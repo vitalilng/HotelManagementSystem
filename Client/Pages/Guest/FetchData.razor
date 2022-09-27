@@ -1,0 +1,70 @@
+﻿@page "/guest"
+@inject HttpClient httpClient
+@inject IJSRuntime js
+
+<h3>Guests</h3>
+<small>Add any guest</small>
+<div class="form-group">
+    <a class="btn btn-success" href="guest/create"><i class="oi oi-plus"></i> Create New</a>
+</div>
+<br />
+
+@if (guests == null)
+{
+    <text>Loading ...</text>
+}
+else if(guests.Length == 0)
+{
+    <text>No Records found.</text>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>FullName</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Country</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(Guest guest in guests)
+            {
+                <tr>
+                    <th>@guest.Id</th>
+                    <th>@guest.FullName</th>
+                    <th>@guest.Username</th>
+                    <th>@guest.Email</th>
+                    <th>@guest.PhoneNumber</th>
+                    <th>@guest.Country</th>
+                    <th>
+                        <a class="btn btn-success" href="guest/update/@guest.Id">Update</a>
+                        <button class="btn btn-danger" @onclick="@(() => DeleteGuest(guest.Id))">Delete</button>
+                    </th>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    Guest[]? guests { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        guests = await httpClient.GetFromJsonAsync<Guest[]>("api/guest");
+    }
+
+    async Task DeleteGuest(int guestId)
+    {
+        var guest = guests.First(x => x.Id == guestId);
+        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {guest.FullName}'s ({guest.Id}) Record?"))
+        {
+            await httpClient.DeleteAsync($"api/guest/{guestId}");
+            await OnInitializedAsync();
+        }
+    }
+}

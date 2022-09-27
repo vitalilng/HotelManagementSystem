@@ -1,0 +1,24 @@
+﻿@page "/guest/update/{guestId:int}"
+@inject HttpClient httpClient
+@inject NavigationManager uriHelper
+@inject IJSRuntime js
+
+<h3>Update</h3>
+<Form ButtonText="Update" guest="@guest"
+      OnValidSubmit="@UpdateGuest" />
+
+@code {
+    [Parameter] public int guestId { get; set; }
+    Guest guest = new Guest();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        guest = await httpClient.GetFromJsonAsync<Guest>($"api/guest/{guestId}");
+    }
+    async Task UpdateGuest()
+    {
+        await httpClient.PutAsJsonAsync("api/guest", guest);
+        await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+        uriHelper.NavigateTo("guest");
+    }
+}

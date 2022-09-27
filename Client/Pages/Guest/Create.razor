@@ -1,0 +1,16 @@
+﻿@page "/guest/create"
+@inject HttpClient httpClient
+@inject NavigationManager uriHelper
+
+<h3>Create</h3>
+<Form ButtonText="Create Guest" guest="@guest"
+    OnValidSubmit="@CreateGuest" />
+
+@code {
+    Guest guest = new Guest();
+    async Task CreateGuest()
+    {
+        await httpClient.PostAsJsonAsync("api/guest", guest);
+        uriHelper.NavigateTo("guest");
+    }
+}
