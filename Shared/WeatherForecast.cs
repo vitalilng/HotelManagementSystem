@@ -1,4 +1,4 @@
-﻿namespace HotelManagementSystem.Learner.Shared
+﻿namespace HotelManagementSystem.Shared
 {
     public class WeatherForecast
     {

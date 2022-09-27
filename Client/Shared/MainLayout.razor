@@ -2,10 +2,10 @@
 @inject NavigationManager navigationManager
 @inject CustomStateProvider authStateProvider
 
-<div class="sidebar">
+<div class="sidebar" style="position:fixed">
     <NavMenu />
 </div>
-<div class="main">
+<div class="main" style="margin-left:250px">
     <div class="top-row">
         <button type="button" class="btn btn-link ml-md-auto" @onclick="@LogoutClick">Logout</button>
     </div>

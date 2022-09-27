@@ -31,7 +31,7 @@ builder.Services.AddScoped<AuthenticationStateProvider>(s => s.GetRequiredServic
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
-builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("HotelManagementSystem.ServerAPI"));
+//builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("HotelManagementSystem.ServerAPI"));
 
 //builder.Services.AddApiAuthorization();
 builder.Services.AddOidcAuthentication(options =>
