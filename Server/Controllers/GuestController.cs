@@ -24,7 +24,7 @@ namespace HotelManagementSystem.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int guestId)
+        public async Task<IActionResult> Get(Guid guestId)
         {
             Guest? guest = await _applicationDbContext.Guests.FirstOrDefaultAsync(a => a.Id == guestId);
             return Ok(guest);
@@ -47,7 +47,7 @@ namespace HotelManagementSystem.Server.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGuest(int guestId)
+        public async Task<IActionResult> DeleteGuest(Guid guestId)
         {
             var guest = new Guest { Id = guestId };
             _applicationDbContext.Remove(guest);

@@ -32,18 +32,27 @@ namespace HotelManagementSystem.Learner.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegistrationRequest parameters)
         {
-            var user = new ApplicationUser();
-            user.UserName = parameters.UserName;
+            var user = new ApplicationUser
+            {
+                FullName = parameters.FullName,
+                UserName = parameters.UserName,
+                Email = parameters.Email,
+                PhoneNumber = parameters.PhoneNumber,
+                Country = parameters.Country,
+                Password = parameters.Password,
+                PasswordConfirm = parameters.PasswordConfirm,
+                EmailConfirmed = true
+
+            };
             var result = await _userManager.CreateAsync(user, parameters.Password);
             if (!result.Succeeded) return BadRequest(result.Errors.FirstOrDefault()?.Description);
-
             return await Login(new LoginRequest
             {
                 UserName = parameters.UserName,
                 Password = parameters.Password
             });
         }
-        
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Logout()
