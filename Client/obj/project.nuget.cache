@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "iy9h9RKzOpPgwWerSXxYq+yKOen1XCRdd0j19deogxjrvWAXbQTzqhkA/c1SUafRPQ6exzGPSyaA89seNBjZhQ==",
+  "dgSpecHash": "zrgNNhxyGIcLfrKDqfQ8g3kSm73b43fYQsFbGeynRqZttxfJF0RwP7DAF6haxrYNQwyZ+oo9EqUhnj46VJg0dA==",
   "success": true,
   "projectFilePath": "C:\\Users\\vitalil\\source\\repos\\HotelManagementSystem\\HotelManagementSystem\\Client\\HotelManagementSystem.Client.csproj",
   "expectedPackageFiles": [
@@ -15,6 +15,7 @@
     "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.aspnetcore.components.forms\\6.0.9\\microsoft.aspnetcore.components.forms.6.0.9.nupkg.sha512",
     "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.aspnetcore.components.web\\6.0.9\\microsoft.aspnetcore.components.web.6.0.9.nupkg.sha512",
     "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.aspnetcore.components.webassembly\\6.0.9\\microsoft.aspnetcore.components.webassembly.6.0.9.nupkg.sha512",
+    "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.aspnetcore.components.webassembly.authentication\\6.0.9\\microsoft.aspnetcore.components.webassembly.authentication.6.0.9.nupkg.sha512",
     "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.aspnetcore.components.webassembly.devserver\\6.0.9\\microsoft.aspnetcore.components.webassembly.devserver.6.0.9.nupkg.sha512",
     "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.aspnetcore.metadata\\6.0.9\\microsoft.aspnetcore.metadata.6.0.9.nupkg.sha512",
     "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\6.0.0\\microsoft.aspnetcore.razor.language.6.0.0.nupkg.sha512",
@@ -49,6 +50,7 @@
     "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\6.0.0\\microsoft.extensions.fileproviders.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.extensions.fileproviders.physical\\6.0.0\\microsoft.extensions.fileproviders.physical.6.0.0.nupkg.sha512",
     "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\6.0.0\\microsoft.extensions.filesystemglobbing.6.0.0.nupkg.sha512",
+    "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.extensions.http\\6.0.0\\microsoft.extensions.http.6.0.0.nupkg.sha512",
     "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.extensions.logging\\6.0.0\\microsoft.extensions.logging.6.0.0.nupkg.sha512",
     "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\6.0.2\\microsoft.extensions.logging.abstractions.6.0.2.nupkg.sha512",
     "C:\\Users\\vitalil\\.nuget\\packages\\microsoft.extensions.options\\6.0.0\\microsoft.extensions.options.6.0.0.nupkg.sha512",

@@ -22,16 +22,16 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/vitalil/source/repos/HotelManagementSystem/HotelManagementSystem/Client/Pages/Authenticate/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aGVudGljYXRlXExvZ2luLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/vitalil/source/repos/HotelManagementSystem/HotelManagementSystem/Client/Pages/Authenticate/Register.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aGVudGljYXRlXFJlZ2lzdGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/vitalil/source/repos/HotelManagementSystem/HotelManagementSystem/Client/Pages/Authentication.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aGVudGljYXRpb24ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/vitalil/source/repos/HotelManagementSystem/HotelManagementSystem/Client/Pages/Authentication/Login.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aGVudGljYXRpb25cTG9naW4ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/vitalil/source/repos/HotelManagementSystem/HotelManagementSystem/Client/Pages/Authentication/Register.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aGVudGljYXRpb25cUmVnaXN0ZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/vitalil/source/repos/HotelManagementSystem/HotelManagementSystem/Client/Pages/Counter.razor]

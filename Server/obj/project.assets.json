@@ -4286,6 +4286,8 @@
           "HotelManagementSystem.Shared": "1.0.0",
           "Microsoft.AspNetCore.Components.Authorization": "6.0.9",
           "Microsoft.AspNetCore.Components.WebAssembly": "6.0.9",
+          "Microsoft.AspNetCore.Components.WebAssembly.Authentication": "6.0.9",
+          "Microsoft.Extensions.Http": "6.0.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "6.0.10",
           "System.Net.Http.Json": "6.0.0"
         },

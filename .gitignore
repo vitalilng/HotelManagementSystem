@@ -366,3 +366,10 @@ MigrationBackup/
 *.gz
 *.cache
 *.props
+*.cache
+*.pdb
+*.props
+*.editorconfig
+
+obj/
+bin/

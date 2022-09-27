@@ -58,7 +58,7 @@ else
         guests = await httpClient.GetFromJsonAsync<Guest[]>("api/guest");
     }
 
-    async Task DeleteGuest(int guestId)
+    async Task DeleteGuest(Guid guestId)
     {
         var guest = guests.First(x => x.Id == guestId);
         if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {guest.FullName}'s ({guest.Id}) Record?"))
