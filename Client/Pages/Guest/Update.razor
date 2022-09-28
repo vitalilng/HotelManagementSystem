@@ -1,4 +1,4 @@
-﻿@page "/guest/update/{guestId:int}"
+﻿@page "/guest/update/{guestId:guid}"
 @inject HttpClient httpClient
 @inject NavigationManager uriHelper
 @inject IJSRuntime js
@@ -8,12 +8,12 @@
       OnValidSubmit="@UpdateGuest" />
 
 @code {
-    [Parameter] public int guestId { get; set; }
+    [Parameter] public Guid guestId { get; set; }
     Guest guest = new Guest();
 
-    protected async override Task OnParametersSetAsync()
+    protected override Task OnParametersSetAsync()
     {
-        guest = await httpClient.GetFromJsonAsync<Guest>($"api/guest/{guestId}");
+        return httpClient.GetFromJsonAsync<Guest>($"api/guest/{guestId}");
     }
     async Task UpdateGuest()
     {

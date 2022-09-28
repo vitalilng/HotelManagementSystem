@@ -54,7 +54,5 @@ namespace HotelManagementSystem.Server.Controllers
             await _applicationDbContext.SaveChangesAsync();
             return NoContent();
         }
-
-
     }
 }

@@ -45,7 +45,6 @@ namespace HotelManagementSystem.Server.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -63,11 +62,9 @@ namespace HotelManagementSystem.Server.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordConfirm")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
@@ -104,11 +101,9 @@ namespace HotelManagementSystem.Server.Migrations
 
             modelBuilder.Entity("HotelManagementSystem.Shared.Models.Guest", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
@@ -159,15 +154,15 @@ namespace HotelManagementSystem.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "daa5c760-0bd5-4f09-a61d-032a81a0d708",
-                            ConcurrencyStamp = "1c126be0-0b36-4d69-8d02-70b2c924328e",
+                            Id = "3ef0b342-ded6-415f-a280-9af7ca934e88",
+                            ConcurrencyStamp = "3109bbc6-662c-4fe6-b73e-cb21e2be20a9",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "6906451f-45c7-40bf-9b24-61e3bdcc52b8",
-                            ConcurrencyStamp = "1eaa3d63-9a34-48ba-a441-e3fe46d587fc",
+                            Id = "9b6182ba-6a32-4941-9a9f-d7a40c6a72fa",
+                            ConcurrencyStamp = "3bf97538-52e0-4ddf-b9d3-77fdbd0a27c6",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         });

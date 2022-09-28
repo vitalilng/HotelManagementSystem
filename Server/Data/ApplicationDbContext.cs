@@ -12,7 +12,7 @@ namespace HotelManagementSystem.Server.Data
         {
         }
 
-        public DbSet<Guest>? Guests { get; set; }
+        public DbSet<Guest> Guests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelManagementSystem.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220926140229_removeIdentityUserColumns")]
-    partial class removeIdentityUserColumns
+    [Migration("20220928112728_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -47,7 +47,6 @@ namespace HotelManagementSystem.Server.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -65,11 +64,9 @@ namespace HotelManagementSystem.Server.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordConfirm")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
@@ -106,11 +103,9 @@ namespace HotelManagementSystem.Server.Migrations
 
             modelBuilder.Entity("HotelManagementSystem.Shared.Models.Guest", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
@@ -161,15 +156,15 @@ namespace HotelManagementSystem.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eb62a3d6-41d2-4bd3-83cc-d47b1493d942",
-                            ConcurrencyStamp = "0ce300ce-140a-42d6-bfb6-4304146cd9d5",
+                            Id = "3ef0b342-ded6-415f-a280-9af7ca934e88",
+                            ConcurrencyStamp = "3109bbc6-662c-4fe6-b73e-cb21e2be20a9",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "daf2699a-a398-47af-b7b4-1a53d784b061",
-                            ConcurrencyStamp = "ab0d70a8-4386-49fc-9083-c7953899f9f7",
+                            Id = "9b6182ba-6a32-4941-9a9f-d7a40c6a72fa",
+                            ConcurrencyStamp = "3bf97538-52e0-4ddf-b9d3-77fdbd0a27c6",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         });
@@ -198,40 +193,6 @@ namespace HotelManagementSystem.Server.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
