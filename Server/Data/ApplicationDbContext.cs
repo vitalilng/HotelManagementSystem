@@ -12,7 +12,8 @@ namespace HotelManagementSystem.Server.Data
         {
         }
 
-        public DbSet<Guest> Guests { get; set; }
+        //DbSet is initialized to null!. That tells the compiler that the property is set to a not-null value.
+        public DbSet<Guest> Guests { get; set; } = null!; 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

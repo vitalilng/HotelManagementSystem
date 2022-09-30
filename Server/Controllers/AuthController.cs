@@ -44,13 +44,20 @@ namespace HotelManagementSystem.Learner.Server.Controllers
                 EmailConfirmed = true
 
             };
-            var result = await _userManager.CreateAsync(user, parameters.Password);
-            if (!result.Succeeded) return BadRequest(result.Errors.FirstOrDefault()?.Description);
+            IdentityResult result = await _userManager.CreateAsync(user, parameters.Password);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors.FirstOrDefault()?.Description);
+            }
+
+            //Add all new users to Guest role
+            await _userManager.AddToRoleAsync(user, "Guest");
+
             return await Login(new LoginRequest
             {
                 UserName = parameters.UserName,
                 Password = parameters.Password
-            });
+            });                        
         }
 
         [Authorize]

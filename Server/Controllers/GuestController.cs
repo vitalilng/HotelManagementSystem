@@ -1,5 +1,6 @@
 ﻿using HotelManagementSystem.Server.Data;
 using HotelManagementSystem.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ namespace HotelManagementSystem.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrator")]
     public class GuestController : ControllerBase
     {
         private readonly ApplicationDbContext _applicationDbContext;

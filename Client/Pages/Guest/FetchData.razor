@@ -1,6 +1,7 @@
 ﻿@page "/guest"
 @inject HttpClient httpClient
 @inject IJSRuntime js
+@attribute [Authorize(Roles="Administrator")]
 
 <h3>Guests</h3>
 <small>Add any guest</small>
