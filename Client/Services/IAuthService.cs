@@ -1,12 +1,12 @@
-﻿using HotelManagementSystem.Shared.Models;
+﻿using HotelManagementSystem.Shared.Dto;
 
 namespace HotelManagementSystem.Client.Services
 {
     public interface IAuthService
     {
-        Task Login(LoginRequest loginRequest);
-        Task Register(RegistrationRequest registrationRequest);
+        Task Login(LoginDto loginRequest);
+        Task Register(RegistrationDto registrationRequest);
         Task Logout();
-        Task<CurrentUser> CurrentUserInfo();
+        Task<CurrentUserDto> CurrentUserInfo();
     }
 }

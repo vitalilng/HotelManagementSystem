@@ -1,4 +1,4 @@
-﻿using HotelManagementSystem.Shared.Models;
+﻿using HotelManagementSystem.Shared.Dto;
 using System.Net.Http.Json;
 
 namespace HotelManagementSystem.Client.Services
@@ -11,13 +11,13 @@ namespace HotelManagementSystem.Client.Services
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        public async Task<CurrentUser> CurrentUserInfo()
+        public async Task<CurrentUserDto> CurrentUserInfo()
         {
-            CurrentUser? result = await _httpClient.GetFromJsonAsync<CurrentUser>("api/auth/currentuserinfo");
+            CurrentUserDto? result = await _httpClient.GetFromJsonAsync<CurrentUserDto>("api/auth/currentuserinfo");
             return result ?? throw new ArgumentNullException(nameof(result));
         }
 
-        public async Task Login(LoginRequest loginRequest)
+        public async Task Login(LoginDto loginRequest)
         {
             HttpResponseMessage result = await _httpClient.PostAsJsonAsync("api/auth/login", loginRequest);
             if (result.StatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -33,7 +33,7 @@ namespace HotelManagementSystem.Client.Services
             result.EnsureSuccessStatusCode();
         }
 
-        public async Task Register(RegistrationRequest registrationRequest)
+        public async Task Register(RegistrationDto registrationRequest)
         {
             HttpResponseMessage result = await _httpClient.PostAsJsonAsync("api/auth/register", registrationRequest);
             if (result.StatusCode == System.Net.HttpStatusCode.BadRequest)

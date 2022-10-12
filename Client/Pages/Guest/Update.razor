@@ -1,23 +1,24 @@
-﻿@page "/guest/update/{guestId:guid}"
+﻿@page "/guest/update/{guestId}"
 @inject HttpClient httpClient
 @inject NavigationManager uriHelper
 @inject IJSRuntime js
 
-<h3>Update</h3>
-<Form ButtonText="Update" guest="@guest"
-      OnValidSubmit="@UpdateGuest" />
+<h3>Update Guest</h3>
+
+<Form ButtonText="Update" registrationModel="@registrationModel"
+          OnValidSubmit="@UpdateGuest" />
 
 @code {
-    [Parameter] public Guid guestId { get; set; }
-    Guest guest = new Guest();
+    [Parameter] public string? guestId { get; set; }    
+    RegistrationDto registrationModel = new RegistrationDto();
 
-    protected override Task OnParametersSetAsync()
-    {
-        return httpClient.GetFromJsonAsync<Guest>($"api/guest/{guestId}");
+    protected async override Task OnParametersSetAsync()
+    {       
+        registrationModel = await httpClient.GetFromJsonAsync<RegistrationDto>($"api/guest/{guestId}");
     }
     async Task UpdateGuest()
     {
-        await httpClient.PutAsJsonAsync("api/guest", guest);
+        await httpClient.PutAsJsonAsync("api/guest", registrationModel);
         await js.InvokeVoidAsync("alert", $"Updated Successfully!");
         uriHelper.NavigateTo("guest");
     }

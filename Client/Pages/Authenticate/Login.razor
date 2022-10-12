@@ -6,19 +6,19 @@
 <h1 class="h2 font-weight-normal login-title">
     Login
 </h1>
-<EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="loginRequest">
+<EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="loginModel">
     <DataAnnotationsValidator />
 
     <label for="inputUsername" class="sr-only">Username</label>
-    <InputText id="inputUsername" class="form-control" @bind-Value="@loginRequest.UserName" autofocus placeholder="Username" />
-    <ValidationMessage For="@(() => loginRequest.UserName)" />
+    <InputText id="inputUsername" class="form-control" @bind-Value="@loginModel.UserName" autofocus placeholder="Username" />
+    <ValidationMessage For="@(() => loginModel.UserName)" />
 
     <label for="inputPassword" class="sr-only">Password</label>
-    <InputText type="password" id="inputPassword" class="form-control" @bind-Value="@loginRequest.Password" autofocus placeholder="Password" />
-    <ValidationMessage For="@(() => loginRequest.Password)" />
+    <InputText type="password" id="inputPassword" class="form-control" @bind-Value="@loginModel.Password" autofocus placeholder="Password" />
+    <ValidationMessage For="@(() => loginModel.Password)" />
 
     <div class="form-check m-3">
-        <InputCheckbox id="inputRememberMe" class="form-check-input" @bind-Value="@loginRequest.RememberMe" />
+        <InputCheckbox id="inputRememberMe" class="form-check-input" @bind-Value="@loginModel.RememberMe" />
         <label class="form-check-label" for="inputRememberMe">Remember Me</label>
     </div>
 
@@ -30,7 +30,7 @@
 </EditForm>
 
 @code {
-    LoginRequest loginRequest { get; set; } = new LoginRequest();
+    LoginDto loginModel { get; set; } = new LoginDto();
     string? error { get; set; } = "";
 
     async Task OnSubmit()
@@ -38,7 +38,7 @@
         error = null;
         try
         {
-            await authStateProvider.Login(loginRequest);
+            await authStateProvider.Login(loginModel);
             navigationManager.NavigateTo("");
         }
         catch (Exception ex)

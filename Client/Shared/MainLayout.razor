@@ -13,9 +13,11 @@
         @Body
     </div>
 </div>
+
 @functions {
     [CascadingParameter]
     Task<AuthenticationState> AuthenticationState { get; set; }
+
     protected override async Task OnParametersSetAsync()
     {
         if (!(await AuthenticationState).User.Identity.IsAuthenticated)

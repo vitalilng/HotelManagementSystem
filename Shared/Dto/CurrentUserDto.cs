@@ -1,6 +1,6 @@
-﻿namespace HotelManagementSystem.Shared.Models
+﻿namespace HotelManagementSystem.Shared.Dto
 {
-    public class CurrentUser
+    public class CurrentUserDto
     {
         public bool IsAuthenticated { get; set; }
         public string? UserName { get; set; }

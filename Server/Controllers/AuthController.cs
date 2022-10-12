@@ -1,5 +1,5 @@
 ﻿using HotelManagementSystem.Server.Models;
-using HotelManagementSystem.Shared.Models;
+using HotelManagementSystem.Shared.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +19,7 @@ namespace HotelManagementSystem.Learner.Server.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> Login(LoginRequest request)
+        public async Task<IActionResult> Login(LoginDto request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
             if (user == null) return BadRequest("User does not exist");
@@ -30,9 +30,9 @@ namespace HotelManagementSystem.Learner.Server.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> Register(RegistrationRequest parameters)
+        public async Task<IActionResult> Register(RegistrationDto parameters)
         {
-            var user = new ApplicationUser
+            var applicationUser = new ApplicationUser
             {
                 FullName = parameters.FullName,
                 UserName = parameters.UserName,
@@ -44,16 +44,16 @@ namespace HotelManagementSystem.Learner.Server.Controllers
                 EmailConfirmed = true
 
             };
-            IdentityResult result = await _userManager.CreateAsync(user, parameters.Password);
+            IdentityResult result = await _userManager.CreateAsync(applicationUser, parameters.Password);
             if (!result.Succeeded)
             {
                 return BadRequest(result.Errors.FirstOrDefault()?.Description);
             }
 
             //Add all new users to Guest role
-            await _userManager.AddToRoleAsync(user, "Guest");
+            await _userManager.AddToRoleAsync(applicationUser, "Guest");
 
-            return await Login(new LoginRequest
+            return await Login(new LoginDto
             {
                 UserName = parameters.UserName,
                 Password = parameters.Password
@@ -69,9 +69,9 @@ namespace HotelManagementSystem.Learner.Server.Controllers
         }
         
         [HttpGet]
-        public CurrentUser CurrentUserInfo()
+        public CurrentUserDto CurrentUserInfo()
         {
-            return new CurrentUser
+            return new CurrentUserDto
             {
                 IsAuthenticated = User.Identity.IsAuthenticated,
                 UserName = User.Identity.Name,

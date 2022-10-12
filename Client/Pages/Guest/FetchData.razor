@@ -10,11 +10,11 @@
 </div>
 <br />
 
-@if (guests == null)
+@if (registeredGuests == null)
 {
     <text>Loading ...</text>
 }
-else if(guests.Length == 0)
+else if(registeredGuests.Length == 0)
 {
     <text>No Records found.</text>
 }
@@ -22,50 +22,50 @@ else
 {
     <table class="table table-striped">
         <thead>
-            <tr>
-                <th>Id</th>
+            <tr>                
                 <th>FullName</th>
                 <th>Username</th>
                 <th>Email</th>
                 <th>Phone Number</th>
-                <th>Country</th>
+                <th>Country</th>                
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach(Guest guest in guests)
+            @foreach (RegistrationDto registeredGuest in registeredGuests)
             {
-                <tr>
-                    <th>@guest.Id</th>
-                    <th>@guest.FullName</th>
-                    <th>@guest.Username</th>
-                    <th>@guest.Email</th>
-                    <th>@guest.PhoneNumber</th>
-                    <th>@guest.Country</th>
+                <tr>                    
+                    <th>@registeredGuest.FullName</th>
+                    <th>@registeredGuest.UserName</th>
+                    <th>@registeredGuest.Email</th>
+                    <th>@registeredGuest.PhoneNumber</th>
+                    <th>@registeredGuest.Country</th>                    
                     <th>
-                        <a class="btn btn-success" href="guest/update/@guest.Id">Update</a>
-                        <button class="btn btn-danger" @onclick="@(() => DeleteGuest(guest.Id))">Delete</button>
+                        <a class="btn btn-sm btn-success" href="guest/update/@registeredGuest.Id">Update</a>                        
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick="@(() => DeleteGuest(registeredGuest.Id))">Delete</button>
                     </th>
-
                 </tr>
             }
         </tbody>
     </table>
 }
 @code {
-    Guest[]? guests { get; set; }
+    RegistrationDto[]? registeredGuests { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        guests = await httpClient.GetFromJsonAsync<Guest[]>("api/guest");
+        registeredGuests = await httpClient.GetFromJsonAsync<RegistrationDto[]>("api/guest");
     }
 
-    async Task DeleteGuest(Guid guestId)
+    async Task DeleteGuest(string? guestId)
     {
-        var guest = guests.First(x => x.Id == guestId);
-        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {guest.FullName}'s ({guest.Id}) Record?"))
+        if (registeredGuests is not null && guestId != null)
         {
-            await httpClient.DeleteAsync($"api/guest/{guestId}");
-            await OnInitializedAsync();
+            var guestUser = registeredGuests.First(x => x.Id == guestId);
+            if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {guestUser.UserName}'s  Record ?"))
+            {
+                await httpClient.DeleteAsync($"api/guest/{guestId}");
+                await OnInitializedAsync();
+            }
         }
     }
 }

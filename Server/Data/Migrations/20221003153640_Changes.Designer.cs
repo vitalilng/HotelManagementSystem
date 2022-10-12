@@ -4,6 +4,7 @@ using HotelManagementSystem.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelManagementSystem.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221003153640_Changes")]
+    partial class Changes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,15 +130,15 @@ namespace HotelManagementSystem.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e1a30582-a453-43af-8158-c5c6229d48f1",
-                            ConcurrencyStamp = "6f28c6fd-2e85-443b-8600-341d07a04a9e",
+                            Id = "ab2fa0a5-5d81-4dab-82f8-e1b2e351ee38",
+                            ConcurrencyStamp = "141fb35a-fa4a-4b41-940a-44604e3024de",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "cba4a459-67e1-446c-9f93-2c0fb734b9f3",
-                            ConcurrencyStamp = "21bdab0f-57ee-4541-8348-eb79246156c4",
+                            Id = "cc373e4b-2036-4a97-8f94-efe83a31325e",
+                            ConcurrencyStamp = "8e6964b9-f813-4b38-8317-5e2aed7b5d78",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         });

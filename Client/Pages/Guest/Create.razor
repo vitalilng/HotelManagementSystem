@@ -3,14 +3,15 @@
 @inject NavigationManager uriHelper
 
 <h3>Create</h3>
-<Form ButtonText="Create Guest" guest="@guest"
+<Form ButtonText="Create Guest" registrationModel="@registrationModel"
     OnValidSubmit="@CreateGuest" />
 
 @code {
-    Guest guest = new Guest();
+    RegistrationDto registrationModel = new RegistrationDto();
+
     async Task CreateGuest()
     {
-        await httpClient.PostAsJsonAsync("api/guest", guest);
+        await httpClient.PostAsJsonAsync("api/guest", registrationModel);
         uriHelper.NavigateTo("guest");
     }
 }

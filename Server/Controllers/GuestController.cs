@@ -1,8 +1,12 @@
-﻿using HotelManagementSystem.Server.Data;
-using HotelManagementSystem.Shared.Models;
+﻿using Duende.IdentityServer.Models;
+using HotelManagementSystem.Server.Data;
+using HotelManagementSystem.Server.Models;
+using HotelManagementSystem.Shared.Dto;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace HotelManagementSystem.Server.Controllers
 {
@@ -12,48 +16,112 @@ namespace HotelManagementSystem.Server.Controllers
     public class GuestController : ControllerBase
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public GuestController(ApplicationDbContext applicationDbContext)
+        public GuestController(ApplicationDbContext applicationDbContext,
+                               UserManager<ApplicationUser> userManager                               )
         {
-            _applicationDbContext = applicationDbContext;
+            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));            
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllGuests()
+        public IActionResult GetAllGuests()
         {
-            List<Guest> guests = await _applicationDbContext.Guests.ToListAsync();
-            return Ok(guests);
+            IQueryable<ApplicationUser> applicationUsers = _userManager.Users;
+            return Ok(applicationUsers);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid guestId)
+        [HttpGet("{guestId}")]
+        public async Task<IActionResult> Get(string guestId)
         {
-            Guest? guest = await _applicationDbContext.Guests.FirstOrDefaultAsync(a => a.Id == guestId);
-            return Ok(guest);
+            var applicationUser = await _userManager.FindByIdAsync(guestId);
+            if (applicationUser is null)
+            {
+                return NotFound();
+            }
+            return Ok(applicationUser);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateGuest(Guest guest)
+        public async Task<IActionResult> CreateGuest(RegistrationDto guestUser)
         {
-            _applicationDbContext.Add(guest);
-            await _applicationDbContext.SaveChangesAsync();
-            return Ok(guest.Id);
+            if (ModelState.IsValid)
+            {
+                ApplicationUser applicationUser = new()
+                {
+                    FullName = guestUser.FullName,
+                    UserName = guestUser.UserName,
+                    Email = guestUser.Email,
+                    Country = guestUser.Country,
+                    PhoneNumber = guestUser.PhoneNumber,
+                    Password = guestUser.Password,
+                    EmailConfirmed = true
+                };
+
+                IdentityResult identityResult = await _userManager.CreateAsync(applicationUser, guestUser.Password);
+                if (identityResult.Succeeded)
+                {
+                    return RedirectToPage("guest");
+                }
+                else
+                {
+                    foreach (IdentityError error in identityResult.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+
+                return Ok(guestUser.Id);
+            }
+            return BadRequest();
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateGuest(Guest guest)
+        public async Task<IActionResult> UpdateGuest([FromBody]RegistrationDto guestUser)
         {
-            _applicationDbContext.Entry(guest).State = EntityState.Modified;
-            await _applicationDbContext.SaveChangesAsync();
-            return NoContent();
+            var applicationUser = await _userManager.FindByIdAsync(guestUser.Id);
+            if (applicationUser == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                applicationUser.FullName = guestUser.FullName;
+                applicationUser.UserName = guestUser.UserName;
+                applicationUser.Email = guestUser.Email;
+                applicationUser.Country = guestUser.Country;
+                applicationUser.PhoneNumber = guestUser.PhoneNumber;
+                applicationUser.Password = guestUser.Password;
+                applicationUser.PasswordConfirm = guestUser.PasswordConfirm;
+                applicationUser.EmailConfirmed = true;
+
+                var result = await _userManager.UpdateAsync(applicationUser);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToPage("guest");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+            }
+            return Ok(guestUser);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGuest(Guid guestId)
+        [HttpDelete("{guestId}")]
+        public async Task<IActionResult> DeleteGuest(string guestId)
         {
-            var guest = new Guest { Id = guestId };
-            _applicationDbContext.Remove(guest);
-            await _applicationDbContext.SaveChangesAsync();
+            var applicationUser = await _userManager.FindByIdAsync(guestId);
+            if (applicationUser == null)
+            {
+                throw new ArgumentNullException("User not found", nameof(ApplicationUser));
+            }
+            await _userManager.DeleteAsync(applicationUser);
             return NoContent();
         }
     }

@@ -7,36 +7,36 @@
     Register
 </h1>
 
-<EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="registerRequest">
+<EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="registrationModel">
     <DataAnnotationsValidator />
 
     <label for="inputFullname" class="sr-only">FullName</label>
-    <InputText id="inputFullname" class="form-control" placeholder="FullName" autofocus @bind-Value="@registerRequest.FullName" />
-    <ValidationMessage For="@(() => registerRequest.FullName)" />
+    <InputText id="inputFullname" class="form-control" placeholder="FullName" autofocus @bind-Value="@registrationModel.FullName" />
+    <ValidationMessage For="@(() => registrationModel.FullName)" />
 
     <label for="inputUserName" class="sr-only">UserName</label>
-    <InputText id="inputUserName" class="form-control" placeholder="UserName" autofocus @bind-Value="@registerRequest.UserName" />
-    <ValidationMessage For="@(() => registerRequest.UserName)" />
+    <InputText id="inputUserName" class="form-control" placeholder="UserName" autofocus @bind-Value="@registrationModel.UserName" />
+    <ValidationMessage For="@(() => registrationModel.UserName)" />
 
     <label for="inputEmail" class="sr-only">Email</label>
-    <InputText id="inputEmail" class="form-control" placeholder="Email" autofocus @bind-Value="@registerRequest.Email" />
-    <ValidationMessage For="@(() => registerRequest.Email)" />
+    <InputText id="inputEmail" class="form-control" placeholder="Email" autofocus @bind-Value="@registrationModel.Email" />
+    <ValidationMessage For="@(() => registrationModel.Email)" />
 
     <label for="inputPhoneNumber" class="sr-only">Phone Number</label>
-    <InputText id="inputPhoneNumber" class="form-control" placeholder="Phone Number" autofocus @bind-Value="@registerRequest.PhoneNumber" />
-    <ValidationMessage For="@(() => registerRequest.PhoneNumber)" />
+    <InputText id="inputPhoneNumber" class="form-control" placeholder="Phone Number" autofocus @bind-Value="@registrationModel.PhoneNumber" />
+    <ValidationMessage For="@(() => registrationModel.PhoneNumber)" />
 
     <label for="inputCountry" class="sr-only">Country</label>
-    <InputText id="inputCountry" class="form-control" placeholder="Country" autofocus @bind-Value="@registerRequest.Country" />
-    <ValidationMessage For="@(() => registerRequest.Country)" />
+    <InputText id="inputCountry" class="form-control" placeholder="Country" autofocus @bind-Value="@registrationModel.Country" />
+    <ValidationMessage For="@(() => registrationModel.Country)" />
     
     <label for="inputPassword" class="sr-only">Password</label>
-    <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="@registerRequest.Password" />
-    <ValidationMessage For="@(() => registerRequest.Password)" />
+    <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="@registrationModel.Password" />
+    <ValidationMessage For="@(() => registrationModel.Password)" />
     
     <label for="inputPasswordConfirm" class="sr-only">Password Confirmation</label>
-    <InputText type="password" id="inputPasswordConfirm" class="form-control" placeholder="Password Confirmation" @bind-Value="@registerRequest.PasswordConfirm" />
-    <ValidationMessage For="@(() => registerRequest.PasswordConfirm)" />
+    <InputText type="password" id="inputPasswordConfirm" class="form-control" placeholder="Password Confirmation" @bind-Value="@registrationModel.PasswordConfirm" />
+    <ValidationMessage For="@(() => registrationModel.PasswordConfirm)" />
     <br />
     <button class="btn btn-lg btn-primary btn-block" type="submit">Create account</button>
     
@@ -47,7 +47,7 @@
 </EditForm>
 
 @functions {
-    RegistrationRequest registerRequest { get; set; } = new RegistrationRequest();
+    RegistrationDto registrationModel { get; set; } = new RegistrationDto();
     string? error { get; set; }
 
     async Task OnSubmit()
@@ -55,7 +55,7 @@
         error = null;
         try
         {
-            await authStateProvider.Register(registerRequest);
+            await authStateProvider.Register(registrationModel);
             navigationManager.NavigateTo("");
         }
         catch (Exception ex)
