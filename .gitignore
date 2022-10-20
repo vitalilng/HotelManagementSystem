@@ -364,13 +364,8 @@ MigrationBackup/
 *.dll
 *.pdb
 *.gz
-*.cache
-*.props
-*.cache
-*.pdb
 *.props
 *.editorconfig
-
 obj/
 bin/
 *.cache
