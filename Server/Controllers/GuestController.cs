@@ -1,49 +1,84 @@
-﻿using Duende.IdentityServer.Models;
-using HotelManagementSystem.Server.Data;
-using HotelManagementSystem.Server.Models;
+﻿using HotelManagementSystem.Server.Models;
 using HotelManagementSystem.Shared.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Web.Http;
+using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
+using FromBodyAttribute = Microsoft.AspNetCore.Mvc.FromBodyAttribute;
+using HttpDeleteAttribute = Microsoft.AspNetCore.Mvc.HttpDeleteAttribute;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
+using HttpPutAttribute = Microsoft.AspNetCore.Mvc.HttpPutAttribute;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace HotelManagementSystem.Server.Controllers
 {
-    [Route("api/[controller]")]
+    /// <summary>
+    /// Guest controller
+    /// </summary>
+    [Route("api/guests")]
     [ApiController]
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "admin")]
     public class GuestController : ControllerBase
     {
-        private readonly ApplicationDbContext _applicationDbContext;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public GuestController(ApplicationDbContext applicationDbContext,
-                               UserManager<ApplicationUser> userManager                               )
+        /// <summary>
+        /// GuestController constructor with userManager DI
+        /// </summary>
+        /// <param name="userManager"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public GuestController(UserManager<ApplicationUser> userManager)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));            
         }
 
+        /// <summary>
+        /// Gets all the guests
+        /// </summary>
+        /// <returns>The list of all guests</returns>
+        [Route("")]
         [HttpGet]
-        public IActionResult GetAllGuests()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetGuests()
         {
-            IQueryable<ApplicationUser> applicationUsers = _userManager.Users;
+            IQueryable<ApplicationUser> applicationUsers = _userManager.Users;            
             return Ok(applicationUsers);
         }
 
-        [HttpGet("{guestId}")]
-        public async Task<IActionResult> Get(string guestId)
+        /// <summary>
+        /// Get a guest by id
+        /// </summary>
+        /// <param name="guestId"></param>
+        /// <returns>The guest by id</returns>
+        [Route("{guestId}")]
+        //[HttpGet("{guestId}")]        
+        [HttpGet]        
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById(string guestId)
         {
             var applicationUser = await _userManager.FindByIdAsync(guestId);
-            if (applicationUser is null)
+            if (applicationUser is null || applicationUser.UserName == "admin")
             {
                 return NotFound();
             }
             return Ok(applicationUser);
-        }
+        }        
 
+        /// <summary>
+        /// Create a Guest
+        /// </summary>
+        /// <param name="guestUser"></param>
+        /// <returns>The created guest user</returns>
         [HttpPost]
+        [Route("/create")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateGuest(RegistrationDto guestUser)
         {
             if (ModelState.IsValid)
@@ -77,7 +112,16 @@ namespace HotelManagementSystem.Server.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// Update a Guest
+        /// </summary>
+        /// <param name="guestUser"></param>
+        /// <returns>Updated guest data</returns>
         [HttpPut]
+        [Route("update/{guestId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateGuest([FromBody]RegistrationDto guestUser)
         {
             var applicationUser = await _userManager.FindByIdAsync(guestUser.Id);
@@ -113,13 +157,23 @@ namespace HotelManagementSystem.Server.Controllers
             return Ok(guestUser);
         }
 
-        [HttpDelete("{guestId}")]
+        /// <summary>
+        /// Delete a Guest by id
+        /// </summary>
+        /// <param name="guestId">List without the deleted guest user</param>
+        [HttpDelete]
+        [Route("{guestId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteGuest(string guestId)
         {
             var applicationUser = await _userManager.FindByIdAsync(guestId);
             if (applicationUser == null)
             {
-                throw new ArgumentNullException("User not found", nameof(ApplicationUser));
+                return NotFound();
             }
             await _userManager.DeleteAsync(applicationUser);
             return NoContent();

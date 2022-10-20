@@ -1,11 +1,9 @@
 using HotelManagementSystem.Client;
-using HotelManagementSystem.Client.Pages.Guest;
 using HotelManagementSystem.Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using System.Net.Http;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 var baseAddress = builder.Configuration.GetValue<string>("BaseUrl");
@@ -38,9 +36,6 @@ builder.Services.AddOidcAuthentication(options =>
 {
     builder.Configuration.Bind("Local", options.ProviderOptions);
 });
-
-
-
 
 //builder.Services.AddScoped<AuthenticationStateProvider>();
 

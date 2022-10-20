@@ -8,6 +8,6 @@ namespace HotelManagementSystem.Server.Models
         public string? Country { get; set; }
         public string? Password { get; set; }
         public string? PasswordConfirm { get; set; }
-        private string? UserRole { get; set; }
+        public bool SoftDeleted { get; set; }
     }
 }

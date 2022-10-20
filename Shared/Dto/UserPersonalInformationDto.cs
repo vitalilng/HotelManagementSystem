@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using HotelManagementSystem.Shared.Dto;
+using System.ComponentModel.DataAnnotations;
 
 namespace HotelManagementSystem.Shared.Models
 {
-    public class GuestPersonalInformationDto
+    public class UserPersonalInformationDto: BaseEntityDto
     {
         [Required]
         [Display(Name = "Full Name")]

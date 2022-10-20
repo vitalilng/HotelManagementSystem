@@ -33,7 +33,6 @@ namespace HotelManagementSystem.Client.Services
             {
                 Console.WriteLine("Request failed" + ex.ToString());   
             }
-
             return new AuthenticationState(new ClaimsPrincipal(identity));
         }
 

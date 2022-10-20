@@ -4,10 +4,20 @@
 
 <div class="sidebar" style="position:fixed">
     <NavMenu />
+
 </div>
 <div class="main" style="margin-left:250px">
     <div class="top-row">
-        <button type="button" class="btn btn-link ml-md-auto" @onclick="@LogoutClick">Logout</button>
+<AuthorizeView>
+            <Authorized>
+                <a href="authentication/profile">Hello, @context.User.Identity?.Name!</a>
+                <button type="button" class="btn btn-link ml-md-auto" @onclick="@LogoutClick">Logout</button>
+            </Authorized>
+            <NotAuthorized>
+                <a href="authentication/register">Register</a>
+                <a href="authentication/login">Log in</a>
+            </NotAuthorized>
+</AuthorizeView>
     </div>
     <div class="content px-4">
         @Body
@@ -16,11 +26,12 @@
 
 @functions {
     [CascadingParameter]
-    Task<AuthenticationState> AuthenticationState { get; set; }
+    Task<AuthenticationState> AuthenticationState { get; set; } 
 
     protected override async Task OnParametersSetAsync()
     {
-        if (!(await AuthenticationState).User.Identity.IsAuthenticated)
+        var user = (await AuthenticationState).User;
+        if (!user.Identity.IsAuthenticated)
         {
             navigationManager.NavigateTo("/login");
         }
@@ -29,5 +40,6 @@
     {
         await authStateProvider.Logout();
         navigationManager.NavigateTo("/login");
+        
     }
 }

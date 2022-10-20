@@ -1,10 +1,9 @@
 ﻿@page "/guest"
 @inject HttpClient httpClient
 @inject IJSRuntime js
-@attribute [Authorize(Roles="Administrator")]
+@attribute [Authorize(Roles="admin")]
 
 <h3>Guests</h3>
-<small>Add any guest</small>
 <div class="form-group">
     <a class="btn btn-success" href="guest/create"><i class="oi oi-plus"></i> Create New</a>
 </div>
@@ -20,8 +19,8 @@ else if(registeredGuests.Length == 0)
 }
 else
 {
-    <table class="table table-striped">
-        <thead>
+    <table class="table table-success">
+        <thead class="">
             <tr>                
                 <th>FullName</th>
                 <th>Username</th>

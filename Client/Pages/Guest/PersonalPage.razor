@@ -1,0 +1,56 @@
+﻿@page "/personalPage"
+@inject HttpClient httpClient
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h2>Personal Page</h2>
+
+        <h1>Hello </h1>
+
+        
+            <table class="table table-success">
+                <thead class="">
+                    <tr>
+                        <th>FullName</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Country</th>
+                        <th>Password</th>s
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                        <th>@userPersonalInformation.FullName</th>
+                        <th>@userPersonalInformation.UserName</th>
+                        <th>@userPersonalInformation.Email</th>
+                        <th>@userPersonalInformation.PhoneNumber</th>
+                        <th>@userPersonalInformation.Country</th>
+                        <th>@userPersonalInformation.Password</th>
+                            <th>
+                            <a class="btn btn-sm btn-success" href="guest/update/@userPersonalInformation.Id">Update</a>
+                            </th>
+                        </tr>
+                </tbody>
+            </table>
+
+@code{
+    [CascadingParameter]
+    Task<AuthenticationState> AuthenticationState { get; set; }
+
+    UserPersonalInformationDto? userPersonalInformation { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var claims = user.Claims;
+        var name = user.Identity.Name;
+
+        //userPersonalInformation = await httpClient.GetFromJsonAsync<UserPersonalInformationDto>(claims);
+
+    }
+
+    
+}
