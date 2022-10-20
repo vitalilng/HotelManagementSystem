@@ -1,6 +1,0 @@
-C:\Users\vitalil\source\repos\HotelManagementSystem\HotelManagementSystem\Client\obj\Debug\net6.0\HotelManagementSystem.Client.csproj.AssemblyReference.cache
-C:\Users\vitalil\source\repos\HotelManagementSystem\HotelManagementSystem\Client\obj\Debug\net6.0\HotelManagementSystem.Client.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\vitalil\source\repos\HotelManagementSystem\HotelManagementSystem\Client\obj\Debug\net6.0\HotelManagementSystem.Client.AssemblyInfoInputs.cache
-C:\Users\vitalil\source\repos\HotelManagementSystem\HotelManagementSystem\Client\obj\Debug\net6.0\HotelManagementSystem.Client.AssemblyInfo.cs
-C:\Users\vitalil\source\repos\HotelManagementSystem\HotelManagementSystem\Client\obj\Debug\net6.0\HotelManagementSystem.Client.csproj.CoreCompileInputs.cache
-C:\Users\vitalil\source\repos\HotelManagementSystem\HotelManagementSystem\Client\obj\Debug\net6.0\HotelManagementSystem.Client.MvcApplicationPartsAssemblyInfo.cache
