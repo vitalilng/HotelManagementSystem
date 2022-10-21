@@ -12,7 +12,7 @@ namespace HotelManagementSystem.Client.Services
         }
 
         public async Task<CurrentUserDto> CurrentUserInfo()
-        {
+        {            
             CurrentUserDto? result = await _httpClient.GetFromJsonAsync<CurrentUserDto>("api/auth/currentuserinfo");
             return result ?? throw new ArgumentNullException(nameof(result));
         }

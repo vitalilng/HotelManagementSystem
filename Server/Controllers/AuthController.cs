@@ -1,9 +1,7 @@
 ﻿using HotelManagementSystem.Server.Models;
 using HotelManagementSystem.Shared.Dto;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Web.Http;
 using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
@@ -14,7 +12,7 @@ namespace HotelManagementSystem.Learner.Server.Controllers
     /// <summary>
     /// Authorization Controller class
     /// </summary>
-    [RoutePrefix("api/auth")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -111,16 +109,16 @@ namespace HotelManagementSystem.Learner.Server.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("curentuserinfo")]
-        public CurrentUserDto CurrentUserInfo()
+        [Route("currentuserinfo")]
+        public ActionResult CurrentUserInfo()
         {
-            return new CurrentUserDto
+            return Ok( new CurrentUserDto
             {
                 IsAuthenticated = User.Identity.IsAuthenticated,
                 UserName = User.Identity.Name,
                 Claims = User.Claims
                 .ToDictionary(c => c.Type, c => c.Value)
-            };
+            });
         }
     }
 }

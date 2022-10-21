@@ -1,9 +1,7 @@
 ﻿using HotelManagementSystem.Server.Models;
 using HotelManagementSystem.Shared.Dto;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Web.Http;
 using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
 using FromBodyAttribute = Microsoft.AspNetCore.Mvc.FromBodyAttribute;
 using HttpDeleteAttribute = Microsoft.AspNetCore.Mvc.HttpDeleteAttribute;
@@ -53,8 +51,7 @@ namespace HotelManagementSystem.Server.Controllers
         /// </summary>
         /// <param name="guestId"></param>
         /// <returns>The guest by id</returns>
-        [Route("{guestId}")]
-        //[HttpGet("{guestId}")]        
+        [Route("{guestId}")]                
         [HttpGet]        
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -75,7 +72,7 @@ namespace HotelManagementSystem.Server.Controllers
         /// <param name="guestUser"></param>
         /// <returns>The created guest user</returns>
         [HttpPost]
-        [Route("/create")]
+        [Route("")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -106,7 +103,6 @@ namespace HotelManagementSystem.Server.Controllers
                         ModelState.AddModelError("", error.Description);
                     }
                 }
-
                 return Ok(guestUser.Id);
             }
             return BadRequest();
@@ -118,7 +114,7 @@ namespace HotelManagementSystem.Server.Controllers
         /// <param name="guestUser"></param>
         /// <returns>Updated guest data</returns>
         [HttpPut]
-        [Route("update/{guestId}")]
+        [Route("{guestId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

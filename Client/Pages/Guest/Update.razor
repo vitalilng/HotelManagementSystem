@@ -14,12 +14,12 @@
 
     protected async override Task OnParametersSetAsync()
     {       
-        registrationModel = await httpClient.GetFromJsonAsync<RegistrationDto>($"api/guest/{guestId}");
+        registrationModel = await httpClient.GetFromJsonAsync<RegistrationDto>($"api/guests/{guestId}");
     }
     async Task UpdateGuest()
     {
-        await httpClient.PutAsJsonAsync("api/guest", registrationModel);
+        await httpClient.PutAsJsonAsync($"api/guests/{guestId}", registrationModel);
         await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-        uriHelper.NavigateTo("guest");
+        uriHelper.NavigateTo("guests");
     }
 }

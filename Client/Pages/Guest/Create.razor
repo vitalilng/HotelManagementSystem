@@ -11,7 +11,7 @@
 
     async Task CreateGuest()
     {
-        await httpClient.PostAsJsonAsync("api/guest", registrationModel);
-        uriHelper.NavigateTo("guest");
+        await httpClient.PostAsJsonAsync("api/guests", registrationModel);
+        uriHelper.NavigateTo("guests");
     }
 }

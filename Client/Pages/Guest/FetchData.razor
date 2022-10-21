@@ -1,11 +1,11 @@
-﻿@page "/guest"
+﻿@page "/guests"
 @inject HttpClient httpClient
 @inject IJSRuntime js
 @attribute [Authorize(Roles="admin")]
 
 <h3>Guests</h3>
 <div class="form-group">
-    <a class="btn btn-success" href="guest/create"><i class="oi oi-plus"></i> Create New</a>
+    <a class="btn btn-success" href="guest/create"><i class="oi oi-plus"></i>Add new guest</a>
 </div>
 <br />
 
@@ -52,7 +52,7 @@ else
     RegistrationDto[]? registeredGuests { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        registeredGuests = await httpClient.GetFromJsonAsync<RegistrationDto[]>("api/guest");
+        registeredGuests = await httpClient.GetFromJsonAsync<RegistrationDto[]>("api/guests");
     }
 
     async Task DeleteGuest(string? guestId)
@@ -62,7 +62,7 @@ else
             var guestUser = registeredGuests.First(x => x.Id == guestId);
             if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {guestUser.UserName}'s  Record ?"))
             {
-                await httpClient.DeleteAsync($"api/guest/{guestId}");
+                await httpClient.DeleteAsync($"api/guests/{guestId}");
                 await OnInitializedAsync();
             }
         }

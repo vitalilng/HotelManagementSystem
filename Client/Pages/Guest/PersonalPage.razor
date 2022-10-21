@@ -1,56 +1,40 @@
-﻿@page "/personalPage"
+﻿@page "/personalpage"
 @inject HttpClient httpClient
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <h2>Personal Page</h2>
 
         <h1>Hello </h1>
+        <p>@authMessage</p>
+        @if(claims.Count() > 0)
+        {
+            <ul>
+                @foreach(var claim in claims)
+                {
+                    <li>@claim.Type: @claim.Value</li>
+                }
+            </ul>
+        }
 
-        
-            <table class="table table-success">
-                <thead class="">
-                    <tr>
-                        <th>FullName</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Phone Number</th>
-                        <th>Country</th>
-                        <th>Password</th>s
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                        <tr>
-                        <th>@userPersonalInformation.FullName</th>
-                        <th>@userPersonalInformation.UserName</th>
-                        <th>@userPersonalInformation.Email</th>
-                        <th>@userPersonalInformation.PhoneNumber</th>
-                        <th>@userPersonalInformation.Country</th>
-                        <th>@userPersonalInformation.Password</th>
-                            <th>
-                            <a class="btn btn-sm btn-success" href="guest/update/@userPersonalInformation.Id">Update</a>
-                            </th>
-                        </tr>
-                </tbody>
-            </table>
 
 @code{
-    [CascadingParameter]
-    Task<AuthenticationState> AuthenticationState { get; set; }
+    private string authMessage;
+    private string surnameMessage;
+    private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
 
-    UserPersonalInformationDto? userPersonalInformation { get; set; }
-
-    protected override async Task OnInitializedAsync()
+    private async Task GetClaimsPrincipalData()
     {
-
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-        var claims = user.Claims;
-        var name = user.Identity.Name;
 
-        //userPersonalInformation = await httpClient.GetFromJsonAsync<UserPersonalInformationDto>(claims);
-
+        if(user.Identity.IsAuthenticated)
+        {
+            authMessage = $"{user.Identity.Name} is authenticated";
+            claims = user.Claims;
+            surnameMessage = $"{user.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value}";
+        }
     }
 
-    
 }
