@@ -1,12 +1,21 @@
+using HotelManagementSystem.Server.Contracts;
 using HotelManagementSystem.Server.Data;
 using HotelManagementSystem.Server.Models;
+using HotelManagementSystem.Server.Repository;
+using HotelManagementSystem.Server.Service;
+using HotelManagementSystem.Server.Service.Contracts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using NLog;
+using HotelManagementSystem.Server.LoggerService;
+using HotelManagementSystem.Server.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -18,6 +27,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.S
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultUI()
     .AddDefaultTokenProviders();
+
 
 // Register the Swagger generator, defining 1 or more Swagger documents
 builder.Services.AddSwaggerGen(options =>
@@ -39,11 +49,27 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddAuthentication().AddIdentityServerJwt();
+
+builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
+
+//register repository manager class
+builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+
+//register service manager class
+builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
+
+var logger = app.Services.GetRequiredService<ILoggerManager>();
+app.ConfigureExceptionHandler(logger);
+if (app.Environment.IsProduction())
+{
+    app.UseHsts();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -64,13 +90,10 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hotel Management System API");   
 });
 
-
 app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 app.UseRouting();
-
-//app.UseIdentityServer();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 var baseAddress = builder.Configuration.GetValue<string>("BaseUrl");
@@ -27,16 +28,9 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<CustomStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<CustomStateProvider>());
 builder.Services.AddScoped<IAuthService, AuthService>();
-
-// Supply HttpClient instances that include access tokens when making requests to the server project
-//builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("HotelManagementSystem.ServerAPI"));
-
-//builder.Services.AddApiAuthorization();
+builder.Services.AddMudServices();
 builder.Services.AddOidcAuthentication(options =>
 {
     builder.Configuration.Bind("Local", options.ProviderOptions);
 });
-
-//builder.Services.AddScoped<AuthenticationStateProvider>();
-
 await builder.Build().RunAsync();

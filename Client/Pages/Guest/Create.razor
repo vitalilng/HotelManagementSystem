@@ -1,6 +1,7 @@
 ﻿@page "/guest/create"
 @inject HttpClient httpClient
 @inject NavigationManager uriHelper
+@inject MudBlazor.ISnackbar snackBar
 
 <h3>Add new Guest User</h3>
 <Form ButtonText="Create Guest" registrationModel="@registrationModel"

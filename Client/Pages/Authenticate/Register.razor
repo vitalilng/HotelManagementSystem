@@ -4,38 +4,39 @@
 @inject CustomStateProvider authStateProvider
 
 <h1 class="h2 font-weight-normal login-title">
-    Register
+    Register new account:    
 </h1>
+<br />
 
 <EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="registrationModel">
     <DataAnnotationsValidator />
 
-    <label for="inputFullname" class="sr-only">FullName</label>
-    <InputText id="inputFullname" class="form-control" placeholder="FullName" autofocus @bind-Value="@registrationModel.FullName" />
+    <label for="inputFullname" class="sr-only" style="font-weight:bold" >FullName</label>
+    <InputText id="inputFullname" class="form-control w-25" placeholder="FullName" autofocus @bind-Value="@registrationModel.FullName" />
     <ValidationMessage For="@(() => registrationModel.FullName)" />
-
-    <label for="inputUserName" class="sr-only">UserName</label>
-    <InputText id="inputUserName" class="form-control" placeholder="UserName" autofocus @bind-Value="@registrationModel.UserName" />
+    <p></p>
+    <label for="inputUserName" class="sr-only" style="font-weight:bold">UserName</label>
+    <InputText id="inputUserName" class="form-control w-25" placeholder="UserName" autofocus @bind-Value="@registrationModel.UserName" />
     <ValidationMessage For="@(() => registrationModel.UserName)" />
-
-    <label for="inputEmail" class="sr-only">Email</label>
-    <InputText id="inputEmail" class="form-control" placeholder="Email" autofocus @bind-Value="@registrationModel.Email" />
+    <p></p>
+    <label for="inputEmail" class="sr-only" style="font-weight:bold">Email</label>
+    <InputText id="inputEmail" class="form-control w-25" placeholder="Email" autofocus @bind-Value="@registrationModel.Email" />
     <ValidationMessage For="@(() => registrationModel.Email)" />
-
-    <label for="inputPhoneNumber" class="sr-only">Phone Number</label>
-    <InputText id="inputPhoneNumber" class="form-control" placeholder="Phone Number" autofocus @bind-Value="@registrationModel.PhoneNumber" />
+    <p></p>
+    <label for="inputPhoneNumber" class="sr-only" style="font-weight:bold">Phone Number</label>
+    <InputText id="inputPhoneNumber" class="form-control w-25" placeholder="Phone Number" autofocus @bind-Value="@registrationModel.PhoneNumber" />
     <ValidationMessage For="@(() => registrationModel.PhoneNumber)" />
-
-    <label for="inputCountry" class="sr-only">Country</label>
-    <InputText id="inputCountry" class="form-control" placeholder="Country" autofocus @bind-Value="@registrationModel.Country" />
+    <p></p>
+    <label for="inputCountry" class="sr-only" style="font-weight:bold">Country</label>
+    <InputText id="inputCountry" class="form-control w-25" placeholder="Country" autofocus @bind-Value="@registrationModel.Country" />
     <ValidationMessage For="@(() => registrationModel.Country)" />
-    
-    <label for="inputPassword" class="sr-only">Password</label>
-    <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="@registrationModel.Password" />
+    <p></p>
+    <label for="inputPassword" class="sr-only" style="font-weight:bold">Password</label>
+    <InputText type="password" id="inputPassword" class="form-control w-25" placeholder="Password" @bind-Value="@registrationModel.Password" />
     <ValidationMessage For="@(() => registrationModel.Password)" />
-    
-    <label for="inputPasswordConfirm" class="sr-only">Password Confirmation</label>
-    <InputText type="password" id="inputPasswordConfirm" class="form-control" placeholder="Password Confirmation" @bind-Value="@registrationModel.PasswordConfirm" />
+    <p></p>
+    <label for="inputPasswordConfirm" class="sr-only" style="font-weight:bold">Password Confirmation</label>
+    <InputText type="password" id="inputPasswordConfirm" class="form-control w-25" placeholder="Password Confirmation" @bind-Value="@registrationModel.PasswordConfirm" />
     <ValidationMessage For="@(() => registrationModel.PasswordConfirm)" />
     <br />
     <button class="btn btn-lg btn-primary btn-block" type="submit">Create account</button>

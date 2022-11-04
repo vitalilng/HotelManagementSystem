@@ -17,7 +17,7 @@ namespace HotelManagementSystem.Server.Controllers
     /// </summary>
     [Route("api/guests")]
     [ApiController]
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles ="admin")]
     public class GuestController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -33,16 +33,17 @@ namespace HotelManagementSystem.Server.Controllers
         }
 
         /// <summary>
-        /// Gets all the guests
+        /// Gets all guest users
         /// </summary>
         /// <returns>The list of all guests</returns>
         [Route("")]
         [HttpGet]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetGuests()
         {
-            IQueryable<ApplicationUser> applicationUsers = _userManager.Users;            
+            IQueryable<ApplicationUser> applicationUsers = _userManager.Users.Where(u => u.UserName != "admin");
             return Ok(applicationUsers);
         }
 
@@ -59,7 +60,8 @@ namespace HotelManagementSystem.Server.Controllers
         public async Task<IActionResult> GetById(string guestId)
         {
             var applicationUser = await _userManager.FindByIdAsync(guestId);
-            if (applicationUser is null || applicationUser.UserName == "admin")
+
+            if (applicationUser is null )
             {
                 return NotFound();
             }
@@ -94,7 +96,7 @@ namespace HotelManagementSystem.Server.Controllers
                 IdentityResult identityResult = await _userManager.CreateAsync(applicationUser, guestUser.Password);
                 if (identityResult.Succeeded)
                 {
-                    return RedirectToPage("guest");
+                    return RedirectToPage("guests");
                 }
                 else
                 {
@@ -140,7 +142,7 @@ namespace HotelManagementSystem.Server.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToPage("guest");
+                    return RedirectToPage("guests");
                 }
                 else
                 {
