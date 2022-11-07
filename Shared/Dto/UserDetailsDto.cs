@@ -1,9 +1,8 @@
-﻿using HotelManagementSystem.Shared.Dto;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace HotelManagementSystem.Shared.Models
+namespace HotelManagementSystem.Shared.Dto
 {
-    public class UserPersonalInformationDto: BaseEntityDto
+    public class UserDetailsDto : BaseEntityDto
     {
         [Required]
         [Display(Name = "Full Name")]
@@ -18,7 +17,7 @@ namespace HotelManagementSystem.Shared.Models
         [EmailAddress(ErrorMessage = "Not a valid Email")]
         [DataType(DataType.EmailAddress)]
         public string? Email { get; set; }
-
+        
         [Required]
         [Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber)]
@@ -32,5 +31,11 @@ namespace HotelManagementSystem.Shared.Models
         [Display(Name = "Password")]
         [DataType(DataType.Password)]
         public string? Password { get; set; }
+        
+        [Required]
+        [Display(Name = "Confirm Password")]
+        [Compare(nameof(Password), ErrorMessage = "Passwords do not match!")]
+        [DataType(DataType.Password)]        
+        public string? PasswordConfirm { get; set; }
     }
 }

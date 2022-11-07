@@ -30,7 +30,7 @@
     protected bool IsDisabled { get; set; }
     private string authMessage="";
     private string userId = "";
-    RegistrationDto registrationModel = new RegistrationDto();
+    UserDetailsDto registrationModel = new UserDetailsDto();
     private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
 
     protected override async Task OnInitializedAsync()
@@ -43,7 +43,7 @@
             authMessage = $"Hello {user.Identity.Name}, this is your personal page!";
             claims = user.Claims;
             userId = $"{user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value}";          
-            registrationModel = await httpClient.GetFromJsonAsync<RegistrationDto>($"api/guests/{userId}");
+            registrationModel = await httpClient.GetFromJsonAsync<UserDetailsDto>($"api/guests/{userId}");
         }
     }
 

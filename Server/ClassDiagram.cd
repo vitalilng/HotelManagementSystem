@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Service.Contracts will hold the definitions for the service interfaces that are going to encapsulate the main business logic.">
+    <Position X="5.099" Y="0.681" Height="0.795" Width="3.386" />
+  </Comment>
+  <Class Name="HotelManagementSystem.Server.Repository.ApplicationUserRepository">
+    <Position X="12.25" Y="4.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Repository\ApplicationUserRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HotelManagementSystem.Server.Repository.RepositoryBase&lt;T&gt;">
+    <Position X="9.75" Y="4.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAEAAAAAAwAAAAAAEAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Repository\RepositoryBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HotelManagementSystem.Server.Repository.RepositoryManager">
+    <Position X="15" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>IAAAAIAAAAEAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Repository\RepositoryManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HotelManagementSystem.Server.Service.ApplicationUserService">
+    <Position X="4.75" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAACAAAAAAABAAAAAAAAIAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Service\ApplicationUserService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HotelManagementSystem.Server.Service.ServiceManager">
+    <Position X="7.25" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Service\ServiceManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HotelManagementSystem.Server.LoggerService.LoggerManager">
+    <Position X="2.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAACAAAAAAAAIAAJAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LoggerService\LoggerManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="HotelManagementSystem.Server.Contracts.IApplicationUserRepository">
+    <Position X="12.25" Y="1.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\IApplicationUserRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="HotelManagementSystem.Server.Contracts.ILoggerManager">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAIAAJAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\ILoggerManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="HotelManagementSystem.Server.Contracts.IRepositoryBase&lt;T&gt;">
+    <Position X="9.75" Y="1.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAEAAAAAAQAAAAAAEAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\IRepositoryBase.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="HotelManagementSystem.Server.Contracts.IRepositoryManager">
+    <Position X="15" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\IRepositoryManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="HotelManagementSystem.Server.Service.Contracts.IApplicationUserService">
+    <Position X="4.75" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Service.Contracts\IApplicationUserService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="HotelManagementSystem.Server.Service.Contracts.IServiceManager">
+    <Position X="7.25" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Service.Contracts\IServiceManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

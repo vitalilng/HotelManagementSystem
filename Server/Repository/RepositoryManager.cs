@@ -5,8 +5,8 @@ namespace HotelManagementSystem.Server.Repository
 {
     /// <summary>
     /// Using Lazy class to ensure lazy initialization for our repositories. 
-    /// Meaning that repository instances will be created only we access them for the first time
-    /// And not before that
+    /// Meaning that repository instances will be created only we access them 
+    /// for the first time And not before that
     /// </summary>
     public class RepositoryManager : IRepositoryManager
     {
@@ -20,7 +20,8 @@ namespace HotelManagementSystem.Server.Repository
         /// <exception cref="ArgumentNullException"></exception>
         public RepositoryManager(ApplicationDbContext applicationDbContext)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContext = applicationDbContext
+                                    ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _applicationUserRepository = new Lazy<IApplicationUserRepository>(() => new ApplicationUserRepository(applicationDbContext));
         }
 

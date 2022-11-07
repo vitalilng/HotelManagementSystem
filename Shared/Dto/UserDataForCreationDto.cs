@@ -2,14 +2,16 @@
 
 namespace HotelManagementSystem.Shared.Dto
 {
-    public class RegistrationDto : BaseEntityDto
+    public class UserDataForCreationDto
     {
         [Required]
         [Display(Name = "Full Name")]
+        [StringLength(15)]
         public string? FullName { get; set; }
         
         [Required]
         [Display(Name = "UserName")]
+        [StringLength(10)]
         public string? UserName { get; set; }
         
         [Required]
@@ -17,25 +19,26 @@ namespace HotelManagementSystem.Shared.Dto
         [EmailAddress(ErrorMessage = "Not a valid Email")]
         [DataType(DataType.EmailAddress)]
         public string? Email { get; set; }
-        
+
         [Required]
         [Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber)]
+        [StringLength(10)]
         public string? PhoneNumber { get; set; }
         
         [Required]
-        [Display(Name = "Country")]
+        [Display(Name = "Country")]        
         public string? Country { get; set; }
         
         [Required]
         [Display(Name = "Password")]
         [DataType(DataType.Password)]
         public string? Password { get; set; }
-        
+
         [Required]
         [Display(Name = "Confirm Password")]
         [Compare(nameof(Password), ErrorMessage = "Passwords do not match!")]
-        [DataType(DataType.Password)]        
+        [DataType(DataType.Password)]
         public string? PasswordConfirm { get; set; }
     }
 }

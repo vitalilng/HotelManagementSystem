@@ -6,6 +6,8 @@ namespace HotelManagementSystem.Server.Service
 {
     /// <summary>
     /// Service manager class implementation
+    /// We are utilizing the Lazy class to ensure the 
+    /// lazy initialization of our services.
     /// </summary>
     public class ServiceManager : IServiceManager
     {

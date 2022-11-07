@@ -12,6 +12,7 @@ using System.Reflection;
 using NLog;
 using HotelManagementSystem.Server.LoggerService;
 using HotelManagementSystem.Server.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +55,12 @@ builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
 
 //register repository manager class
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+
+//Suppress default default model state validation from ApiController attribute
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 //register service manager class
 builder.Services.AddScoped<IServiceManager, ServiceManager>();

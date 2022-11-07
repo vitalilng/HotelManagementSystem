@@ -33,7 +33,7 @@ namespace HotelManagementSystem.Client.Services
             result.EnsureSuccessStatusCode();
         }
 
-        public async Task Register(RegistrationDto registrationRequest)
+        public async Task Register(UserDetailsDto registrationRequest)
         {
             HttpResponseMessage result = await _httpClient.PostAsJsonAsync("api/auth/register", registrationRequest);
             if (result.StatusCode == System.Net.HttpStatusCode.BadRequest)

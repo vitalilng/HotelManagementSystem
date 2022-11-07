@@ -15,7 +15,8 @@ namespace HotelManagementSystem.Server
         /// </summary>
         public MappingProfile()
         {
-            CreateMap<ApplicationUser, RegistrationDto>();
+            CreateMap<ApplicationUser, UserDetailsDto>(); //<Tsource, Tdestination>
+            CreateMap<UserDataForCreationDto, ApplicationUser>(); //<Tsource, Tdestination>
         }
     }
 }

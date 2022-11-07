@@ -6,8 +6,8 @@ namespace HotelManagementSystem.Client.Services
     {
         //IQueryable<ApplicationUser> GetGuests();
         Task GetById(string guestId);
-        Task CreateGuest(RegistrationDto registrationDto);
-        Task UpdateGuest(RegistrationDto registrationDto);
+        Task CreateGuest(UserDetailsDto registrationDto);
+        Task UpdateGuest(UserDetailsDto registrationDto);
         Task DeleteGuest(string guestId);
     }
 }

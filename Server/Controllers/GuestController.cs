@@ -78,7 +78,7 @@ namespace HotelManagementSystem.Server.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateGuest(RegistrationDto guestUser)
+        public async Task<IActionResult> CreateGuest(UserDetailsDto guestUser)
         {
             if (ModelState.IsValid)
             {
@@ -120,7 +120,7 @@ namespace HotelManagementSystem.Server.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateGuest([FromBody]RegistrationDto guestUser)
+        public async Task<IActionResult> UpdateGuest([FromBody]UserDetailsDto guestUser)
         {
             var applicationUser = await _userManager.FindByIdAsync(guestUser.Id);
             if (applicationUser == null)

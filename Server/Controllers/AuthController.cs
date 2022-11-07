@@ -58,7 +58,7 @@ namespace HotelManagementSystem.Learner.Server.Controllers
         [Route("register")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]        
-        public async Task<IActionResult> Register(RegistrationDto parameters)
+        public async Task<IActionResult> Register(UserDetailsDto parameters)
         {
             var applicationUser = new ApplicationUser
             {

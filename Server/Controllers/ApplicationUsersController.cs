@@ -1,4 +1,5 @@
 ﻿using HotelManagementSystem.Server.Service.Contracts;
+using HotelManagementSystem.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagementSystem.Server.Controllers
@@ -37,12 +38,40 @@ namespace HotelManagementSystem.Server.Controllers
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        [HttpGet("{userId}")]
+        [HttpGet("{userId}", Name ="ApplicationUserById")]
         public IActionResult GetApplicationUser(string userId)
         {
             var applicationUser = _serviceManager.ApplicationUserService.GetApplicationUser(userId, trackChanges: false);
             return Ok(applicationUser);
         }
 
+        /// <summary>
+        /// Create Application Guest user
+        /// </summary>
+        /// <param name="userDataForCreation"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult CreateGuestUser([FromBody] UserDataForCreationDto userDataForCreation)
+        {
+            if (userDataForCreation is null)
+            {
+                return BadRequest("UserDataForCreationDto object is null");
+            }
+            var createdGuestUser = _serviceManager.ApplicationUserService.CreateGuestUser(userDataForCreation);
+
+            return CreatedAtRoute("ApplicationUserById", new { userId = createdGuestUser.Id }, createdGuestUser);
+        }
+
+        /// <summary>
+        /// Delete guest user from db
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpDelete("{userId}")]
+        public IActionResult DeleteGuestUser(string userId)
+        {
+            _serviceManager.ApplicationUserService.DeleteGuestUser(userId, trackChanges: false);
+            return NoContent();// return 204 No Content
+        }
     }
 }

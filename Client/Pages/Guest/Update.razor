@@ -10,11 +10,11 @@
 
 @code {
     [Parameter] public string? guestId { get; set; }    
-    RegistrationDto registrationModel = new RegistrationDto();
+    UserDetailsDto registrationModel = new UserDetailsDto();
 
     protected async override Task OnParametersSetAsync()
     {       
-        registrationModel = await httpClient.GetFromJsonAsync<RegistrationDto>($"api/guests/{guestId}");
+        registrationModel = await httpClient.GetFromJsonAsync<UserDetailsDto>($"api/guests/{guestId}");
     }
     async Task UpdateGuest()
     {

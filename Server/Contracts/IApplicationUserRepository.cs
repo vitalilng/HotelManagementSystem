@@ -3,7 +3,7 @@
 namespace HotelManagementSystem.Server.Contracts
 {
     /// <summary>
-    /// Application User Interface
+    /// ApplicationUser Repository
     /// </summary>
     public interface IApplicationUserRepository
     {
@@ -21,5 +21,17 @@ namespace HotelManagementSystem.Server.Contracts
         /// <param name="trackChanges"></param>
         /// <returns></returns>
         ApplicationUser GetApplicationUser(string userId, bool trackChanges);
+
+        /// <summary>
+        /// Add new Guest user
+        /// </summary>
+        /// <param name="user"></param>
+        void CreateGuestUser(ApplicationUser user);
+
+        /// <summary>
+        /// Delete a guest user from DB
+        /// </summary>
+        /// <param name="user"></param>
+        void DeleteGuestUser(ApplicationUser user);
     }
 }

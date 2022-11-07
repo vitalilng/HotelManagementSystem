@@ -3,7 +3,12 @@
 namespace HotelManagementSystem.Server.Contracts
 {
     /// <summary>
-    /// implementing repository pattern logic
+    /// Generic interface to hold all CRUD methods
+    /// 
+    /// trackChanges parameter
+    /// used to improve read-only query performance. When it’s set to false, we
+    /// attach the AsNoTracking method to our query to inform EF Core that it doesn’t need to track changes
+    /// for the required entities.This greatly improves the speed of a query
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface IRepositoryBase<T>

@@ -36,12 +36,12 @@ else
 
 }
 @code {
-    RegistrationDto[]? registeredGuests { get; set; }
-    RegistrationDto registeredGuest = new();
+    UserDetailsDto[]? registeredGuests { get; set; }
+    UserDetailsDto registeredGuest = new();
     private string searchString = "";
     protected override async Task OnInitializedAsync()
     {
-        registeredGuests = await httpClient.GetFromJsonAsync<RegistrationDto[]>("api/guests");
+        registeredGuests = await httpClient.GetFromJsonAsync<UserDetailsDto[]>("api/guests");
     }
 
     async Task DeleteGuest(string? guestId)
@@ -57,7 +57,7 @@ else
         }
     }
 
-    private bool Search(RegistrationDto registeredGuest)
+    private bool Search(UserDetailsDto registeredGuest)
     {
         if (string.IsNullOrEmpty(searchString)) return true;
         if (registeredGuest.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase)

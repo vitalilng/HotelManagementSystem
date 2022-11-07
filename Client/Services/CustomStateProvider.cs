@@ -56,7 +56,7 @@ namespace HotelManagementSystem.Client.Services
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
-        public async Task Register(RegistrationDto registrationParameters)
+        public async Task Register(UserDetailsDto registrationParameters)
         {
             await _authService.Register(registrationParameters);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());

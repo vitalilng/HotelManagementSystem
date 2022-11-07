@@ -2,7 +2,6 @@
 using HotelManagementSystem.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace HotelManagementSystem.Server.Repository
 {
@@ -26,10 +25,22 @@ namespace HotelManagementSystem.Server.Repository
             ApplicationDbContext = applicationDbContext;
         }
 
+        /// <summary>
+        /// Create entity
+        /// </summary>
+        /// <param name="entity"></param>
         public void Create(T entity) => ApplicationDbContext.Set<T>().Add(entity);
 
+        /// <summary>
+        /// Update entity
+        /// </summary>
+        /// <param name="entity"></param>
         public void Update(T entity) => ApplicationDbContext.Set<T>().Update(entity);
 
+        /// <summary>
+        /// Delete entity
+        /// </summary>
+        /// <param name="entity"></param>
         public void Delete(T entity) => ApplicationDbContext.Set<T>().Remove(entity);
 
         /// <summary>
