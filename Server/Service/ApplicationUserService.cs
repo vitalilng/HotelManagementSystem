@@ -34,12 +34,11 @@ namespace HotelManagementSystem.Server.Service
         /// method from the ApplicationUserRepository class and return all the guest users
         /// from the database.
         /// </summary>
-        /// <param name="trackChanges"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public IEnumerable<UserDetailsDto> GetAllGuestUsers(bool trackChanges)
+        public IEnumerable<UserDetailsDto> GetApplicationUsers()
         {
-            IEnumerable<ApplicationUser> guests = _repositoryManager.ApplicationUser.GetAllGuestUsers(trackChanges)
+            IEnumerable<ApplicationUser> guests = _repositoryManager.ApplicationUserRepository.GetApplicationUsers()
                                                            .Where(u => u.UserName != "admin"); // get all guest users
             // Execute a mapping from the source object to a new destination object.
             // The source type is inferred from the source object.
@@ -52,12 +51,11 @@ namespace HotelManagementSystem.Server.Service
         /// Get user by id from the Repository
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="trackChanges"></param>
         /// <returns></returns>
-        /// <exception cref="ApplicationUserNotFoundException"></exception>
-        public UserDetailsDto GetApplicationUser(string userId, bool trackChanges)
+        /// <exception cref="RoomNotFoundException"></exception>
+        public UserDetailsDto GetApplicationUser(string userId)
         {
-            ApplicationUser? applicationUser = _repositoryManager.ApplicationUser.GetApplicationUser(userId, trackChanges);
+            ApplicationUser? applicationUser = _repositoryManager.ApplicationUserRepository.GetApplicationUser(userId);
             if (applicationUser is null)
             {
                 throw new ApplicationUserNotFoundException(userId);
@@ -69,14 +67,14 @@ namespace HotelManagementSystem.Server.Service
         /// <summary>
         /// Create application guest user
         /// </summary>
-        /// <param name="userDataForCreation"></param>
+        /// <param name="userCreationDataToBeDisplayed"></param>
         /// <returns></returns>
-        public UserDetailsDto CreateGuestUser(UserDataForCreationDto userDataForCreation)
+        public UserDetailsDto CreateApplicationUser(UserDataForCreationDto userCreationDataToBeDisplayed)
         {
-            ApplicationUser guestUserEntity = _mapper.Map<ApplicationUser>(userDataForCreation);
-            _repositoryManager.ApplicationUser.CreateGuestUser(guestUserEntity);
+            var guestUser = _mapper.Map<ApplicationUser>(userCreationDataToBeDisplayed); //Map<Tdestination>(Tsource)
+            _repositoryManager.ApplicationUserRepository.CreateApplicationUser(guestUser);
             _repositoryManager.Save();
-            UserDetailsDto guestUserToReturn = _mapper.Map<UserDetailsDto>(guestUserEntity);
+            var guestUserToReturn = _mapper.Map<UserDetailsDto>(guestUser);
             return guestUserToReturn;
         }
 
@@ -84,17 +82,68 @@ namespace HotelManagementSystem.Server.Service
         /// Delete guest user from db
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="trackChanges"></param>
-        /// <exception cref="ApplicationUserNotFoundException"></exception>
-        public void DeleteGuestUser(string userId, bool trackChanges)
+        /// <exception cref="RoomNotFoundException"></exception>
+        public void DeleteApplicationUser(string userId)
         {
-            var guestUser = _repositoryManager.ApplicationUser.GetApplicationUser(userId, trackChanges);
+            var guestUser = _repositoryManager.ApplicationUserRepository.GetApplicationUser(userId);
             if (guestUser is null)
             {
                 throw new ApplicationUserNotFoundException(userId);
             }
-            _repositoryManager.ApplicationUser.DeleteGuestUser(guestUser);
+            _repositoryManager.ApplicationUserRepository.DeleteApplicationUser(guestUser);
             _repositoryManager.Save();
         }
+
+        /// <summary>
+        /// Update guest user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="userUpdateDataToBeDisplayed"></param>
+        public void UpdateApplicationUser(string userId, UserDataForUpdateDto userUpdateDataToBeDisplayed)
+        {
+            //get the user we want to update
+            var userToBeUpdated = _repositoryManager.ApplicationUserRepository.GetApplicationUser(userId);
+
+            if (userToBeUpdated is null)
+            {
+                throw new ApplicationUserNotFoundException(userId);
+            }
+            
+            //map user we want to update to user data to be updated
+            _mapper.Map(userUpdateDataToBeDisplayed, userToBeUpdated); //(source, destination)            
+            _repositoryManager.ApplicationUserRepository.UpdateApplicationUser(userToBeUpdated);
+            _repositoryManager.Save();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public (UserDataForUpdateDto userDataForUpdate, ApplicationUser applicationUser) GetApplicationUserForPatch(string userId)
+        {
+            //get the user we want to patch update any details
+            var applicationUser = _repositoryManager.ApplicationUserRepository.GetApplicationUser(userId); 
+            
+            if (applicationUser is null)
+            {
+                throw new ApplicationUserNotFoundException(userId);
+            }
+
+            var userDataForPatch = _mapper.Map<UserDataForUpdateDto>(applicationUser);
+            return (userDataForPatch, applicationUser);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userDataForUpdate"></param>
+        /// <param name="applicationUser"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void SaveChangesForPatch(UserDataForUpdateDto userDataForUpdate, ApplicationUser applicationUser)
+        {
+            _mapper.Map(userDataForUpdate, applicationUser);
+            _repositoryManager.Save();
+        }        
     }
 }

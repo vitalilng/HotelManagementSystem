@@ -2,38 +2,85 @@
 @layout AuthLayout
 @inject NavigationManager navigationManager
 @inject CustomStateProvider authStateProvider
-
-<h1 class="h2 font-weight-normal login-title">
-    Login
-</h1>
-<br />
+@inject ISnackbar snackBar
 
 <EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="loginModel">
-    <DataAnnotationsValidator />
+<DataAnnotationsValidator />
+    <MudGrid Outlined=true>
+    <MudItem xs="6" sm="7">
+            <MudCard Outlined=true>
+                <MudCardContent>
+                    <MudText Typo="Typo.h6">Login</MudText>
+                    <MudTextField Label="Username" HelperText="Max. 8 characters"
+                                @bind-Value="loginModel.UserName" 
+                                For="@(() => loginModel.UserName)"
+                                  Variant="Variant.Filled" />
 
-    <label for="inputUsername" class="sr-only">Username</label>
-    <InputText id="inputUsername" class="form-control w-25" @bind-Value="@loginModel.UserName" autofocus placeholder="Username" />
-    <ValidationMessage For="@(() => loginModel.UserName)" />
+                    <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
+                                @bind-Value="loginModel.Password" 
+                                For="@(() => loginModel.Password)"                                 
+                                  InputType="@PasswordInput" Immediate="true"
+                                  Variant="Variant.Filled"
+                                  Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
+                                  OnAdornmentClick="ButtonTestClick"
+                                  AdornmentAriaLabel="Show Password" />
 
-    <label for="inputPassword" class="sr-only">Password</label>
-    <InputText type="password" id="inputPassword" class="form-control w-25" @bind-Value="@loginModel.Password" autofocus placeholder="Password" />
-    <ValidationMessage For="@(() => loginModel.Password)" />
-
-    <div class="form-check m-3">
-        <InputCheckbox id="inputRememberMe" class="form-check-input" @bind-Value="@loginModel.RememberMe" />
-        <label class="form-check-label" for="inputRememberMe">Remember Me</label>
-    </div>
-
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
-    <label class="text-danger">@error</label>
-    <NavLink href="register">
-        <h6 class="font-weight-normal text-center">Create Account</h6>
-    </NavLink>
+                    <MudCheckBox T="bool" Label="Remember Me!" 
+                                @bind-Value="@loginModel.RememberMe" 
+                                For="@(() => loginModel.RememberMe)" />
+                    <MudText Typo="Typo.h6">Don't have an account?</MudText>
+                    <MudLink Href="register" Typo="Typo.body2">Go To Registration</MudLink>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
+                </MudCardActions>                
+            </MudCard>
+    </MudItem>
+    <MudItem xs="6" >
+        <MudPaper Class="pa-4 mud-height-full">               
+            @if (!success)          
+            {
+                <MudText Color="@Color.Error">
+                    <ValidationSummary />
+                </MudText>
+            }
+        </MudPaper>
+    </MudItem>    
+</MudGrid>
 </EditForm>
 
 @code {
+    bool success;
+    string[] errors = { };
+    MudTextField<string>? passwordField;
+    MudForm? form;  
+
+
     LoginDto loginModel { get; set; } = new LoginDto();
     string? error { get; set; } = "";
+
+    /// <summary>
+    /// password visibility icon
+    /// </summary>
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestClick()
+    {
+        if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
 
     async Task OnSubmit()
     {

@@ -1,24 +1,87 @@
 ﻿@page "/"
-@inject MudBlazor.ISnackbar snackBar
+@inject ISnackbar snackBar
+@inject NavigationManager NavigationManager
+@inject HttpClient httpClient 
 
 
-<MudCard Elevation="25">
-    <MudCardHeader>
-        <CardHeaderContent>
-            
-            <AuthorizeView>
-                <Authorized>      
-                    <MudText Typo="Typo.h6">Hello @context.User.Identity.Name</MudText>
-                    <MudText Typo="Typo.h6">Your Personal Page</MudText>
-                </Authorized>
-                 <Authorizing>
-                 <h1>Loading ...</h1>
-                    </Authorizing>
-                <NotAuthorized>
-                    You are not authorized!
-                </NotAuthorized>
-            </AuthorizeView>
+<MudCard Outlined=true>
+    <MudCardContent>
+                <MudText Align="Align.Center" Typo="Typo.h3">Make A Booking</MudText>
+                <MudContainer class="d-flex">
+                
+                <MudDatePicker Label="Arrival Date" @bind-Date="transactionParameters.DateOfArrival" 
+                        PickerVariant="PickerVariant.Dialog" Rounded="true" 
+                        Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date 
+                        Validation="@transactionParameters.ValidDateRange"/>
+                
+                <MudSpacer></MudSpacer>
+                
+                <MudDatePicker Label="Departure Date" @bind-Date="transactionParameters.DateOfDeparture" 
+                        PickerVariant="PickerVariant.Dialog" Rounded="true" 
+                        Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
+                           Validation="@transactionParameters.ValidDateRange" />
 
-        </CardHeaderContent>
-    </MudCardHeader>
+                </MudContainer>
+                <br />
+                <MudContainer Class="d-flex justify-center align-center">
+                    <MudButton Class="pa-4" ButtonType="ButtonType.Button" Size=Size.Large 
+                        Variant="Variant.Filled" Color="Color.Tertiary" 
+                        OnClick="@GetAvailableRooms">Check Availability</MudButton>
+                </MudContainer>
+                
+                <br/>
+                <br/>
+                <MudText Align="Align.Center" Typo="Typo.h3">List of available rooms:</MudText>
+
+                <MudTable Elevation="25" Items="rooms" @bind-rooms="rooms" >
+                    <ToolBarContent>                        
+                        <MudSpacer />                        
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh>Room Type</MudTh>
+                        <MudTh>Room Size</MudTh>
+                        <MudTh>Beds and Sizes</MudTh>
+                        <MudTh>Options</MudTh>
+                        <MudTh>Max Persons Allowed</MudTh>                        
+                        <MudTh>Price</MudTh>
+                        <MudTh>Action</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Room Type">@context.RoomType</MudTd>
+                        <MudTd DataLabel="Room Size">@context.RoomSize</MudTd>
+                        <MudTd DataLabel="Beds and Sizes">@context.NrOfBedsAndSizes</MudTd>
+                        <MudTd DataLabel="Options">@context.RoomOptions</MudTd>
+                        <MudTd DataLabel="Max Persons Allowed">@context.MaxPersonsAllowed</MudTd>                        
+                        <MudTd DataLabel="Price">@context.Price</MudTd>                        
+                        <MudTd>
+                            <MudButton Class="py-5" ButtonType="ButtonType.Button"
+                               Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary"
+                            OnClick="() => GoToRoomDetailsPage(context.Id)">Details</MudButton>                                
+                        </MudTd>
+                    </RowTemplate>            
+                    <PagerContent>
+                        <MudTablePager />
+                    </PagerContent>
+                </MudTable>
+    </MudCardContent>
 </MudCard>
+
+@code {
+
+    RoomDto[]? rooms { get; set; }
+    RoomDto room = new();
+    TransactionParameters? transactionParameters { get; set; } = new();
+    
+    private void GoToRoomDetailsPage(Guid roomId)
+    {
+        NavigationManager.NavigateTo($"rooms/{roomId}");
+    }
+
+    async Task GetAvailableRooms()
+    {
+        var dateOfArrival = transactionParameters.DateOfArrival;
+        var dateOfDeparture = transactionParameters.DateOfDeparture;
+        var url = $"api/rooms/GetAvailableRooms?DateOfArrival={dateOfArrival}&DateOfDeparture={dateOfDeparture}";
+        rooms = await httpClient.GetFromJsonAsync<RoomDto[]>(url);        
+    }
+}

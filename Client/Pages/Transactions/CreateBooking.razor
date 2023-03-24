@@ -1,0 +1,146 @@
+﻿@page "/createbooking"
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+@inject StateContainer StateContainer
+@inject GlobalStateContainer globalStateContainer
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@implements IDisposable
+@inject ISnackbar snackBar
+
+<MudPaper>
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudTextField Label="UserName" Immediate=true Variant="Variant.Text"
+                                Value="username" ReadOnly=true />
+
+                <MudTextField Label="Room Type" Immediate=true Variant="Variant.Text" Value="roomType" ReadOnly=true />
+
+                <MudDatePicker Label="Arrival Date"                                
+                               @bind-Date="@transactionParameters.DateOfArrival"                                             
+                               Required=true  RequiredError="Arrival Date is required!" 
+                               PickerVariant="PickerVariant.Dialog" Rounded="true"
+                               Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
+                               Validation="@transactionParameters.ValidDateRange" />
+
+                <MudSpacer></MudSpacer>
+
+                <MudDatePicker Label="Departure Date"
+                                @bind-Date="@transactionParameters.DateOfDeparture"
+                                OnDateChanged ="CalculateTotalSum"
+                               Required=true RequiredError="Departure Date is required!"
+                               PickerVariant="PickerVariant.Dialog" Rounded="true"
+                               Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
+                               Validation="@transactionParameters.ValidDateRange" />
+
+                <MudTextField Label="Total Sum" 
+                              @bind-Value="totalSum"
+                              Variant="Variant.Text" />
+
+            </MudCardContent>
+            <MudCardActions>
+                <MudText>Create Booking and go to Payment page</MudText>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="() => BookRoom()">Book</MudButton>
+            </MudCardActions>
+        </MudCard>
+</MudPaper>
+    
+
+@code {
+    TransactionDataForCreationDto transactionModelForCreation = new();
+    RoomDto? RoomDetailsDto { get; set; }
+    TransactionParameters transactionParameters { get; set; } = new();
+
+    private EditContext? editContext;
+    public event Action? OnStateChange;
+
+    DateTime? Date = DateTime.Today;
+    string? username = "";
+    string? roomType = "";
+    int totalSum = 0;
+
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();        
+        var user = authState.User;
+        username = user.Identity.Name;
+
+        await base.OnInitializedAsync();
+        RoomDetailsDto = StateContainer.Value;
+        roomType = RoomDetailsDto.RoomType;
+    }
+
+
+    protected async override Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        globalStateContainer.OnStateChange += StateHasChanged;        
+    }
+
+
+    private void CalculateTotalSum()
+    {
+        if (transactionParameters.DateOfDeparture is not null)
+        {
+
+            totalSum = RoomDetailsDto.Price * ((DateTime)(transactionParameters.DateOfDeparture) - (DateTime)(transactionParameters.DateOfArrival)).Days;
+        }
+    }
+
+
+
+
+
+
+    //private void OnInput(ChangeEventArgs e)
+    //{
+    //    if (transactionParameters.DateOfArrival.HasValue && transactionParameters.DateOfDeparture.HasValue)
+    //    {
+    //        transactionParameters.DateOfArrival = (DateTime)e.Value;
+    //        totalSum = transactionModelForCreation.GetTotalSum();
+    //    }
+    //}
+
+
+
+
+    //private void HandleArrivalDatePicker(DateTime? dateTime)
+    //{
+    //    //globalStateContainer.SetValue(dateTime);
+    //    if (dateTime.HasValue)
+    //    {
+    //        transactionParameters.DateOfArrival = dateTime.Value;
+    //    }
+        
+    //}
+
+    //private void HandleDepartureDatePicker(DateTime? dateTime)
+    //{
+    //    //globalStateContainer.SetValue(dateTime);
+    //    if (dateTime.HasValue)
+    //    {
+    //        transactionParameters.DateOfDeparture = dateTime.Value;
+    //    }
+
+    //}
+    
+
+
+    async Task BookRoom()
+    {
+        transactionModelForCreation.ApplicationUserId = username;
+        transactionModelForCreation.RoomId = RoomDetailsDto.Id;
+
+
+        await httpClient.PostAsJsonAsync("api/transactions", transactionModelForCreation);
+        navigationManager.NavigateTo("payment");// a new page for paying the booking will be created
+    }
+
+
+
+    public void Dispose()
+    {
+       globalStateContainer.OnStateChange -= StateHasChanged;
+    }
+
+}
+

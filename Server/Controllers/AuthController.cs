@@ -110,9 +110,9 @@ namespace HotelManagementSystem.Learner.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("currentuserinfo")]
-        public ActionResult CurrentUserInfo()
+        public ActionResult GetCurrentUserInfo()
         {
-            return Ok( new CurrentUserDto
+            return Ok(new CurrentUserDto
             {
                 IsAuthenticated = User.Identity.IsAuthenticated,
                 UserName = User.Identity.Name,

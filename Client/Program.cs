@@ -1,5 +1,6 @@
 using HotelManagementSystem.Client;
 using HotelManagementSystem.Client.Services;
+using HotelManagementSystem.Shared;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
@@ -29,6 +30,8 @@ builder.Services.AddScoped<CustomStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<CustomStateProvider>());
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddMudServices();
+builder.Services.AddSingleton<StateContainer>();
+builder.Services.AddSingleton<GlobalStateContainer>();
 builder.Services.AddOidcAuthentication(options =>
 {
     builder.Configuration.Bind("Local", options.ProviderOptions);

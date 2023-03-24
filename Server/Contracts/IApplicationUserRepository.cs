@@ -10,28 +10,32 @@ namespace HotelManagementSystem.Server.Contracts
         /// <summary>
         /// Return all guest users
         /// </summary>
-        /// <param name="trackChanges"></param>
         /// <returns></returns>
-        IEnumerable<ApplicationUser> GetAllGuestUsers(bool trackChanges);
+        IEnumerable<ApplicationUser> GetApplicationUsers();
 
         /// <summary>
         /// Get user
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="trackChanges"></param>
         /// <returns></returns>
-        ApplicationUser GetApplicationUser(string userId, bool trackChanges);
+        ApplicationUser GetApplicationUser(string userId);
 
         /// <summary>
         /// Add new Guest user
         /// </summary>
         /// <param name="user"></param>
-        void CreateGuestUser(ApplicationUser user);
+        void CreateApplicationUser(ApplicationUser user);
 
         /// <summary>
         /// Delete a guest user from DB
         /// </summary>
         /// <param name="user"></param>
-        void DeleteGuestUser(ApplicationUser user);
+        void DeleteApplicationUser(ApplicationUser user);
+
+        /// <summary>
+        /// Update guest user
+        /// </summary>
+        /// <param name="user"></param>
+        void UpdateApplicationUser(ApplicationUser user);
     }
 }

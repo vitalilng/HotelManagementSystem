@@ -27,10 +27,7 @@ namespace HotelManagementSystem.Server.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
-
-            //SoftDelete implementation
-            modelBuilder.Entity<ApplicationUser>().HasQueryFilter(q => !q.SoftDeleted);
-
+            
             //creating and seeding admin user to DB
             const string adminID = "2d5168cc-2092-4eaa-b62a-95ee7d587951";
             const string roleId = adminID;
@@ -65,6 +62,44 @@ namespace HotelManagementSystem.Server.Data
                 {
                     RoleId = roleId,
                     UserId = adminID,
+                });
+
+            // Application User relationship to Transactions table
+            modelBuilder.Entity<ApplicationUser>()                
+                .HasMany(b => b.Transactions)
+                .WithOne(b => b.ApplicationUser);
+
+            // Room relationship to Transactions table
+            modelBuilder.Entity<Room>()
+                .HasMany(b => b.Transactions)
+                .WithOne(b => b.Room);
+            
+            Guid g = new ("11223344-5566-7788-99AA-BBCCDDEEFF00");
+
+            modelBuilder.Entity<Room>()
+                .HasData(new Room()
+                {
+                    Id = g,
+                    RoomType = "Single",
+                    RoomSize = "21",
+                    NrOfBedsAndSizes = "Single Bed(1.60 x 2.00)",
+                    RoomOptions = "FreeWifi, TV, Safe, Karaoke",
+                    MaxPersonsAllowed = "2",
+                    Availability = "Available",
+                    Description = "Room Description",
+                    Price = 123
+                });
+
+            modelBuilder.Entity<Transaction>()                
+                .HasData(new Transaction()
+                {
+                    Id = Guid.NewGuid(),
+                    ApplicationUserId = adminID,
+                    RoomId = g,
+                    ArrivalDate = new DateTime(2022,12,20),
+                    DepartureDate = new DateTime(2022, 12, 27),
+                    TotalSum = 23456,
+                    TransactionDateTime = DateTimeOffset.Now,
                 });
         }
     }

@@ -1,0 +1,83 @@
+﻿@page "/rooms/{roomId:guid}"
+@inject HttpClient httpClient
+@inject NavigationManager NavigationManager
+@inject StateContainer StateContainer
+@implements IDisposable
+@inject ISnackbar snackBar
+
+<MudPaper>
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h4">Room Details</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+    </MudCard>
+    <MudCard Outlined=true>
+        <MudCardContent>
+                <MudTextField Label="Room Type" @bind-Value="RoomDetailsDto.RoomType" ReadOnly=true DisableUnderLine=true></MudTextField>
+        </MudCardContent>        
+    </MudCard>    
+    <MudCard Outlined=true>
+        <MudCardContent>
+            <MudTextField Label="Room Size" @bind-Value="RoomDetailsDto.RoomSize" ReadOnly=true DisableUnderLine=true></MudTextField>
+        </MudCardContent>
+    </MudCard>
+    <MudCard Outlined=true>
+        <MudCardContent>
+            <MudTextField Label="Nr of Beds" @bind-Value="RoomDetailsDto.NrOfBedsAndSizes" ReadOnly=true DisableUnderLine=true></MudTextField>
+        </MudCardContent>
+    </MudCard>
+    <MudCard Outlined=true>
+        <MudCardContent>
+            <MudTextField Label="Room Options" @bind-Value="RoomDetailsDto.RoomOptions" ReadOnly=true DisableUnderLine=true></MudTextField>
+        </MudCardContent>
+    </MudCard>
+    <MudCard Outlined=true>
+        <MudCardContent>
+            <MudTextField Label="Maximum Persons Allowed" @bind-Value="RoomDetailsDto.MaxPersonsAllowed" ReadOnly=true DisableUnderLine=true></MudTextField>
+        </MudCardContent>
+    </MudCard>
+    <MudCard Outlined=true>
+        <MudCardContent>
+            <MudTextField Label="Description" @bind-Value="RoomDetailsDto.Description" ReadOnly=true DisableUnderLine=true></MudTextField>
+        </MudCardContent>
+    </MudCard>
+    <MudCard Outlined=true>
+        <MudCardContent>
+            <MudTextField Label="Price" @bind-Value="RoomDetailsDto.Price" ReadOnly=true DisableUnderLine=true></MudTextField>
+        </MudCardContent>
+    </MudCard>
+</MudPaper>
+<MudPaper>
+    <MudCard>
+        <MudCardActions>
+        <MudButton Class="py-5" ButtonType="ButtonType.Button"
+                   Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary" OnClick="() => HandleButton()" >Go to Booking</MudButton>
+        </MudCardActions>
+    </MudCard>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public Guid roomId { get; set; }
+    RoomDto RoomDetailsDto { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        RoomDetailsDto = await httpClient.GetFromJsonAsync<RoomDto>($"/api/rooms/{roomId}");
+        StateContainer.OnStateChange += StateHasChanged;
+    }
+
+    private void HandleButton()
+    {
+        StateContainer.SetValue(RoomDetailsDto);
+        NavigationManager.NavigateTo("/createbooking");
+    }
+
+    public void Dispose()
+    {
+        StateContainer.OnStateChange -= StateHasChanged;
+    }
+    
+}

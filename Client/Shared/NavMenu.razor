@@ -1,17 +1,23 @@
-﻿
-
-<MudNavMenu>
-    <MudNavLink Href="" Match="NavLinkMatch.All">Home</MudNavLink>
-    <MudNavLink Href="PersonalPage">Personal Page</MudNavLink>    
-    <MudNavLink Href="guests">Guests</MudNavLink>
-</MudNavMenu>
+﻿@*<MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+<MudDrawer @bind-Open="@open" ClipMode="clipMode" DisableOverlay="true" Variant="@DrawerVariant.Mini">
+    <MudNavMenu Class="mud-width-full" Bordered="true">
+        <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+        <MudNavLink Href="/personalpage" Icon="@Icons.Material.Filled.AccountCircle">Personal Page</MudNavLink>
+        <AuthorizeView Roles="admin">
+            <MudNavLink Href="/guests" Icon="@Icons.Material.Filled.FamilyRestroom">Guests</MudNavLink>
+            <MudNavLink Href="/rooms" Icon="@Icons.Material.Filled.Room">Rooms</MudNavLink>
+            <MudNavLink Href="/transactions" Icon="@Icons.Material.Filled.AssuredWorkload">Transactions</MudNavLink>
+        </AuthorizeView>
+        <MudNavLink Href="/about" Icon="@Icons.Filled.Info">About</MudNavLink>
+    </MudNavMenu>
+</MudDrawer>
 
 @code {
-    private bool collapseNavMenu = true;
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
+    private bool open = true;
+    DrawerClipMode clipMode = DrawerClipMode.Docked;
+    bool dense = false;
+    private void ToggleDrawer()
     {
-        collapseNavMenu = !collapseNavMenu;
+        open = !open;
     }
-}
+}*@

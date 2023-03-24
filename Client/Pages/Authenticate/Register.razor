@@ -3,53 +3,111 @@
 @inject NavigationManager navigationManager
 @inject CustomStateProvider authStateProvider
 
-<h1 class="h2 font-weight-normal login-title">
-    Register new account:    
-</h1>
-<br />
-
 <EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="registrationModel">
-    <DataAnnotationsValidator />
+<DataAnnotationsValidator />
+<MudGrid>
+    <MudItem xs="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                    <MudText Typo="Typo.h1">Create New Account:</MudText>
 
-    <label for="inputFullname" class="sr-only" style="font-weight:bold" >FullName</label>
-    <InputText id="inputFullname" class="form-control w-25" placeholder="FullName" autofocus @bind-Value="@registrationModel.FullName" />
-    <ValidationMessage For="@(() => registrationModel.FullName)" />
-    <p></p>
-    <label for="inputUserName" class="sr-only" style="font-weight:bold">UserName</label>
-    <InputText id="inputUserName" class="form-control w-25" placeholder="UserName" autofocus @bind-Value="@registrationModel.UserName" />
-    <ValidationMessage For="@(() => registrationModel.UserName)" />
-    <p></p>
-    <label for="inputEmail" class="sr-only" style="font-weight:bold">Email</label>
-    <InputText id="inputEmail" class="form-control w-25" placeholder="Email" autofocus @bind-Value="@registrationModel.Email" />
-    <ValidationMessage For="@(() => registrationModel.Email)" />
-    <p></p>
-    <label for="inputPhoneNumber" class="sr-only" style="font-weight:bold">Phone Number</label>
-    <InputText id="inputPhoneNumber" class="form-control w-25" placeholder="Phone Number" autofocus @bind-Value="@registrationModel.PhoneNumber" />
-    <ValidationMessage For="@(() => registrationModel.PhoneNumber)" />
-    <p></p>
-    <label for="inputCountry" class="sr-only" style="font-weight:bold">Country</label>
-    <InputText id="inputCountry" class="form-control w-25" placeholder="Country" autofocus @bind-Value="@registrationModel.Country" />
-    <ValidationMessage For="@(() => registrationModel.Country)" />
-    <p></p>
-    <label for="inputPassword" class="sr-only" style="font-weight:bold">Password</label>
-    <InputText type="password" id="inputPassword" class="form-control w-25" placeholder="Password" @bind-Value="@registrationModel.Password" />
-    <ValidationMessage For="@(() => registrationModel.Password)" />
-    <p></p>
-    <label for="inputPasswordConfirm" class="sr-only" style="font-weight:bold">Password Confirmation</label>
-    <InputText type="password" id="inputPasswordConfirm" class="form-control w-25" placeholder="Password Confirmation" @bind-Value="@registrationModel.PasswordConfirm" />
-    <ValidationMessage For="@(() => registrationModel.PasswordConfirm)" />
-    <br />
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Create account</button>
-    
-    <label class="text-danger">@error</label>
-    <NavLink href="login">
-        <h6 class="font-weight-normal text-center">Already have an account? Click here to login</h6>
-    </NavLink>
+                    <MudTextField Label="FullName" HelperText="Max. 15 characters"
+                                  @bind-Value="registrationModel.FullName"
+                                  For="@(() => registrationModel.FullName)"
+                                  Immediate="true" 
+                                  Variant="Variant.Filled" />
+
+                    <MudTextField Label="Email" Class="mt-3"
+                                  @bind-Value="registrationModel.Email" 
+                                  For="@(() => registrationModel.Email)" 
+                                  Immediate="true" 
+                                  Variant="Variant.Filled" />
+
+                    <MudTextField Label="Username" HelperText="Max. 8 characters"
+                                  @bind-Value="registrationModel.UserName"
+                                  For="@(() => registrationModel.UserName)" 
+                                  Immediate="true" 
+                                  Variant="Variant.Filled" />
+
+                    <MudTextField Label="Phone Number" HelperText="Max. 15 characters"
+                                  @bind-Value="registrationModel.PhoneNumber"
+                                  For="@(() => registrationModel.PhoneNumber)" 
+                                  Immediate="true" 
+                                  Variant="Variant.Filled" />
+
+                    <MudTextField Label="Country" @bind-Value="registrationModel.Country"
+                                  For="@(() => registrationModel.Country)"
+                                  Immediate="true" 
+                                  Variant="Variant.Filled" />
+
+                    <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
+                                  @bind-Value="registrationModel.Password"
+                                  For="@(() => registrationModel.Password)"
+                                  InputType="@PasswordInput" Immediate="true"
+                                  Variant="Variant.Filled" 
+                                  Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" 
+                                  OnAdornmentClick="ButtonTestClick" 
+                                  AdornmentAriaLabel="Show Password"/>
+
+                    <MudTextField Label="Confirm Password" HelperText="Repeat the password" Class="mt-3"
+                                  @bind-Value="registrationModel.PasswordConfirm"
+                                  For="@(() => registrationModel.PasswordConfirm)"
+                                  InputType="@PasswordInput" Immediate="true"
+                                  Variant="Variant.Filled" 
+                                  Adornment="Adornment.End" 
+                                  AdornmentIcon="@PasswordInputIcon" 
+                                  OnAdornmentClick="ButtonTestClick" 
+                                  AdornmentAriaLabel="Show Password" />                
+            </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="6">
+        <MudPaper Class="pa-4 mud-height-full">               
+            @if (!success)          
+            {
+                <MudText Color="@Color.Error">
+                    <ValidationSummary />
+                </MudText>
+            }
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="6">
+            <MudText Typo="Typo.h6">Already have an account?</MudText>
+            <MudLink Href="login" Typo="Typo.h1">Go To Login</MudLink>
+    </MudItem>
+</MudGrid>   
 </EditForm>
 
-@functions {
+@code {
     UserDetailsDto registrationModel { get; set; } = new UserDetailsDto();
     string? error { get; set; }
+    bool success;
+    
+    /// <summary>
+    /// password visibility icon
+    /// </summary>
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestClick()
+    {
+        if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
 
     async Task OnSubmit()
     {
@@ -57,7 +115,7 @@
         try
         {
             await authStateProvider.Register(registrationModel);
-            navigationManager.NavigateTo("");
+            navigationManager.NavigateTo("login");
         }
         catch (Exception ex)
         {

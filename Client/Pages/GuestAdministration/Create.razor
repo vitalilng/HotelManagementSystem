@@ -1,0 +1,105 @@
+﻿@page "/guest/create"
+@inject HttpClient httpClient
+@inject NavigationManager uriHelper
+@inject ISnackbar snackBar
+@attribute [Authorize(Roles = "admin")]
+
+<EditForm class="form-signin" OnValidSubmit="CreateGuest" Model="registrationModel">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7">
+            <MudCard Outlined="true">
+                <MudCardContent>
+                    <MudTextField Label="FullName" HelperText="Max. 15 characters"
+                                  @bind-Value="registrationModel.FullName"
+                                  For="@(() => registrationModel.FullName)"
+                                  Immediate="true"
+                                  Variant="Variant.Text" />
+
+                    <MudTextField Label="Email" Class="mt-3"
+                                  @bind-Value="registrationModel.Email"
+                                  For="@(() => registrationModel.Email)"
+                                  Immediate="true"
+                                  Variant="Variant.Text" />
+
+                    <MudTextField Label="Username" HelperText="Max. 8 characters"
+                                  @bind-Value="registrationModel.UserName"
+                                  For="@(() => registrationModel.UserName)"
+                                  Immediate="true"
+                                  Variant="Variant.Text" />
+
+                    <MudTextField Label="Phone Number" HelperText="Max. 15 characters"
+                                  @bind-Value="registrationModel.PhoneNumber"
+                                  For="@(() => registrationModel.PhoneNumber)"
+                                  Immediate="true"
+                                  Variant="Variant.Text" />
+
+                    <MudTextField Label="Country" @bind-Value="registrationModel.Country"
+                                  For="@(() => registrationModel.Country)"
+                                  Immediate="true"
+                                  Variant="Variant.Text" />
+
+                    <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
+                                  @bind-Value="registrationModel.Password"
+                                  For="@(() => registrationModel.Password)"
+                                  InputType="@PasswordInput" Immediate="true"
+                                  Variant="Variant.Text"
+                                  Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
+                                  OnAdornmentClick="ButtonTestClick"
+                                  AdornmentAriaLabel="Show Password" />
+
+                    <MudTextField Label="Confirm Password" HelperText="Repeat the password" Class="mt-3"
+                                  @bind-Value="registrationModel.PasswordConfirm"
+                                  For="@(() => registrationModel.PasswordConfirm)"
+                                  InputType="@PasswordInput" Immediate="true"
+                                  Variant="Variant.Text"
+                                  Adornment="Adornment.End"
+                                  AdornmentIcon="@PasswordInputIcon"
+                                  OnAdornmentClick="ButtonTestClick"
+                                  AdornmentAriaLabel="Show Password" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code {
+    UserDetailsDto registrationModel = new UserDetailsDto();
+
+    bool success;
+    string[] errors = {};
+    MudTextField<string>? pwField1;
+    MudForm? form;
+
+    async Task CreateGuest()
+    {
+        await httpClient.PostAsJsonAsync("api/guestusers", registrationModel);
+        uriHelper.NavigateTo("guests");
+    }
+
+    /// <summary>
+    /// password visibility icon
+    /// </summary>
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestClick()
+    {
+        if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+}

@@ -17,7 +17,7 @@ namespace HotelManagementSystem.Server.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -79,9 +79,6 @@ namespace HotelManagementSystem.Server.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("SoftDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -106,18 +103,116 @@ namespace HotelManagementSystem.Server.Migrations
                         {
                             Id = "2d5168cc-2092-4eaa-b62a-95ee7d587951",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f53f4b38-a9b7-48f7-9c70-03467d8e6811",
+                            ConcurrencyStamp = "8eec910a-2372-443b-b268-9e7c205bc619",
                             Email = "administrator@page.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "administrator@page.com",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAELdjYjPCoz72o1pDE3PX2Cn1Flnhb9ivzRxJEmYVLuiSxip1K9m3LGJzt8rgfyWoVw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPfmuuKjiDDu4KMnzLpwsiqwE/GIlPTvKXLNwR0BvJIiUth2BVsXPLRdR80gNnrlEw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e13d36de-8de3-4614-b45e-e01816b506b8",
-                            SoftDeleted = false,
+                            SecurityStamp = "d306fde2-699d-468e-9429-540678b1eeb4",
                             TwoFactorEnabled = false,
                             UserName = "admin"
+                        });
+                });
+
+            modelBuilder.Entity("HotelManagementSystem.Server.Models.Room", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Availability")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MaxPersonsAllowed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NrOfBedsAndSizes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Price")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("RoomOptions")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomSize")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Room");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11223344-5566-7788-99aa-bbccddeeff00"),
+                            Availability = "Available",
+                            Description = "Room Description",
+                            MaxPersonsAllowed = "2",
+                            NrOfBedsAndSizes = "Single Bed(1.60 x 2.00)",
+                            Price = 123L,
+                            RoomOptions = "FreeWifi, TV, Safe, Karaoke",
+                            RoomSize = "21",
+                            RoomType = "Single"
+                        });
+                });
+
+            modelBuilder.Entity("HotelManagementSystem.Server.Models.Transaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("ArrivalDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DepartureDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("RoomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("TotalSum")
+                        .HasColumnType("float");
+
+                    b.Property<DateTimeOffset>("TransactionDateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("Transaction");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("31eb8912-e08c-4fea-8d4e-ca420e70bc5e"),
+                            ApplicationUserId = "2d5168cc-2092-4eaa-b62a-95ee7d587951",
+                            ArrivalDate = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartureDate = new DateTime(2022, 12, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RoomId = new Guid("11223344-5566-7788-99aa-bbccddeeff00"),
+                            TotalSum = 23456.0,
+                            TransactionDateTime = new DateTimeOffset(new DateTime(2023, 1, 2, 16, 1, 23, 649, DateTimeKind.Unspecified).AddTicks(334), new TimeSpan(0, 2, 0, 0, 0))
                         });
                 });
 
@@ -150,15 +245,15 @@ namespace HotelManagementSystem.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f90b09cc-4574-4925-a692-31b4c8eeb249",
-                            ConcurrencyStamp = "d776635a-dc4d-4c5f-b36f-a0b706fa80ae",
+                            Id = "723a2c3d-ea61-4a58-a5a6-76ac18e97e97",
+                            ConcurrencyStamp = "26803bc2-0a3e-4eae-a64e-88f131113ea4",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         },
                         new
                         {
                             Id = "2d5168cc-2092-4eaa-b62a-95ee7d587951",
-                            ConcurrencyStamp = "df084b9a-7a35-4f93-9294-1dac78b859cb",
+                            ConcurrencyStamp = "e9d768cb-858e-4bd2-ad1a-edda69771923",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         });
@@ -277,6 +372,30 @@ namespace HotelManagementSystem.Server.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("HotelManagementSystem.Server.Models.Room", b =>
+                {
+                    b.HasOne("HotelManagementSystem.Server.Models.ApplicationUser", null)
+                        .WithMany("Rooms")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("HotelManagementSystem.Server.Models.Transaction", b =>
+                {
+                    b.HasOne("HotelManagementSystem.Server.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("Transactions")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("HotelManagementSystem.Server.Models.Room", "Room")
+                        .WithMany("Transactions")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -326,6 +445,18 @@ namespace HotelManagementSystem.Server.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HotelManagementSystem.Server.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Rooms");
+
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("HotelManagementSystem.Server.Models.Room", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

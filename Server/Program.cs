@@ -13,10 +13,26 @@ using NLog;
 using HotelManagementSystem.Server.LoggerService;
 using HotelManagementSystem.Server.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Options;
+using HotelManagementSystem.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+
+// We are creating a local function.This function configures support for JSON Patch using
+// Newtonsoft.Json while leaving the other formatters unchanged
+NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() => new ServiceCollection()
+    .AddLogging()
+    .AddMvc()
+    .AddNewtonsoftJson().Services
+    .BuildServiceProvider()
+    .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters
+    .OfType<NewtonsoftJsonPatchInputFormatter>()
+    .First();
+
+
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -52,6 +68,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddAuthentication().AddIdentityServerJwt();
 
 builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
+builder.Services.AddSingleton<StateContainer>();
 
 //register repository manager class
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
@@ -66,6 +83,16 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddControllersWithViews();
+
+//
+builder.Services.AddControllers(config =>
+{
+    config.RespectBrowserAcceptHeader = true;
+    config.ReturnHttpNotAcceptable = true;
+    config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+}).AddXmlDataContractSerializerFormatters();
+
+
 builder.Services.AddRazorPages();
 builder.Services.AddAutoMapper(typeof(Program));
 

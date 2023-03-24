@@ -1,45 +1,58 @@
-﻿using HotelManagementSystem.Shared.Dto;
+﻿using HotelManagementSystem.Server.Models;
+using HotelManagementSystem.Shared.Dto;
 
 namespace HotelManagementSystem.Server.Service.Contracts
 {
     /// <summary>
-    /// ApplicationUser service    
-    /// 
-    /// trackChanges parameter
-    /// used to improve read-only query performance. When it’s set to false, we
-    /// attach the AsNoTracking method to our query to inform EF Core that it doesn’t need to track changes
-    /// for the required entities.This greatly improves the speed of a query
+    /// ApplicationUser service   
     /// </summary>
     public interface IApplicationUserService
     {
         /// <summary>
         /// Get All guest users
         /// </summary>
-        /// <param name="trackChanges"></param>
         /// <returns></returns>
-        IEnumerable<UserDetailsDto> GetAllGuestUsers(bool trackChanges);
-        
+        IEnumerable<UserDetailsDto> GetApplicationUsers();
+
         /// <summary>
         /// Get user by id
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="trackChanges"></param>
         /// <returns></returns>
-        UserDetailsDto GetApplicationUser(string userId, bool trackChanges);
+        UserDetailsDto GetApplicationUser(string userId);
 
         /// <summary>
         /// Create application guest user
         /// </summary>
-        /// <param name="userDataForCreation"></param>
+        /// <param name="userCreationDataToBeDisplayed"></param>
         /// <returns></returns>
-        UserDetailsDto CreateGuestUser(UserDataForCreationDto userDataForCreation);
+        UserDetailsDto CreateApplicationUser(UserDataForCreationDto userCreationDataToBeDisplayed);
 
         /// <summary>
         /// Delete guest user from db
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="trackChanges"></param>
-        void DeleteGuestUser(string userId, bool trackChanges);
+        void DeleteApplicationUser(string userId);
 
+        /// <summary>
+        /// Update guest user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="userUpdateDataToBeDisplayed"></param>
+        void UpdateApplicationUser(string userId, UserDataForUpdateDto userUpdateDataToBeDisplayed);
+
+        /// <summary>
+        /// Patch guest user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        (UserDataForUpdateDto userDataForUpdate, ApplicationUser applicationUser) GetApplicationUserForPatch(string userId);
+
+        /// <summary>
+        /// Save patch modification
+        /// </summary>
+        /// <param name="userDataForPatch"></param>
+        /// <param name="applicationUser"></param>
+        void SaveChangesForPatch(UserDataForUpdateDto userDataForPatch, ApplicationUser applicationUser);
     }
 }

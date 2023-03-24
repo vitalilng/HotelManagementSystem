@@ -9,8 +9,18 @@
         /// <summary>
         /// 
         /// </summary>
-        IApplicationUserRepository ApplicationUser { get; }
+        IApplicationUserRepository ApplicationUserRepository { get; }
         
+        /// <summary>
+        /// Room repository
+        /// </summary>
+        IRoomRepository RoomRepository { get; }
+
+        /// <summary>
+        /// Transaction Repository
+        /// </summary>
+        ITransactionRepository TransactionRepository { get; }
+
         /// <summary>
         /// save to database
         /// </summary>

@@ -17,6 +17,18 @@ namespace HotelManagementSystem.Server
         {
             CreateMap<ApplicationUser, UserDetailsDto>(); //<Tsource, Tdestination>
             CreateMap<UserDataForCreationDto, ApplicationUser>(); //<Tsource, Tdestination>
+            CreateMap<UserDataForUpdateDto, ApplicationUser>().ReverseMap(); //<Tsource, Tdestination> <-> two way mapping            
+
+            CreateMap<Room, RoomDto>();
+            CreateMap<RoomDataForCreationDto, Room>();
+            CreateMap<RoomDataForUpdateDto, Room>().ReverseMap();
+
+            CreateMap<Transaction, TransactionDto>();
+            CreateMap<Transaction, TransactionDataToDisplayDto>()
+                .ForMember(dto => dto.UserName, conf => conf.MapFrom(ol => ol.ApplicationUser.UserName))
+                .ForMember(dto => dto.RoomType, conf => conf.MapFrom(ol => ol.Room.RoomType)); 
+            CreateMap<TransactionDataForCreationDto, Transaction>();
+            CreateMap<TransactionDataForUpdateDto, Transaction>().ReverseMap();
         }
     }
 }

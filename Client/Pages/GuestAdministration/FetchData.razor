@@ -1,0 +1,118 @@
+﻿@page "/guests"
+@inject HttpClient httpClient
+@inject IJSRuntime js
+@attribute [Authorize(Roles="admin")]
+
+@inject ISnackbar snackBar
+
+@if (registeredGuests == null)
+{
+    <MudText Typo="Typo.h6">Loading...</MudText>
+}
+else if(registeredGuests.Length == 0)
+{
+     <MudText Typo="Typo.h6">No records found...</MudText>
+}
+else
+{
+    <MudCard Elevation="25">
+        <MudCardHeader>
+            <CardHeaderContent>                
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="guest/create">Add Guest</MudButton>
+            </CardHeaderContent>
+        </MudCardHeader>
+    </MudCard>    
+    <br />
+    <MudTable Elevation="25" Items="registeredGuests" Hover="true" Breakpoint="Breakpoint.Sm" @bind-registeredGuests="registeredGuests" MultiSelection="true" 
+    Filter="new Func<UserDetailsDto, bool>(SearchGuests)" CanCancelEdit="true" >
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Guests</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Full Name</MudTh>
+            <MudTh>UserName</MudTh>
+            <MudTh>Email</MudTh>
+            <MudTh>Phone Number</MudTh>
+            <MudTh>Country</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Full Name">@context.FullName</MudTd>
+            <MudTd DataLabel="UserName">@context.UserName</MudTd>
+            <MudTd DataLabel="Email">@context.Email</MudTd>
+            <MudTd DataLabel="Phone Number">@context.PhoneNumber</MudTd>
+            <MudTd DataLabel="Country">@context.Country</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Full Name">
+                <MudTextField @bind-Value="@context.FullName" Required />
+            </MudTd>
+            <MudTd DataLabel="UserName">
+                <MudTextField @bind-Value="@context.UserName" Required />
+            </MudTd>
+            <MudTd DataLabel="Email">
+                <MudTextField @bind-Value="@context.Email" Required />
+            </MudTd>
+            <MudTd DataLabel="Phone Number">
+                <MudTextField @bind-Value="@context.PhoneNumber" Required />
+            </MudTd>
+            <MudTd DataLabel="Country">
+                <MudTextField @bind-Value="@context.Country" Required />
+            </MudTd>
+        </RowEditingTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>    
+    <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Do you wish to delete selected Guest(s)?</MudText>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" Href="#" StartIcon="@Icons.Material.Filled.Delete">Delete</MudButton>
+                </CardHeaderContent>
+            </MudCardHeader>
+    </MudCard>
+}
+@code {
+    UserDetailsDto[]? registeredGuests { get; set; }
+    UserDetailsDto registeredGuest = new();
+    private string searchString = "";
+    private bool canCancelEdit = false;
+    private List<string> editEvents = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        registeredGuests = await httpClient.GetFromJsonAsync<UserDetailsDto[]>("api/guestusers");
+    }
+
+    async Task DeleteGuest(string? guestId)
+    {
+        if (registeredGuests is not null && guestId != null)
+        {
+            var guestUser = registeredGuests.First(x => x.Id == guestId);
+            if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {guestUser.UserName}'s  Record ?"))
+            {
+                await httpClient.DeleteAsync($"api/guestusers/{guestId}");
+                await OnInitializedAsync();
+            }
+        }
+    }
+
+    private bool SearchGuests(UserDetailsDto registeredGuest)
+    {
+        if (string.IsNullOrEmpty(searchString)) return true;
+        if (registeredGuest.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+            ||registeredGuest.UserName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void AddEditionEvent(string message)
+    {
+        editEvents.Add(message);
+        StateHasChanged();
+    }
+}

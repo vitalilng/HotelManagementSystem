@@ -1,0 +1,120 @@
+﻿@page "/rooms"
+@inject HttpClient httpClient
+@inject ISnackbar snackBar
+@attribute [Authorize(Roles ="admin")]
+
+
+@if (rooms == null)
+{
+    <MudText Typo="Typo.h6">Loading...</MudText>
+}
+else if(rooms.Length == 0)
+{
+     <MudText Typo="Typo.h6">No records found...</MudText>
+}
+else
+{
+    <MudCard Elevation="25">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="room/create">Add New Room!</MudButton>
+            </CardHeaderContent>
+        </MudCardHeader>
+    </MudCard>
+    <br />
+
+    <MudTable Elevation="25" Items="rooms" Hover="true" Breakpoint="Breakpoint.Sm" @bind-rooms="rooms" MultiSelection="true"
+          Filter="new Func<RoomDto, bool>(SearchRoom)" CanCancelEdit="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Rooms</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Room Type</MudTh>
+            <MudTh>Room Size</MudTh>
+            <MudTh>Beds and Sizes</MudTh>
+            <MudTh>Options</MudTh>
+            <MudTh>Max Persons Allowed</MudTh>
+            <MudTh>Availability</MudTh>
+            <MudTh>Description</MudTh>
+            <MudTh>Price</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Room Type">@context.RoomType</MudTd>
+            <MudTd DataLabel="Room Size">@context.RoomSize</MudTd>
+            <MudTd DataLabel="Beds and Sizes">@context.NrOfBedsAndSizes</MudTd>
+            <MudTd DataLabel="Options">@context.RoomOptions</MudTd>
+            <MudTd DataLabel="Max Persons Allowed">@context.MaxPersonsAllowed</MudTd>
+            <MudTd DataLabel="Availability">@context.Availability</MudTd>
+            <MudTd DataLabel="Description">@context.Description</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Room Type">
+                <MudTextField @bind-Value="@context.RoomType" Required />
+            </MudTd>
+            <MudTd DataLabel="Room Size">
+                <MudTextField @bind-Value="@context.RoomSize" Required />
+            </MudTd>
+            <MudTd DataLabel="Beds and Sizes">
+                <MudTextField @bind-Value="@context.NrOfBedsAndSizes" Required />
+            </MudTd>
+            <MudTd DataLabel="Options">
+                <MudTextField @bind-Value="@context.RoomOptions" Required />
+            </MudTd>
+            <MudTd DataLabel="Max Persons Allowed">
+                <MudTextField @bind-Value="@context.MaxPersonsAllowed" Required />
+            </MudTd>
+            <MudTd DataLabel="Availability">
+                <MudTextField @bind-Value="@context.Availability" Required />
+            </MudTd>
+            <MudTd DataLabel="Description">
+                <MudTextField @bind-Value="@context.Description" Required />
+            </MudTd>
+            <MudTd DataLabel="Price">
+                <MudTextField @bind-Value="@context.Price" Required />
+            </MudTd>
+        </RowEditingTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+    <MudCard Elevation="25">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">Do you wish to delete selected Room(s)?</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Error" Href="#" StartIcon="@Icons.Material.Filled.Delete">Delete</MudButton>
+            </CardHeaderContent>
+        </MudCardHeader>
+    </MudCard>
+}
+
+@code {
+    RoomDto[]? rooms { get; set; }
+    RoomDto room = new();
+    private string searchString = "";
+    private bool canCancelEdit = false;
+    private List<string> editEvents = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        rooms = await httpClient.GetFromJsonAsync<RoomDto[]>("api/rooms");
+    }
+
+    private bool SearchRoom(RoomDto roomDto)
+    {
+        if (string.IsNullOrEmpty(searchString)) return true;
+        if (room.RoomType.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void AddEditionEvent(string message)
+    {
+        editEvents.Add(message);
+        StateHasChanged();
+    }
+}

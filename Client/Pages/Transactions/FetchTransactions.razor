@@ -1,0 +1,101 @@
+﻿@page "/transactions"
+@inject HttpClient httpClient
+@inject ISnackbar snackBar
+@attribute [Authorize(Roles = "admin")]
+
+
+@if (transactionsToDisplay == null)
+{
+        <MudText Typo="Typo.h6">Loading...</MudText>
+}
+else if (transactionsToDisplay.Length == 0)
+{
+         <MudText Typo="Typo.h6">No records found...</MudText>
+}
+else
+{
+    <MudTable Elevation="25" Items="transactionsToDisplay" Hover="true" Breakpoint="Breakpoint.Sm" @bind-transactionsToDisplay="transactionsToDisplay" MultiSelection="true"
+          Filter="new Func<TransactionDataToDisplayDto, bool>(SearchTransaction)" CanCancelEdit="true">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Transactions</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Username</MudTh>
+                <MudTh>Room Type</MudTh>
+                <MudTh>Arrival Date</MudTh>                
+                <MudTh>Departure Date</MudTh>            
+                <MudTh>TotalSum</MudTh>
+            <MudTh>Transaction DateTime</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Username">@context.UserName</MudTd>
+                <MudTd DataLabel="Room Type">@context.RoomType </MudTd>
+                <MudTd DataLabel="Arrival Date">@context.ArrivalDate</MudTd>                              
+                <MudTd DataLabel="Departure Date">@context.DepartureDate</MudTd>                              
+                <MudTd DataLabel="TotalSum">@context.TotalSum</MudTd>
+                <MudTd DataLabel="TransactionDateTime">@context.TransactionDateTime</MudTd>
+            </RowTemplate>
+            <RowEditingTemplate>
+                <MudTd DataLabel="Username">
+                    <MudTextField @bind-Value="@context.UserName" Required />
+                </MudTd>
+                <MudTd DataLabel="Room Type">
+                        <MudTextField @bind-Value="@context.RoomType" Required />
+                </MudTd>                
+                <MudTd DataLabel="Arrival Date">
+                <MudTextField @bind-Value="@context.ArrivalDate" Required />
+                </MudTd>
+            <MudTd DataLabel="Departure Date">
+                <MudTextField @bind-Value="@context.DepartureDate" Required />
+            </MudTd>
+                <MudTd DataLabel="TotalSum">
+                    <MudTextField @bind-Value="@context.TotalSum" Required />
+                </MudTd>
+            <MudTd DataLabel="Transaction DateTime">
+                <MudTextField @bind-Value="@context.TransactionDateTime" Required />
+            </MudTd>
+            </RowEditingTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Do you wish to delete selected Transaction(s)?</MudText>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" Href="#" StartIcon="@Icons.Material.Filled.Delete">Delete</MudButton>
+                </CardHeaderContent>
+            </MudCardHeader>
+        </MudCard>
+}
+
+@code {
+    TransactionDataToDisplayDto[]? transactionsToDisplay { get; set; }
+    TransactionDataToDisplayDto transactionToDisplay = new();
+    private string searchString = "";
+    private bool canCancelEdit = false;
+    private List<string> editEvents = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        transactionsToDisplay = await httpClient.GetFromJsonAsync<TransactionDataToDisplayDto[]>("api/transactions/GetTransactionsToBeDisplayed");
+    }
+
+    private bool SearchTransaction(TransactionDataToDisplayDto transactionToDisplay)
+    {
+        if (string.IsNullOrEmpty(searchString)) return true;
+        if (transactionToDisplay.UserName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void AddEditionEvent(string message)
+    {
+        editEvents.Add(message);
+        StateHasChanged();
+    }
+}

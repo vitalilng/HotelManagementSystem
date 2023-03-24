@@ -9,9 +9,11 @@ namespace HotelManagementSystem.Server.Service
     /// We are utilizing the Lazy class to ensure the 
     /// lazy initialization of our services.
     /// </summary>
-    public class ServiceManager : IServiceManager
+    public sealed class ServiceManager : IServiceManager
     {
         private readonly Lazy<IApplicationUserService> _applicationUserService;
+        private readonly Lazy<IRoomService> _roomService;
+        private readonly Lazy<ITransactionService> _transactionService;
 
         /// <summary>
         /// repository manager interface injection
@@ -23,11 +25,28 @@ namespace HotelManagementSystem.Server.Service
         {
             _applicationUserService = new Lazy<IApplicationUserService>(() =>
                 new ApplicationUserService(repositoryManager, mapper, loggerManager));
+
+            _roomService = new Lazy<IRoomService>(() =>
+                new RoomService(repositoryManager, mapper, loggerManager));
+
+            _transactionService = new Lazy<ITransactionService>(() =>
+                new TransactionService(repositoryManager, mapper, loggerManager));
+
         }
 
         /// <summary>
-        /// implementing IApplicationUserService interface
+        /// 
         /// </summary>
         public IApplicationUserService ApplicationUserService => _applicationUserService.Value;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IRoomService RoomService => _roomService.Value;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ITransactionService TransactionService => _transactionService.Value;
     }
 }

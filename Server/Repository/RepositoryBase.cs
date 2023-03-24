@@ -1,6 +1,5 @@
 ﻿using HotelManagementSystem.Server.Contracts;
 using HotelManagementSystem.Server.Data;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace HotelManagementSystem.Server.Repository
@@ -44,27 +43,17 @@ namespace HotelManagementSystem.Server.Repository
         public void Delete(T entity) => ApplicationDbContext.Set<T>().Remove(entity);
 
         /// <summary>
-        /// trackChanges used to improve read-only query performance
+        /// 
         /// </summary>
-        /// <param name="trackChanges"></param>
         /// <returns></returns>
-
-        public IQueryable<T> FindAll(bool trackChanges)
-            => !trackChanges ? 
-            ApplicationDbContext.Set<T>().AsNoTracking() :
-            ApplicationDbContext.Set<T>();
+        public IQueryable<T> FindAll()
+            => ApplicationDbContext.Set<T>();
 
         /// <summary>
-        /// When trackChanges it’s set to false, we attach the AsNoTracking method to our query to inform EF Core that it
-        /// doesn’t need to track changes for the required entities.This greatly improves the speed of a query
         /// </summary>
         /// <param name="expression"></param>
-        /// <param name="trackChanges"></param>
         /// <returns></returns>
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression,
-                                             bool trackChanges)
-        => !trackChanges ?
-            ApplicationDbContext.Set<T>().Where(expression).AsNoTracking() :
-            ApplicationDbContext.Set<T>().Where(expression);
+        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
+        => ApplicationDbContext.Set<T>().Where(expression);
     }
 }

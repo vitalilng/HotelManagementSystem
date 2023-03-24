@@ -12,6 +12,8 @@ namespace HotelManagementSystem.Server.Repository
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly Lazy<IApplicationUserRepository> _applicationUserRepository;
+        private readonly Lazy<IRoomRepository> _roomRepository;
+        private readonly Lazy<ITransactionRepository> _transactionRepository;
 
         /// <summary>
         /// Constructor implementation
@@ -23,12 +25,24 @@ namespace HotelManagementSystem.Server.Repository
             _applicationDbContext = applicationDbContext
                                     ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _applicationUserRepository = new Lazy<IApplicationUserRepository>(() => new ApplicationUserRepository(applicationDbContext));
+            _roomRepository = new Lazy<IRoomRepository>(() => new RoomRepository(applicationDbContext));
+            _transactionRepository = new Lazy<ITransactionRepository>(() => new TransactionRepository(applicationDbContext));
         }
 
         /// <summary>
         /// Implement the interface
         /// </summary>
-        public IApplicationUserRepository ApplicationUser => _applicationUserRepository.Value;        
+        public IApplicationUserRepository ApplicationUserRepository => _applicationUserRepository.Value;
+
+        /// <summary>
+        /// implement room repository
+        /// </summary>
+        public IRoomRepository RoomRepository => _roomRepository.Value;
+
+        /// <summary>
+        /// implement transaction repository
+        /// </summary>
+        public ITransactionRepository TransactionRepository => _transactionRepository.Value;
 
         /// <summary>
         /// Save the changes to database

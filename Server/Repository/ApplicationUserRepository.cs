@@ -20,10 +20,9 @@ namespace HotelManagementSystem.Server.Repository
         /// <summary>
         /// Find all guest user ordered by username into a list
         /// </summary>
-        /// <param name="trackChanges"></param>
         /// <returns></returns>
-        public IEnumerable<ApplicationUser> GetAllGuestUsers(bool trackChanges) => 
-            FindAll(trackChanges)
+        public IEnumerable<ApplicationUser> GetApplicationUsers() => 
+            FindAll()
             .OrderBy(c => c.UserName)
             .ToList();
 
@@ -31,22 +30,34 @@ namespace HotelManagementSystem.Server.Repository
         /// Get user by
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="trackChanges"></param>
         /// <returns></returns>
-        public ApplicationUser GetApplicationUser(string userId, bool trackChanges) =>
-            FindByCondition(c => c.Id.Equals(userId), trackChanges)
-            .SingleOrDefault();
+        public ApplicationUser GetApplicationUser(string userId)
+        {
+            var result = new ApplicationUser() ;
+            if (userId is not null)
+            {
+                result = FindByCondition(c => c.Id.Equals(userId)).SingleOrDefault();
+            }
+            return result?? throw new ArgumentNullException(nameof(userId));
+        }
 
         /// <summary>
         /// Create new guest application user
         /// </summary>
         /// <param name="applicationUser"></param>
-        public void CreateGuestUser(ApplicationUser applicationUser) => Create(applicationUser);
+        public void CreateApplicationUser(ApplicationUser applicationUser) => Create(applicationUser);
 
         /// <summary>
         /// Delete guest user from db
         /// </summary>
         /// <param name="applicationUser"></param>
-        public void DeleteGuestUser(ApplicationUser applicationUser) => Delete(applicationUser);
+        public void DeleteApplicationUser(ApplicationUser applicationUser) => Delete(applicationUser);
+
+        /// <summary>
+        /// Update guest user
+        /// </summary>
+        /// <param name="applicationUser"></param>
+        public void UpdateApplicationUser(ApplicationUser applicationUser) => Update(applicationUser);
+       
     }
 }

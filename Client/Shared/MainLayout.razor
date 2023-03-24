@@ -2,34 +2,52 @@
 @inject NavigationManager navigationManager
 @inject CustomStateProvider authStateProvider
 
-<div class="sidebar" style="position:fixed">
-    <NavMenu />
-
-</div>
-<div class="main" style="margin-left:250px">
-    <div class="top-row">
-<AuthorizeView>
-            <Authorized>
-                <a href="authentication/profile">Hello, @context.User.Identity?.Name!</a>
-                <button type="button" class="btn btn-link ml-md-auto" @onclick="@LogoutClick">Logout</button>
-            </Authorized>
-            <NotAuthorized>
-                <a href="authentication/register">Register</a>
-                <a href="authentication/login">Log in</a>
-            </NotAuthorized>
-</AuthorizeView>
-    </div>
-    <div class="content px-4">
-        @Body
-    </div>
-</div>
-
 <MudThemeProvider />
+<MudDialogProvider />
 <MudSnackbarProvider />
+<MudLayout>
+    <MudAppBar Elevation="1" Dense="@dense">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+        Hotel Management App
+        <MudSpacer />
+        <AuthorizeView>
+                <Authorized>      
+                    <MudText Typo="Typo.h6">Hello @context.User.Identity.Name</MudText>                                       
+                </Authorized>
+                 <Authorizing>
+                 <h1>Loading ...</h1>
+                    </Authorizing>
+                <NotAuthorized>
+                    You are not authorized!
+                </NotAuthorized>
+            </AuthorizeView>
+        <MudSpacer/>
+        <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" Edge="Edge.Start" OnClick="@LogoutClick" />
+    </MudAppBar>
+    <MudDrawer @bind-Open="@open" Elevation="1" ClipMode="clipMode" DisableOverlay="true" Variant="@DrawerVariant.Mini">
+        <MudNavMenu Class="mud-width-full" Bordered="true">
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+            <MudNavLink Href="/personalpage" Icon="@Icons.Material.Filled.AccountCircle">Personal Page</MudNavLink>
+            <AuthorizeView Roles="admin">
+                <MudNavLink Href="/guests" Icon="@Icons.Material.Filled.FamilyRestroom">Guests</MudNavLink>
+                <MudNavLink Href="/rooms" Icon="@Icons.Material.Filled.Room">Rooms</MudNavLink>
+                <MudNavLink Href="/transactions" Icon="@Icons.Material.Filled.AssuredWorkload">Transactions</MudNavLink>
+            </AuthorizeView>
+            <MudNavLink Href="/about" Icon="@Icons.Filled.Info">About</MudNavLink>
+        </MudNavMenu>
+</MudDrawer>
+    <MudMainContent Class="pt-16 px-10">
+        @Body
+    </MudMainContent>
+</MudLayout>
 
 @functions {
     [CascadingParameter]
-    Task<AuthenticationState> AuthenticationState { get; set; } 
+    Task<AuthenticationState> AuthenticationState { get; set; }
+
+    bool dense = false;
+    bool open = false;
+    DrawerClipMode clipMode = DrawerClipMode.Docked;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -39,10 +57,15 @@
             navigationManager.NavigateTo("/login");
         }
     }
+
     async Task LogoutClick()
     {
         await authStateProvider.Logout();
         navigationManager.NavigateTo("/login");
-        
+    }
+
+    void ToggleDrawer()
+    {
+        open = !open;
     }
 }

@@ -17,7 +17,7 @@ namespace HotelManagementSystem.Server.Controllers
     /// </summary>
     [Route("api/guests")]
     [ApiController]
-    [Authorize(Roles ="admin")]
+    [Authorize(Roles = "admin")]
     public class GuestController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;

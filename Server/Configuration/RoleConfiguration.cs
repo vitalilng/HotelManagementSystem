@@ -4,8 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HotelManagementSystem.Server.Configuration
 {
+    /// <summary>
+    /// Role Configuration
+    /// </summary>
     public class RoleConfiguration : IEntityTypeConfiguration<IdentityRole>
     {
+        /// <summary>
+        /// Configuration
+        /// </summary>
+        /// <param name="builder"></param>
         public void Configure(EntityTypeBuilder<IdentityRole> builder)
         {
             builder.HasData(

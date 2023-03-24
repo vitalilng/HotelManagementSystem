@@ -28,8 +28,14 @@ namespace HotelManagementSystem.Server.Models
         public string? PasswordConfirm { get; set; }
         
         /// <summary>
-        /// for soft delete implementation
+        /// Navigation property to transaction model
         /// </summary>
-        public bool SoftDeleted { get; set; }
+        public List<Transaction>? Transactions { get; set; }
+        
+        /// <summary>
+        /// Rooms navigation property
+        /// </summary>
+        public List<Room>? Rooms { get; set; }
+
     }
 }
