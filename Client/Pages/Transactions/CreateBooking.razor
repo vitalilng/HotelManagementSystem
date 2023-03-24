@@ -46,8 +46,7 @@
     
 
 @code {
-    //RoomDto? roomDto;
-    protected TransactionDataForCreationDto? transactionModelForCreation { get; set; }
+    protected TransactionDataForCreationDto transactionModelForCreation { get; set; }
     RoomDto? RoomDetailsDto { get; set; }
     TransactionParameters transactionParameters { get; set; } = new();
 
@@ -63,22 +62,28 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-        username = user.Identity.Name;
+        if (user is not null)
+        {
+            username = user.Identity.Name;
+        }
 
         await base.OnInitializedAsync();
         RoomDetailsDto = StateContainer.Value;
-        roomType = RoomDetailsDto.RoomType;
+        if (RoomDetailsDto is not null)
+        {
+            roomType = RoomDetailsDto.RoomType;            
+        }
         transactionModelForCreation = new TransactionDataForCreationDto(RoomDetailsDto);
+
     }
-    
+
 
     protected async override Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
         globalStateContainer.OnStateChange += StateHasChanged;
 
-        transactionModelForCreation.ArrivalDate = transactionParameters.DateOfArrival;
-        transactionModelForCreation.DepartureDate = transactionParameters.DateOfDeparture;
+
     }
 
 
@@ -86,9 +91,20 @@
     {
         //if (transactionParameters.DateOfDeparture is not null && RoomDetailsDto is not null)
         //{
-            //var days = ((DateTime)(transactionParameters.DateOfDeparture) - (DateTime)(transactionParameters.DateOfArrival)).Days;
-            totalSum = (int)transactionModelForCreation.SetTotalSum();
+        //var days = ((DateTime)(transactionParameters.DateOfDeparture) - (DateTime)(transactionParameters.DateOfArrival)).Days;
+        //totalSum = (int)transactionModelForCreation.SetTotalSum();
         //}
+
+        if (RoomDetailsDto is not null)
+        {
+            transactionModelForCreation = new TransactionDataForCreationDto(RoomDetailsDto);
+
+            transactionModelForCreation.ArrivalDate = transactionParameters.DateOfArrival;
+            transactionModelForCreation.DepartureDate = transactionParameters.DateOfDeparture;
+            transactionModelForCreation.SetTotalSum();
+            totalSum = transactionModelForCreation.GetTotalSum;
+        }
+
     }
 
 
