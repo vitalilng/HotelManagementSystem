@@ -16,7 +16,7 @@
                 <MudTextField Label="Room Type" Immediate=true Variant="Variant.Text" Value="roomType" ReadOnly=true />
 
                 <MudDatePicker Label="Arrival Date"                                
-                               @bind-Date="@transactionParameters.DateOfArrival"                                             
+                               Date="transactionParameters.DateOfArrival"                               
                                Required=true  RequiredError="Arrival Date is required!" 
                                PickerVariant="PickerVariant.Dialog" Rounded="true"
                                Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
@@ -25,8 +25,8 @@
                 <MudSpacer></MudSpacer>
 
                 <MudDatePicker Label="Departure Date"
-                                @bind-Date="@transactionParameters.DateOfDeparture"
-                                OnDateChanged ="CalculateTotalSum"
+                                Date="@transactionParameters.DateOfDeparture"
+                                DateChanged ="CalculateTotalSum"
                                Required=true RequiredError="Departure Date is required!"
                                PickerVariant="PickerVariant.Dialog" Rounded="true"
                                Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
@@ -46,14 +46,11 @@
     
 
 @code {
-    protected TransactionDataForCreationDto? transactionModelForCreation { get; set; }
+    TransactionDataForCreationDto? transactionModelForCreation { get; set; }
     RoomDto? RoomDetailsDto { get; set; }
-    TransactionParameters transactionParameters { get; set; } = new();
+    TransactionParameters transactionParameters { get; set; }    
 
-    private EditContext? editContext;
     public event Action? OnStateChange;
-
-    //DateTime? Date = DateTime.Today;
     string? username = "";
     string? roomType = "";
     int totalSum = 0;
@@ -72,8 +69,9 @@
         if (RoomDetailsDto is not null)
         {
             roomType = RoomDetailsDto.RoomType;            
+            transactionModelForCreation = new TransactionDataForCreationDto(RoomDetailsDto);
+
         }
-        transactionModelForCreation = new TransactionDataForCreationDto(RoomDetailsDto);
 
     }
 
@@ -83,68 +81,26 @@
         await base.OnParametersSetAsync();
         globalStateContainer.OnStateChange += StateHasChanged;
 
-
+        //transactionModelForCreation.ArrivalDate = transactionParameters.DateOfArrival;
+        //transactionModelForCreation.DepartureDate = transactionParameters.DateOfDeparture;
     }
 
 
     private void CalculateTotalSum()
     {
-        //if (transactionParameters.DateOfDeparture is not null && RoomDetailsDto is not null)
-        //{
-        //var days = ((DateTime)(transactionParameters.DateOfDeparture) - (DateTime)(transactionParameters.DateOfArrival)).Days;
-        //totalSum = (int)transactionModelForCreation.SetTotalSum();
-        //}
-
-        if (RoomDetailsDto is not null)
+        if (RoomDetailsDto is not null && transactionParameters != null)
         {
-            transactionModelForCreation = new TransactionDataForCreationDto(RoomDetailsDto);
+            //transactionModelForCreation = new TransactionDataForCreationDto(RoomDetailsDto);
 
             transactionModelForCreation.ArrivalDate = transactionParameters.DateOfArrival;
             transactionModelForCreation.DepartureDate = transactionParameters.DateOfDeparture;
+
+            
             transactionModelForCreation.SetTotalSum();
-            totalSum = transactionModelForCreation.GetTotalSum;
+            totalSum = transactionModelForCreation.TotalSum;
         }
 
     }
-
-
-
-
-
-
-    //private void OnInput(ChangeEventArgs e)
-    //{
-    //    if (transactionParameters.DateOfArrival.HasValue && transactionParameters.DateOfDeparture.HasValue)
-    //    {
-    //        transactionParameters.DateOfArrival = (DateTime)e.Value;
-    //        totalSum = transactionModelForCreation.GetTotalSum();
-    //    }
-    //}
-
-
-
-
-    //private void HandleArrivalDatePicker(DateTime? dateTime)
-    //{
-    //    //globalStateContainer.SetValue(dateTime);
-    //    if (dateTime.HasValue)
-    //    {
-    //        transactionParameters.DateOfArrival = dateTime.Value;
-    //    }
-        
-    //}
-
-    //private void HandleDepartureDatePicker(DateTime? dateTime)
-    //{
-    //    //globalStateContainer.SetValue(dateTime);
-    //    if (dateTime.HasValue)
-    //    {
-    //        transactionParameters.DateOfDeparture = dateTime.Value;
-    //    }
-
-    //}
-    
-
 
     async Task BookRoom()
     {

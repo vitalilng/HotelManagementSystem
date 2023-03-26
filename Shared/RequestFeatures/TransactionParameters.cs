@@ -1,8 +1,8 @@
 ﻿namespace HotelManagementSystem.Shared.RequestFeatures
 {
     public class TransactionParameters
-    {        
-        public DateTime? DateOfArrival{ get; set; }
+    {
+        public DateTime? DateOfArrival { get; set; }
         public DateTime? DateOfDeparture { get; set; }
 
         /// <summary>

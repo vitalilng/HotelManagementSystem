@@ -2,15 +2,16 @@
 {
     public class TransactionDataForCreationDto
     {
-        public RoomDto Room { get; set; }
+
         private int totalSum;
-        private DateTime? arrivalDate;
-        private DateTime? departureDate;
+        public RoomDto Room { get; set; }
+        public int TotalSum { get => totalSum; set => totalSum = value; }
 
         public TransactionDataForCreationDto(RoomDto roomDto)
         {
             Room = roomDto ?? throw new ArgumentNullException(nameof(roomDto));
-            SetTotalSum();
+            TotalSum = 0;
+            //SetTotalSum();
         }
 
         /// <summary>
@@ -26,28 +27,14 @@
         /// <summary>
         /// Booking start date
         /// </summary>
-        public DateTime? ArrivalDate
-        {
-            get => arrivalDate;
-            set
-            {
-                arrivalDate = value;
-                SetTotalSum();
-            }
-        }
+        public DateTime? ArrivalDate {get; set;}
+
 
         /// <summary>
         /// booking end date
         /// </summary>
-        public DateTime? DepartureDate
-        {
-            get => departureDate;
-            set
-            {
-                departureDate = value;
-                SetTotalSum();
-            }
-        }
+        public DateTime? DepartureDate { get; set; }
+        
 
         /// <summary>
         /// Transaction sum
