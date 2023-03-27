@@ -5,14 +5,6 @@
 
         private int totalSum;
         public RoomDto Room { get; set; }
-        public int TotalSum { get => totalSum; set => totalSum = value; }
-
-        public TransactionDataForCreationDto(RoomDto roomDto)
-        {
-            Room = roomDto ?? throw new ArgumentNullException(nameof(roomDto));
-            TotalSum = 0;
-            //SetTotalSum();
-        }
 
         /// <summary>
         /// User id
@@ -34,23 +26,23 @@
         /// booking end date
         /// </summary>
         public DateTime? DepartureDate { get; set; }
-        
 
         /// <summary>
         /// Transaction sum
         /// </summary>
-        public int GetTotalSum { get; }
-
-        /// <summary>
-        /// Transaction sum
-        /// </summary>
-        public void SetTotalSum()
+        public double TotalSum
         {
-            if (Room == null)
+            get
             {
-                throw new ArgumentNullException(nameof(Room));
+                if (Room != null && DepartureDate is not null && ArrivalDate is not null)
+                {
+                    return (int)(Room.Price * ((DateTime)DepartureDate - (DateTime)ArrivalDate).TotalDays); //calculate the total sum                
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(Room));
+                }
             }
-            totalSum = (int)(Room.Price * ((DateTime)DepartureDate - (DateTime)ArrivalDate).TotalDays); //calculate the total sum                
         }
     }
 }

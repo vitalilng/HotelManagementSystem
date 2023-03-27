@@ -23,15 +23,18 @@
                                Validation="@transactionParameters.ValidDateRange" />
 
                 <MudSpacer></MudSpacer>
-
+                <div onblur="CalculateTotalSum">
                 <MudDatePicker Label="Departure Date"
-                                Date="@transactionParameters.DateOfDeparture"
-                                DateChanged ="CalculateTotalSum"
+                               Date="transactionParameters.DateOfDeparture"
+                               DateChanged="CalculateTotalSum"
+                               onfocusout="CalculateTotalSum"
                                Required=true RequiredError="Departure Date is required!"
                                PickerVariant="PickerVariant.Dialog" Rounded="true"
                                Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
                                Validation="@transactionParameters.ValidDateRange" />
 
+                </div>
+                
                 <MudTextField Label="Total Sum" 
                               @bind-Value="totalSum"
                               Variant="Variant.Text" />
@@ -46,9 +49,9 @@
     
 
 @code {
-    TransactionDataForCreationDto? transactionModelForCreation { get; set; }
-    RoomDto? RoomDetailsDto { get; set; }
-    TransactionParameters transactionParameters { get; set; }    
+    TransactionDataForCreationDto? transactionModelForCreation { get; set; } = new();
+    RoomDto? RoomDetailsDto { get; set; } = new();
+    TransactionParameters transactionParameters { get; set; } = new();    
 
     public event Action? OnStateChange;
     string? username = "";
@@ -59,47 +62,35 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-        if (user is not null)
+        if (user?.Identity is not null)
         {
             username = user.Identity.Name;
         }
 
+        transactionParameters = new TransactionParameters
+        {
+            DateOfArrival = DateTime.Today,
+            DateOfDeparture = DateTime.Today.AddDays(1)
+        };
         await base.OnInitializedAsync();
         RoomDetailsDto = StateContainer.Value;
         if (RoomDetailsDto is not null)
         {
             roomType = RoomDetailsDto.RoomType;            
-            transactionModelForCreation = new TransactionDataForCreationDto(RoomDetailsDto);
-
+            var dateRange = new TransactionDataForCreationDto { Room = RoomDetailsDto, ApplicationUserId = username, RoomId = RoomDetailsDto.Id, ArrivalDate = transactionParameters.DateOfArrival, DepartureDate = transactionParameters.DateOfDeparture };
+            totalSum = (int)dateRange.TotalSum;
         }
 
+        
     }
-
-
-    protected async override Task OnParametersSetAsync()
-    {
-        await base.OnParametersSetAsync();
-        globalStateContainer.OnStateChange += StateHasChanged;
-
-        //transactionModelForCreation.ArrivalDate = transactionParameters.DateOfArrival;
-        //transactionModelForCreation.DepartureDate = transactionParameters.DateOfDeparture;
-    }
-
 
     private void CalculateTotalSum()
     {
         if (RoomDetailsDto is not null && transactionParameters != null)
         {
-            //transactionModelForCreation = new TransactionDataForCreationDto(RoomDetailsDto);
-
-            transactionModelForCreation.ArrivalDate = transactionParameters.DateOfArrival;
-            transactionModelForCreation.DepartureDate = transactionParameters.DateOfDeparture;
-
-            
-            transactionModelForCreation.SetTotalSum();
-            totalSum = transactionModelForCreation.TotalSum;
+            var dateRange = new TransactionDataForCreationDto {Room = RoomDetailsDto, ApplicationUserId = username, RoomId = RoomDetailsDto.Id, ArrivalDate = transactionParameters.DateOfArrival, DepartureDate = transactionParameters.DateOfDeparture };
+            totalSum = (int)dateRange.TotalSum;
         }
-
     }
 
     async Task BookRoom()
