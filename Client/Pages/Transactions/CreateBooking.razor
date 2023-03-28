@@ -20,7 +20,7 @@
 
                 <MudDatePicker Label="Arrival Date"
                                Date="transactionParameters.DateOfArrival"
-                               ValueChanged="OnArrivalDateChange"
+                               DateChanged="OnArrivalDateChange"
                                Required=true RequiredError="Arrival Date is required!"
                                PickerVariant="PickerVariant.Dialog" Rounded="true"
                                Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
@@ -29,7 +29,7 @@
                 <MudSpacer></MudSpacer>
                 <MudDatePicker Label="Departure Date"
                                 Date="transactionParameters.DateOfDeparture"
-                                DateChanged="CalculateTotalSum"
+                                DateChanged="OnDepartureDateChange"                                
                                 Required=true RequiredError="Departure Date is required!"
                                 PickerVariant="PickerVariant.Dialog" Rounded="true"
                                 Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
@@ -76,29 +76,46 @@
         };
 
         await base.OnInitializedAsync();
-
         RoomDetailsDto = StateContainer.Value;
+
         if (RoomDetailsDto is not null)
         {
             roomType = RoomDetailsDto.RoomType;
         }
     }
 
-    private void CalculateTotalSum(DateTime? departureDate)
+    private void OnArrivalDateChange(DateTime? dateTime)
     {
         if (RoomDetailsDto is not null && transactionParameters != null)
         {
-            var dateRange = new TransactionDataForCreationDto 
-            { 
-                Room = RoomDetailsDto, 
-                ApplicationUserId = username, 
-                RoomId = RoomDetailsDto.Id, 
-                ArrivalDate = transactionParameters.DateOfArrival, 
-                DepartureDate = departureDate 
+            var dateRange = new TransactionDataForCreationDto
+            {
+                    Room = RoomDetailsDto,
+                    ApplicationUserId = username,
+                    RoomId = RoomDetailsDto.Id,
+                    ArrivalDate = dateTime,
+                    DepartureDate = transactionParameters.DateOfDeparture
             };
-            totalSum = (int) dateRange.TotalSum;
+            totalSum = (int)dateRange.TotalSum;
+            transactionParameters.DateOfArrival = dateTime;
         }
-        transactionParameters.DateOfDeparture = departureDate;
+    }
+
+    private void OnDepartureDateChange(DateTime? dateTime)
+    {
+        if (RoomDetailsDto is not null && transactionParameters != null)
+        {
+            var dateRange = new TransactionDataForCreationDto
+            {
+                    Room = RoomDetailsDto,
+                    ApplicationUserId = username,
+                    RoomId = RoomDetailsDto.Id,
+                    ArrivalDate = transactionParameters.DateOfArrival,
+                    DepartureDate = dateTime
+            };
+            totalSum = (int)dateRange.TotalSum;
+            transactionParameters.DateOfDeparture = dateTime;
+        }
     }
 
     async Task BookRoom()
