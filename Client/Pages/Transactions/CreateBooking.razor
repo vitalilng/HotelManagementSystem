@@ -7,37 +7,38 @@
 @implements IDisposable
 @inject ISnackbar snackBar
 
-<MudPaper>
+<EditForm Model="transactionModelForCreation" OnValidSubmit="BookRoom">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <MudPaper>
         <MudCard Outlined="true">
             <MudCardContent>
                 <MudTextField Label="UserName" Immediate=true Variant="Variant.Text"
-                                Value="username" ReadOnly=true />
+                              Value="username" ReadOnly=true />
 
                 <MudTextField Label="Room Type" Immediate=true Variant="Variant.Text" Value="roomType" ReadOnly=true />
 
-                <MudDatePicker Label="Arrival Date"                                
-                               Date="transactionParameters.DateOfArrival"                               
-                               Required=true  RequiredError="Arrival Date is required!" 
+                <MudDatePicker Label="Arrival Date"
+                               Date="transactionParameters.DateOfArrival"
+                               ValueChanged="OnArrivalDateChange"
+                               Required=true RequiredError="Arrival Date is required!"
                                PickerVariant="PickerVariant.Dialog" Rounded="true"
                                Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
                                Validation="@transactionParameters.ValidDateRange" />
 
                 <MudSpacer></MudSpacer>
-                <div onblur="CalculateTotalSum">
                 <MudDatePicker Label="Departure Date"
-                               Date="transactionParameters.DateOfDeparture"
-                               DateChanged="CalculateTotalSum"
-                               onfocusout="CalculateTotalSum"
-                               Required=true RequiredError="Departure Date is required!"
-                               PickerVariant="PickerVariant.Dialog" Rounded="true"
-                               Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
-                               Validation="@transactionParameters.ValidDateRange" />
+                                Date="transactionParameters.DateOfDeparture"
+                                DateChanged="CalculateTotalSum"
+                                Required=true RequiredError="Departure Date is required!"
+                                PickerVariant="PickerVariant.Dialog" Rounded="true"
+                                Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
+                                Validation="@transactionParameters.ValidDateRange" />
 
-                </div>
-                
-                <MudTextField Label="Total Sum" 
+
+                <MudTextField Label="Total Sum"
                               @bind-Value="totalSum"
-                              Variant="Variant.Text" />
+                              Variant="Variant.Text"/>
 
             </MudCardContent>
             <MudCardActions>
@@ -45,7 +46,8 @@
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="() => BookRoom()">Book</MudButton>
             </MudCardActions>
         </MudCard>
-</MudPaper>
+    </MudPaper>
+</EditForm>
     
 
 @code {
@@ -72,25 +74,31 @@
             DateOfArrival = DateTime.Today,
             DateOfDeparture = DateTime.Today.AddDays(1)
         };
+
         await base.OnInitializedAsync();
+
         RoomDetailsDto = StateContainer.Value;
         if (RoomDetailsDto is not null)
         {
-            roomType = RoomDetailsDto.RoomType;            
-            var dateRange = new TransactionDataForCreationDto { Room = RoomDetailsDto, ApplicationUserId = username, RoomId = RoomDetailsDto.Id, ArrivalDate = transactionParameters.DateOfArrival, DepartureDate = transactionParameters.DateOfDeparture };
-            totalSum = (int)dateRange.TotalSum;
+            roomType = RoomDetailsDto.RoomType;
         }
-
-        
     }
 
-    private void CalculateTotalSum()
+    private void CalculateTotalSum(DateTime? departureDate)
     {
         if (RoomDetailsDto is not null && transactionParameters != null)
         {
-            var dateRange = new TransactionDataForCreationDto {Room = RoomDetailsDto, ApplicationUserId = username, RoomId = RoomDetailsDto.Id, ArrivalDate = transactionParameters.DateOfArrival, DepartureDate = transactionParameters.DateOfDeparture };
-            totalSum = (int)dateRange.TotalSum;
+            var dateRange = new TransactionDataForCreationDto 
+            { 
+                Room = RoomDetailsDto, 
+                ApplicationUserId = username, 
+                RoomId = RoomDetailsDto.Id, 
+                ArrivalDate = transactionParameters.DateOfArrival, 
+                DepartureDate = departureDate 
+            };
+            totalSum = (int) dateRange.TotalSum;
         }
+        transactionParameters.DateOfDeparture = departureDate;
     }
 
     async Task BookRoom()

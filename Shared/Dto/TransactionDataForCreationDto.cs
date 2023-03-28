@@ -2,8 +2,6 @@
 {
     public class TransactionDataForCreationDto
     {
-
-        private int totalSum;
         public RoomDto Room { get; set; }
 
         /// <summary>
@@ -36,7 +34,8 @@
             {
                 if (Room != null && DepartureDate is not null && ArrivalDate is not null)
                 {
-                    return (int)(Room.Price * ((DateTime)DepartureDate - (DateTime)ArrivalDate).TotalDays); //calculate the total sum                
+                    var nrOfDays = ((DateTime)DepartureDate - (DateTime)ArrivalDate).TotalDays;
+                    return (int)(Room.Price * nrOfDays); //calculate the total sum                
                 }
                 else
                 {
