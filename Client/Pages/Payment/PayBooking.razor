@@ -1,5 +1,31 @@
 ﻿@page "/payment"
+@inject ISnackbar snackbar
+
+<EditForm OnValidSubmit="Pay">
+    <DataAnnotationsValidator/>
+    <ValidationSummary />
+    <MudCard Outlined="true">         
+        <MudCardContent>
+            <MudTextField Label="Card Number" />
+            <MudDatePicker Label="Expiration Date"/>
+            <MudTextField Label="CVV" />
+            <MudTextField Label="Card Holder Name"/>
+            <MudTextField Label="Email"/>
+        </MudCardContent>
+    </MudCard>
+    <MudButton ButtonType="ButtonType.Submit" />
+
+
+</EditForm>
+
+
 
 @code {
+
+    public void Pay()
+    {
+        
+    }
+
 
 }

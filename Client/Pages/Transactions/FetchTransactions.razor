@@ -26,6 +26,7 @@ else
                 <MudTh>Room Type</MudTh>
                 <MudTh>Arrival Date</MudTh>                
                 <MudTh>Departure Date</MudTh>            
+                <MudTh>Room Price</MudTh>            
                 <MudTh>TotalSum</MudTh>
             <MudTh>Transaction DateTime</MudTh>
             </HeaderContent>
@@ -34,6 +35,7 @@ else
                 <MudTd DataLabel="Room Type">@context.RoomType </MudTd>
                 <MudTd DataLabel="Arrival Date">@context.ArrivalDate</MudTd>                              
                 <MudTd DataLabel="Departure Date">@context.DepartureDate</MudTd>                              
+                <MudTd DataLabel="Room Price">@context.RoomPrice</MudTd>                              
                 <MudTd DataLabel="TotalSum">@context.TotalSum</MudTd>
                 <MudTd DataLabel="TransactionDateTime">@context.TransactionDateTime</MudTd>
             </RowTemplate>
@@ -45,11 +47,14 @@ else
                         <MudTextField @bind-Value="@context.RoomType" Required />
                 </MudTd>                
                 <MudTd DataLabel="Arrival Date">
-                <MudTextField @bind-Value="@context.ArrivalDate" Required />
+                    <MudTextField @bind-Value="@context.ArrivalDate" Required />
                 </MudTd>
-            <MudTd DataLabel="Departure Date">
-                <MudTextField @bind-Value="@context.DepartureDate" Required />
-            </MudTd>
+                <MudTd DataLabel="Departure Date">
+                    <MudTextField @bind-Value="@context.DepartureDate" Required />
+                </MudTd>
+                <MudTd DataLabel="Room Price">
+                    <MudTextField @bind-Value="@context.RoomPrice" Required />
+                </MudTd>
                 <MudTd DataLabel="TotalSum">
                     <MudTextField @bind-Value="@context.TotalSum" Required />
                 </MudTd>

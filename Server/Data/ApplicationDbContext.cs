@@ -96,8 +96,9 @@ namespace HotelManagementSystem.Server.Data
                     Id = Guid.NewGuid(),
                     ApplicationUserId = adminID,
                     RoomId = g,
-                    ArrivalDate = new DateTime(2022,12,20),
-                    DepartureDate = new DateTime(2022, 12, 27),
+                    ArrivalDate = new DateTime(2023,08,20),
+                    DepartureDate = new DateTime(2023, 08, 27),
+                    RoomPrice = 1230,
                     TotalSum = 23456,
                     TransactionDateTime = DateTimeOffset.Now,
                 });

@@ -2,7 +2,7 @@
 {
     public class TransactionDataForCreationDto
     {
-        public RoomDto Room { get; set; }
+        public double _totalSum;
 
         /// <summary>
         /// User id
@@ -19,11 +19,12 @@
         /// </summary>
         public DateTime? ArrivalDate {get; set;}
 
-
         /// <summary>
         /// booking end date
         /// </summary>
         public DateTime? DepartureDate { get; set; }
+
+        public int RoomPrice { get; set; }
 
         /// <summary>
         /// Transaction sum
@@ -31,17 +32,14 @@
         public double TotalSum
         {
             get
-            {
-                if (Room != null && DepartureDate is not null && ArrivalDate is not null)
+            {                
+                if (DepartureDate is not null && ArrivalDate is not null)
                 {
                     var nrOfDays = ((DateTime)DepartureDate - (DateTime)ArrivalDate).TotalDays;
-                    return (int)(Room.Price * nrOfDays); //calculate the total sum                
+                    _totalSum = (int)(RoomPrice * nrOfDays); //calculate the total sum                
                 }
-                else
-                {
-                    throw new ArgumentNullException(nameof(Room));
-                }
-            }
+                return _totalSum;
+            }            
         }
     }
 }

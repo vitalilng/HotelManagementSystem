@@ -12,10 +12,7 @@
     <ValidationSummary />
     <MudPaper>
         <MudCard Outlined="true">
-            <MudCardContent>
-                <MudTextField Label="UserName" Immediate=true Variant="Variant.Text"
-                              Value="username" ReadOnly=true />
-
+            <MudCardContent>                
                 <MudTextField Label="Room Type" Immediate=true Variant="Variant.Text" Value="roomType" ReadOnly=true />
 
                 <MudDatePicker Label="Arrival Date"
@@ -35,6 +32,9 @@
                                 Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
                                 Validation="@transactionParameters.ValidDateRange" />
 
+                <MudTextField Label="Room Price"
+                              @bind-Value="roomPrice"
+                              Variant="Variant.Text" />
 
                 <MudTextField Label="Total Sum"
                               @bind-Value="totalSum"
@@ -55,19 +55,20 @@
     RoomDto? RoomDetailsDto { get; set; } = new();
     TransactionParameters transactionParameters { get; set; } = new();    
 
-    public event Action? OnStateChange;
-    string? username = "";
     string? roomType = "";
     int totalSum = 0;
+    int roomPrice = 0;
+    string userId = "";
 
     protected async override Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        if (user?.Identity is not null)
+        var user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+        if (user is not null) 
         {
-            username = user.Identity.Name;
+            userId = user.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value;
         }
+        
+        
 
         transactionParameters = new TransactionParameters
         {
@@ -81,6 +82,7 @@
         if (RoomDetailsDto is not null)
         {
             roomType = RoomDetailsDto.RoomType;
+            roomPrice = RoomDetailsDto.Price;
         }
     }
 
@@ -88,15 +90,15 @@
     {
         if (RoomDetailsDto is not null && transactionParameters != null)
         {
-            var dateRange = new TransactionDataForCreationDto
-            {
-                    Room = RoomDetailsDto,
-                    ApplicationUserId = username,
+            var transactionData = new TransactionDataForCreationDto
+            {                    
+                    ApplicationUserId = userId,
                     RoomId = RoomDetailsDto.Id,
                     ArrivalDate = dateTime,
-                    DepartureDate = transactionParameters.DateOfDeparture
+                    DepartureDate = transactionParameters.DateOfDeparture,
+                    RoomPrice = RoomDetailsDto.Price                    
             };
-            totalSum = (int)dateRange.TotalSum;
+            totalSum = (int)transactionData.TotalSum;
             transactionParameters.DateOfArrival = dateTime;
         }
     }
@@ -105,26 +107,38 @@
     {
         if (RoomDetailsDto is not null && transactionParameters != null)
         {
-            var dateRange = new TransactionDataForCreationDto
+            var transactionData = new TransactionDataForCreationDto
             {
-                    Room = RoomDetailsDto,
-                    ApplicationUserId = username,
+                    ApplicationUserId = userId,
                     RoomId = RoomDetailsDto.Id,
                     ArrivalDate = transactionParameters.DateOfArrival,
-                    DepartureDate = dateTime
+                    DepartureDate = dateTime,
+                    RoomPrice = RoomDetailsDto.Price
             };
-            totalSum = (int)dateRange.TotalSum;
+            totalSum = (int) transactionData.TotalSum;
             transactionParameters.DateOfDeparture = dateTime;
         }
     }
 
     async Task BookRoom()
     {
-        transactionModelForCreation.ApplicationUserId = username;
-        transactionModelForCreation.RoomId = RoomDetailsDto.Id;
+        var bookingModel = new TransactionDataForCreationDto();
 
+        if (RoomDetailsDto is not null)
+        {
+            bookingModel = new TransactionDataForCreationDto
+            {
+                ApplicationUserId = userId,
+                RoomId = RoomDetailsDto.Id,
+                ArrivalDate = transactionParameters.DateOfArrival,
+                DepartureDate = transactionParameters.DateOfDeparture,
+                RoomPrice = RoomDetailsDto.Price,
+                _totalSum = totalSum                
+            };
 
-        await httpClient.PostAsJsonAsync("api/transactions", transactionModelForCreation);
+        }
+
+        await httpClient.PostAsJsonAsync("api/transactions", bookingModel);
         navigationManager.NavigateTo("payment");// a new page for paying the booking will be created
     }
 

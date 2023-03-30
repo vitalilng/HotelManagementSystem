@@ -64,7 +64,7 @@
     RoomDto RoomDetailsDto { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
-    {
+    {        
         RoomDetailsDto = await httpClient.GetFromJsonAsync<RoomDto>($"/api/rooms/{roomId}");
         StateContainer.OnStateChange += StateHasChanged;
     }

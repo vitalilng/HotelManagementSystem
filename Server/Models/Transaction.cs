@@ -31,6 +31,11 @@
         public DateTime DepartureDate { get; set; }
 
         /// <summary>
+        /// Room Price
+        /// </summary>
+        public double RoomPrice { get; set; }
+        
+        /// <summary>
         /// Transaction sum
         /// </summary>
         public double TotalSum  { get; set; }

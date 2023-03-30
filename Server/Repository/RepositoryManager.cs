@@ -5,7 +5,7 @@ namespace HotelManagementSystem.Server.Repository
 {
     /// <summary>
     /// Using Lazy class to ensure lazy initialization for our repositories. 
-    /// Meaning that repository instances will be created only we access them 
+    /// Meaning that repository instances will be created only when we access them 
     /// for the first time And not before that
     /// </summary>
     public class RepositoryManager : IRepositoryManager
