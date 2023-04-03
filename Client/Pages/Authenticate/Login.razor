@@ -14,16 +14,16 @@
                     <MudTextField Label="Username" HelperText="Max. 8 characters"
                                 @bind-Value="loginModel.UserName" 
                                 For="@(() => loginModel.UserName)"
-                                  Variant="Variant.Filled" />
+                                Variant="Variant.Filled" />
 
                     <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
                                 @bind-Value="loginModel.Password" 
                                 For="@(() => loginModel.Password)"                                 
-                                  InputType="@PasswordInput" Immediate="true"
-                                  Variant="Variant.Filled"
-                                  Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
-                                  OnAdornmentClick="ButtonTestClick"
-                                  AdornmentAriaLabel="Show Password" />
+                                InputType="@PasswordInput" Immediate="true"
+                                Variant="Variant.Filled"
+                                Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
+                                OnAdornmentClick="ButtonTestClick"
+                                AdornmentAriaLabel="Show Password" />
 
                     <MudCheckBox T="bool" Label="Remember Me!" 
                                 @bind-Value="@loginModel.RememberMe" 

@@ -7,68 +7,86 @@
 @implements IDisposable
 @inject ISnackbar snackBar
 
-<EditForm Model="transactionModelForCreation" OnValidSubmit="BookRoom">
+
+<EditForm Model="@transactionModelForCreation">
     <DataAnnotationsValidator />
-    <ValidationSummary />
     <MudPaper>
         <MudCard Outlined="true">
-            <MudCardContent>                
-                <MudTextField Label="Room Type" Immediate=true Variant="Variant.Text" Value="roomType" ReadOnly=true />
-
+            <MudCardContent>
+                <MudTextField Label="Room Type" Immediate=true Variant="Variant.Outlined" Value="roomType" ReadOnly=true />
+                <br />
                 <MudDatePicker Label="Arrival Date"
                                Date="transactionParameters.DateOfArrival"
                                DateChanged="OnArrivalDateChange"
                                Required=true RequiredError="Arrival Date is required!"
                                PickerVariant="PickerVariant.Dialog" Rounded="true"
-                               Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
-                               Validation="@transactionParameters.ValidDateRange" />
+                               Variant="Variant.Outlined"
+                               Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date/>
 
+                <ValidationMessage For=@( () => transactionParameters.DateOfArrival ) />
+                <br />
                 <MudSpacer></MudSpacer>
                 <MudDatePicker Label="Departure Date"
-                                Date="transactionParameters.DateOfDeparture"
-                                DateChanged="OnDepartureDateChange"                                
-                                Required=true RequiredError="Departure Date is required!"
-                                PickerVariant="PickerVariant.Dialog" Rounded="true"
-                                Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
-                                Validation="@transactionParameters.ValidDateRange" />
+                               Date="transactionParameters.DateOfDeparture"
+                               DateChanged="OnDepartureDateChange"
+                               Required=true RequiredError="Departure Date is required!"
+                               PickerVariant="PickerVariant.Dialog" Rounded="true"
+                               Variant="Variant.Outlined"
+                               Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date/>
+                <ValidationMessage For=@( () => transactionParameters.DateOfDeparture ) />
+                <br />
 
-                <MudTextField Label="Room Price"
-                              @bind-Value="roomPrice"
-                              Variant="Variant.Text" />
-
-                <MudTextField Label="Total Sum"
-                              @bind-Value="totalSum"
-                              Variant="Variant.Text"/>
-
+                @if (userType == "admin" || userType == "ADMIN")
+                {
+                    <MudTextField Label="Room Price" @bind-Value="roomPrice" Variant="Variant.Outlined" />
+                    <br />
+                    <MudTextField Label="Total Sum" @bind-Value="totalSum" Variant="Variant.Outlined" />
+                    <ValidationMessage For=@( () => transactionModelForCreation.TotalSum) class="text-danger"/>
+                }
+                else
+                {
+                    <MudTextField Label="Room Price" @bind-Value="roomPrice" Variant="Variant.Outlined" ReadOnly=true DisableUnderLine=true />
+                    <br />
+                    <MudTextField Label="Total Sum" @bind-Value="totalSum" Variant="Variant.Outlined" ReadOnly=true DisableUnderLine=true />
+                    <ValidationMessage For=@( () => transactionModelForCreation.TotalSum) class="text-danger" />
+                }
+                <br />
+                <br />
+                <MudText>Create Booking and go to Payment page</MudText>
+                <br />
             </MudCardContent>
             <MudCardActions>
-                <MudText>Create Booking and go to Payment page</MudText>
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="() => BookRoom()">Book</MudButton>
+
+                <MudButton StartIcon="@Icons.Material.Filled.Book"
+                           ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Class="oi-align-left"                            
+                           OnClick="() => BookRoom()">Book</MudButton>
             </MudCardActions>
         </MudCard>
     </MudPaper>
 </EditForm>
-    
 
 @code {
-    TransactionDataForCreationDto? transactionModelForCreation { get; set; } = new();
-    RoomDto? RoomDetailsDto { get; set; } = new();
-    TransactionParameters transactionParameters { get; set; } = new();    
+    private TransactionDataForCreationDto? transactionModelForCreation { get; set; } = new();
+    private RoomDto? RoomDetailsDto { get; set; } = new();
+    private TransactionParameters transactionParameters { get; set; } = new();    
 
     string? roomType = "";
     int totalSum = 0;
     int roomPrice = 0;
     string userId = "";
+    string userType = "";    
 
     protected async override Task OnInitializedAsync()
     {
         var user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
-        if (user is not null) 
+        if (user is not null && user?.Identity is not null) 
         {
             userId = user.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value;
-        }
-        
-        
+            userType = user.Identity.Name;
+        }       
 
         transactionParameters = new TransactionParameters
         {
@@ -84,28 +102,23 @@
             roomType = RoomDetailsDto.RoomType;
             roomPrice = RoomDetailsDto.Price;
         }
-    }
+    }   
 
     private void OnArrivalDateChange(DateTime? dateTime)
     {
+
         if (RoomDetailsDto is not null && transactionParameters != null)
         {
-            var transactionData = new TransactionDataForCreationDto
-            {                    
-                    ApplicationUserId = userId,
-                    RoomId = RoomDetailsDto.Id,
-                    ArrivalDate = dateTime,
-                    DepartureDate = transactionParameters.DateOfDeparture,
-                    RoomPrice = RoomDetailsDto.Price                    
-            };
-            totalSum = (int)transactionData.TotalSum;
             transactionParameters.DateOfArrival = dateTime;
+            transactionParameters.DateOfDeparture = dateTime;
         }
     }
 
     private void OnDepartureDateChange(DateTime? dateTime)
     {
-        if (RoomDetailsDto is not null && transactionParameters != null)
+        if (RoomDetailsDto is not null 
+            && transactionParameters != null 
+            && dateTime > transactionParameters.DateOfArrival)
         {
             var transactionData = new TransactionDataForCreationDto
             {
@@ -115,16 +128,25 @@
                     DepartureDate = dateTime,
                     RoomPrice = RoomDetailsDto.Price
             };
-            totalSum = (int) transactionData.TotalSum;
+            totalSum = (int)transactionData.TotalSum;                       
             transactionParameters.DateOfDeparture = dateTime;
         }
+        else
+        {
+            ClearField();
+        }
+    }
+
+    void ClearField()
+    {
+        totalSum = 0;
     }
 
     async Task BookRoom()
     {
         var bookingModel = new TransactionDataForCreationDto();
 
-        if (RoomDetailsDto is not null)
+        if (RoomDetailsDto is not null && totalSum != 0)
         {
             bookingModel = new TransactionDataForCreationDto
             {
@@ -135,19 +157,13 @@
                 RoomPrice = RoomDetailsDto.Price,
                 _totalSum = totalSum                
             };
-
+            await httpClient.PostAsJsonAsync("api/transactions", bookingModel);
+            navigationManager.NavigateTo("payment");
         }
-
-        await httpClient.PostAsJsonAsync("api/transactions", bookingModel);
-        navigationManager.NavigateTo("payment");// a new page for paying the booking will be created
     }
-
-
 
     public void Dispose()
     {
-       globalStateContainer.OnStateChange -= StateHasChanged;
+        globalStateContainer.OnStateChange -= StateHasChanged;
     }
-
-}
-
+} 

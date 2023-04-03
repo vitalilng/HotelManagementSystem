@@ -1,26 +1,44 @@
 ﻿@page "/payment"
 @inject ISnackbar snackbar
 
-<EditForm OnValidSubmit="Pay">
-    <DataAnnotationsValidator/>
-    <ValidationSummary />
+
+<MudPaper>
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h4">Payment page</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+    </MudCard>
     <MudCard Outlined="true">         
         <MudCardContent>
-            <MudTextField Label="Card Number" />
-            <MudDatePicker Label="Expiration Date"/>
-            <MudTextField Label="CVV" />
-            <MudTextField Label="Card Holder Name"/>
-            <MudTextField Label="Email"/>
+            <MudTextField Label="Card Number" @bind-Value="cardNumber"></MudTextField>
+            <MudDatePicker Label="Expiration Date" Date="expirationDate"/>
+            <MudTextField Label="CVV" @bind-Value ="cvv"/>
+            <MudTextField Label="Card Holder Name" @bind-Value="cardHolderName"></MudTextField>
+            <MudTextField Label="Email" @bind-Value="email"></MudTextField>
         </MudCardContent>
     </MudCard>
-    <MudButton ButtonType="ButtonType.Submit" />
+    <MudCardActions>
+        <MudButton Class="py-5" ButtonType="ButtonType.Submit"
+                   Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary" OnClick="() => Pay()">Pay</MudButton>
+    </MudCardActions>
+    
+
+</MudPaper>
+    
 
 
-</EditForm>
 
 
 
 @code {
+    long cardNumber = 444444444444444;
+    DateTime expirationDate = DateTime.Now;
+    int cvv = 123;
+    string cardHolderName = "John Doe";
+    string email = "test@email.com";
+
 
     public void Pay()
     {

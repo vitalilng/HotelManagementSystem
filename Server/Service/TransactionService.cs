@@ -49,7 +49,7 @@ namespace HotelManagementSystem.Server.Service
         /// <exception cref="NotImplementedException"></exception>
         public IEnumerable<TransactionDataToDisplayDto> GetTransactionsToBeDisplayed()
         {
-            var transactions = _repositoryManager.TransactionRepository.GetTransactionsQuerable().ProjectTo<TransactionDataToDisplayDto>(_mapper.ConfigurationProvider);
+            var transactions = _repositoryManager.TransactionRepository.GetTransactionsQuerable().ProjectTo<TransactionDataToDisplayDto>(_mapper.ConfigurationProvider).OrderByDescending(t => t.TransactionDateTime);
             var transactionsToDisplayDto = _mapper.Map<IEnumerable<TransactionDataToDisplayDto>>(transactions);
             return transactionsToDisplayDto;
         }
@@ -117,6 +117,7 @@ namespace HotelManagementSystem.Server.Service
         public TransactionDto CreateTransaction(TransactionDataForCreationDto transactionCreateDataDto)
         {
             var transaction = _mapper.Map<Transaction>(transactionCreateDataDto);
+            transaction.TransactionDateTime = DateTime.UtcNow;
             _repositoryManager.TransactionRepository.CreateTransaction(transaction);
             _repositoryManager.Save();
 

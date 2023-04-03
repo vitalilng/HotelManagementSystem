@@ -89,6 +89,12 @@ namespace HotelManagementSystem.Server.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult CreateTransaction([FromBody] TransactionDataForCreationDto transactionDataForCreation)
         {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
+
             if (transactionDataForCreation is null)
             {
                 return BadRequest("transactionDataForCreation object is null");
