@@ -1,8 +1,8 @@
 ﻿using HotelManagementSystem.Server.Service.Contracts;
 using HotelManagementSystem.Shared.Dto;
+using HotelManagementSystem.Shared.RequestFeatures;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using HotelManagementSystem.Shared.RequestFeatures;
 
 namespace HotelManagementSystem.Server.Controllers
 {
@@ -11,19 +11,15 @@ namespace HotelManagementSystem.Server.Controllers
     /// </summary>
     [Route("api/rooms")]
     [ApiController]
-    //[Authorize(Roles = "admin")]
     public class RoomController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
-        
+
         /// <summary>
         /// Room constructor with service manager di
         /// </summary>
         /// <param name="serviceManger"></param>
-        public RoomController(IServiceManager serviceManger)
-        {
-            _serviceManager= serviceManger;
-        }
+        public RoomController(IServiceManager serviceManger) => _serviceManager = serviceManger;
 
         /// <summary>
         /// Get all rooms
@@ -31,7 +27,7 @@ namespace HotelManagementSystem.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]        
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetRooms()
         {
             var rooms = _serviceManager.RoomService.GetRooms();
@@ -63,7 +59,7 @@ namespace HotelManagementSystem.Server.Controllers
         {
             if (roomId == Guid.Empty)
             {
-                return NotFound($"{roomId} was not found");                
+                return NotFound($"{roomId} was not found");
             }
             var room = _serviceManager.RoomService.GetRoom(roomId);
             return Ok(room);
@@ -77,14 +73,18 @@ namespace HotelManagementSystem.Server.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult CreateRoom([FromBody]RoomDataForCreationDto roomDataForCreation)
+        public IActionResult CreateRoom([FromBody] RoomDataForCreationDto roomDataForCreation)
         {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
             if (roomDataForCreation is null)
             {
                 return BadRequest("roomDataForCreation object is null");
             }
             var createdRoom = _serviceManager.RoomService.CreateRoom(roomDataForCreation);
-            return CreatedAtRoute("RoomById", new { roomId = createdRoom.Id}, createdRoom);
+            return CreatedAtRoute("RoomById", new { roomId = createdRoom.Id }, createdRoom);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace HotelManagementSystem.Server.Controllers
         /// <param name="roomDataForUpdate"></param>
         /// <returns></returns>
         [HttpPut("{roomId}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]        
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateRoom(Guid roomId, [FromBody] RoomDataForUpdateDto roomDataForUpdate)
         {
@@ -131,7 +131,7 @@ namespace HotelManagementSystem.Server.Controllers
         /// <param name="returnedRoomDataForPatch"></param>
         /// <returns></returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]        
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPatch("{roomId}")]
         public IActionResult PatchRoom(Guid roomId, [FromBody] JsonPatchDocument<RoomDataForUpdateDto> returnedRoomDataForPatch)
         {

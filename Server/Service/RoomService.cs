@@ -37,7 +37,7 @@ namespace HotelManagementSystem.Server.Service
         public IEnumerable<RoomDto> GetRooms()
         {
             var rooms = _repositoryManager.RoomRepository.GetRooms();
-            
+
             //map rooms to RoomDto using automapper
             var roomsDto = _mapper.Map<IEnumerable<RoomDto>>(rooms);
             return roomsDto;
@@ -54,10 +54,10 @@ namespace HotelManagementSystem.Server.Service
                 throw new DateOfDepartureBadRequestException();
             }
 
-            var rooms = _repositoryManager.RoomRepository.GetRoomsQueryable().Where(r => !r.Transactions.Any(t => (t.ArrivalDate >= transactionParameters.DateOfArrival && t.ArrivalDate <= transactionParameters.DateOfDeparture) 
-                                                                                                               || (t.DepartureDate >= transactionParameters.DateOfArrival && t.DepartureDate <= transactionParameters.DateOfDeparture)
-                                                                                                               || (t.ArrivalDate >= transactionParameters.DateOfArrival && !transactionParameters.DateOfDeparture.HasValue)
-                                                                                                               || (!transactionParameters.DateOfArrival.HasValue && t.DepartureDate <= transactionParameters.DateOfDeparture)));
+            var rooms = _repositoryManager.RoomRepository.GetRoomsQueryable().Where(r => r!.Transactions.Any(t => (t.ArrivalDate >= transactionParameters.DateOfArrival && t.ArrivalDate <= transactionParameters.DateOfDeparture)
+                                                                                                                           || (t.DepartureDate >= transactionParameters.DateOfArrival && t.DepartureDate <= transactionParameters.DateOfDeparture)
+                                                                                                                           || (t.ArrivalDate >= transactionParameters.DateOfArrival && !transactionParameters.DateOfDeparture.HasValue)
+                                                                                                                           || (!transactionParameters.DateOfArrival.HasValue && t.DepartureDate <= transactionParameters.DateOfDeparture)));
 
             var roomsDto = _mapper.Map<IEnumerable<RoomDto>>(rooms);
             return roomsDto;
@@ -71,11 +71,7 @@ namespace HotelManagementSystem.Server.Service
         /// <exception cref="RoomNotFoundException"></exception>
         public RoomDto GetRoom(Guid roomId)
         {
-            var room = _repositoryManager.RoomRepository.GetRoom(roomId);
-            if (room is null)
-            {
-                throw new RoomNotFoundException(roomId);
-            }
+            var room = _repositoryManager.RoomRepository.GetRoom(roomId) ?? throw new RoomNotFoundException(roomId);
             var roomDto = _mapper.Map<RoomDto>(room);
             return roomDto;
         }
@@ -103,18 +99,14 @@ namespace HotelManagementSystem.Server.Service
         /// <exception cref="RoomNotFoundException"></exception>
         public void UpdateRoom(Guid roomId, RoomDataForUpdateDto roomDataForUpdate)
         {
-            var roomToBeUpdated = _repositoryManager.RoomRepository.GetRoom(roomId);
-            if (roomToBeUpdated is null)
-            {
-                throw new RoomNotFoundException(roomId);
-            }
+            var roomToBeUpdated = _repositoryManager.RoomRepository.GetRoom(roomId) ?? throw new RoomNotFoundException(roomId);
             _mapper.Map(roomDataForUpdate, roomToBeUpdated); //(source, destination)
             _repositoryManager.RoomRepository.UpdateRoom(roomToBeUpdated);
             _repositoryManager.Save();
         }
 
         /// <summary>
-        /// Delete room 
+        /// Delete room
         /// </summary>
         /// <param name="roomId"></param>
         /// <exception cref="RoomNotFoundException"></exception>
@@ -155,6 +147,6 @@ namespace HotelManagementSystem.Server.Service
         {
             _mapper.Map(roomDataForPatch, roomToBePatched);
             _repositoryManager.Save();
-        }        
+        }
     }
 }

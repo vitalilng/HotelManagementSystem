@@ -14,19 +14,19 @@ namespace HotelManagementSystem.Server.Controllers
         private readonly IServiceManager _serviceManager;
 
         /// <summary>
-        /// 
+        /// TransactionController constructor
         /// </summary>
         /// <param name="serviceManager"></param>
         public TransactionController(IServiceManager serviceManager)
         {
             _serviceManager = serviceManager;
         }
-        
+
         /// <summary>
         /// Get all transactions
         /// </summary>
         /// <returns></returns>
-        [HttpGet("GetTransactions")]        
+        [HttpGet("GetTransactions")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetTransactions()
@@ -78,7 +78,7 @@ namespace HotelManagementSystem.Server.Controllers
             var transaction = _serviceManager.TransactionService.GetTransaction(transactionId);
             return Ok(transaction);
         }
-        
+
         /// <summary>
         /// Create transaction
         /// </summary>
@@ -94,7 +94,6 @@ namespace HotelManagementSystem.Server.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-
             if (transactionDataForCreation is null)
             {
                 return BadRequest("transactionDataForCreation object is null");
@@ -102,6 +101,5 @@ namespace HotelManagementSystem.Server.Controllers
             var createdTransaction = _serviceManager.TransactionService.CreateTransaction(transactionDataForCreation);
             return CreatedAtRoute("TransactionById", new { transactionId = createdTransaction.Id }, createdTransaction);
         }
-
     }
 }

@@ -7,6 +7,10 @@ namespace HotelManagementSystem.Server.Migrations
 {
     public partial class newTransactionField : Migration
     {
+        /// <summary>
+        /// Up method
+        /// </summary>
+        /// <param name="migrationBuilder"></param>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
@@ -51,6 +55,10 @@ namespace HotelManagementSystem.Server.Migrations
                 values: new object[] { new Guid("3c7631e3-dc7e-472e-9a14-7a7a24b9b40c"), "2d5168cc-2092-4eaa-b62a-95ee7d587951", new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 12, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("11223344-5566-7788-99aa-bbccddeeff00"), 0.0, 23456.0, new DateTimeOffset(new DateTime(2023, 3, 28, 22, 28, 48, 968, DateTimeKind.Unspecified).AddTicks(7723), new TimeSpan(0, 3, 0, 0, 0)) });
         }
 
+        /// <summary>
+        /// Down method
+        /// </summary>
+        /// <param name="migrationBuilder"></param>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(

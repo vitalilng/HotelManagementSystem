@@ -12,6 +12,9 @@
     <DataAnnotationsValidator />
     <MudPaper>
         <MudCard Outlined="true">
+            <MudCardHeader>
+                <MudText Typo="Typo.h5" Color="Color.Info">Please, select the Arrival and Departure Dates</MudText>
+            </MudCardHeader>
             <MudCardContent>
                 <MudTextField Label="Room Type" Immediate=true Variant="Variant.Outlined" Value="roomType" ReadOnly=true />
                 <br />
@@ -23,7 +26,6 @@
                                Variant="Variant.Outlined"
                                Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date/>
 
-                <ValidationMessage For=@( () => transactionParameters.DateOfArrival ) />
                 <br />
                 <MudSpacer></MudSpacer>
                 <MudDatePicker Label="Departure Date"
@@ -33,36 +35,35 @@
                                PickerVariant="PickerVariant.Dialog" Rounded="true"
                                Variant="Variant.Outlined"
                                Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date/>
-                <ValidationMessage For=@( () => transactionParameters.DateOfDeparture ) />
                 <br />
 
-                @if (userType == "admin" || userType == "ADMIN")
+                @if (userType is "admin" or "ADMIN")
                 {
                     <MudTextField Label="Room Price" @bind-Value="roomPrice" Variant="Variant.Outlined" />
                     <br />
                     <MudTextField Label="Total Sum" @bind-Value="totalSum" Variant="Variant.Outlined" />
-                    <ValidationMessage For=@( () => transactionModelForCreation.TotalSum) class="text-danger"/>
                 }
                 else
                 {
                     <MudTextField Label="Room Price" @bind-Value="roomPrice" Variant="Variant.Outlined" ReadOnly=true DisableUnderLine=true />
                     <br />
                     <MudTextField Label="Total Sum" @bind-Value="totalSum" Variant="Variant.Outlined" ReadOnly=true DisableUnderLine=true />
-                    <ValidationMessage For=@( () => transactionModelForCreation.TotalSum) class="text-danger" />
                 }
+
+                @if (transactionModelForCreation is not null && totalSum is 0)
+                {
+                    <br />
+                    <ValidationMessage For=@( () => totalSum) />
+                }
+
                 <br />
                 <br />
-                <MudText>Create Booking and go to Payment page</MudText>
+                <MudText>Book and go to Payment page</MudText>
                 <br />
             </MudCardContent>
             <MudCardActions>
-
-                <MudButton StartIcon="@Icons.Material.Filled.Book"
-                           ButtonType="ButtonType.Submit"
-                           Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           Class="oi-align-left"                            
-                           OnClick="() => BookRoom()">Book</MudButton>
+                <MudButton StartIcon="@Icons.Material.Filled.Book" ButtonType="ButtonType.Submit" 
+                           Variant="Variant.Filled" Color="Color.Primary" Class="oi-align-left" OnClick="BookRoom">Book</MudButton>
             </MudCardActions>
         </MudCard>
     </MudPaper>
@@ -106,7 +107,6 @@
 
     private void OnArrivalDateChange(DateTime? dateTime)
     {
-
         if (RoomDetailsDto is not null && transactionParameters != null)
         {
             transactionParameters.DateOfArrival = dateTime;
@@ -137,7 +137,7 @@
         }
     }
 
-    void ClearField()
+    private void ClearField()
     {
         totalSum = 0;
     }

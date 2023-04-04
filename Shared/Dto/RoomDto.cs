@@ -27,7 +27,7 @@ namespace HotelManagementSystem.Shared.Dto
         [Required(ErrorMessage = "Description is a required field.")]
         public string? Description { get; set; }
 
-        [Required(ErrorMessage = "Price is a required field.")]
+        [Range(1,int.MaxValue, ErrorMessage = "Price is required and should higher than 0.")]
         public int Price { get; set; }
     }
 }

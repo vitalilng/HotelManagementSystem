@@ -14,8 +14,10 @@ else if (transactionsToDisplay.Length == 0)
 }
 else
 {
-    <MudTable Elevation="25" Items="transactionsToDisplay" Hover="true" Breakpoint="Breakpoint.Sm" @bind-transactionsToDisplay="transactionsToDisplay" MultiSelection="true"
-          Filter="new Func<TransactionDataToDisplayDto, bool>(SearchTransaction)" CanCancelEdit="true">
+    <MudTable Elevation="25" Items="transactionsToDisplay" 
+        Hover="true" Breakpoint="Breakpoint.Sm" @bind-transactionsToDisplay="transactionsToDisplay" 
+        Filter="new Func<TransactionDataToDisplayDto, bool>(SearchTransaction)" CanCancelEdit="true" 
+            Bordered=true Striped=true Dense=true>
             <ToolBarContent>
                 <MudText Typo="Typo.h6">Transactions</MudText>
                 <MudSpacer />
@@ -28,16 +30,16 @@ else
                 <MudTh>Departure Date</MudTh>            
                 <MudTh>Room Price</MudTh>            
                 <MudTh>TotalSum</MudTh>
-            <MudTh>Transaction DateTime</MudTh>
+                <MudTh>Transaction DateTime</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Username">@context.UserName</MudTd>
                 <MudTd DataLabel="Room Type">@context.RoomType </MudTd>
-                <MudTd DataLabel="Arrival Date">@context.ArrivalDate</MudTd>                              
-                <MudTd DataLabel="Departure Date">@context.DepartureDate</MudTd>                              
+                <MudTd T="DateTime" Format="dd-mm-yyyy" DataLabel="Arrival Date">@context.ArrivalDate</MudTd>
+                <MudTd T="DateTime" Format="dd-mm-yyyy" DataLabel="Departure Date">@context.DepartureDate</MudTd>
                 <MudTd DataLabel="Room Price">@context.RoomPrice</MudTd>                              
                 <MudTd DataLabel="TotalSum">@context.TotalSum</MudTd>
-                <MudTd DataLabel="TransactionDateTime">@context.TransactionDateTime</MudTd>
+                <MudTd T="DateTime" Format="dd-mm-yyyy" DataLabel="TransactionDateTime">@context.TransactionDateTime</MudTd>
             </RowTemplate>
             <RowEditingTemplate>
                 <MudTd DataLabel="Username">
@@ -47,10 +49,10 @@ else
                         <MudTextField @bind-Value="@context.RoomType" Required />
                 </MudTd>                
                 <MudTd DataLabel="Arrival Date">
-                    <MudTextField @bind-Value="@context.ArrivalDate" Required />
+                <MudTextField T="DateTime" Format="dd-mm-yyyy" @bind-Value="@context.ArrivalDate" Required />
                 </MudTd>
                 <MudTd DataLabel="Departure Date">
-                    <MudTextField @bind-Value="@context.DepartureDate" Required/>
+                <MudTextField T="DateTime" Format="dd-mm-yyyy" @bind-Value="@context.DepartureDate" Required />
                 </MudTd>
                 <MudTd DataLabel="Room Price">
                     <MudTextField @bind-Value="@context.RoomPrice" Required />
@@ -58,9 +60,9 @@ else
                 <MudTd DataLabel="TotalSum">
                     <MudTextField @bind-Value="@context.TotalSum" Required />
                 </MudTd>
-            <MudTd DataLabel="Transaction DateTime">
-                <MudTextField @bind-Value="@context.TransactionDateTime" Required />
-            </MudTd>
+                <MudTd DataLabel="Transaction DateTime">
+                    <MudTextField T="DateTimeOffset" Format="dd-mm-yyyy" @bind-Value="@context.TransactionDateTime" Required />
+                </MudTd>
             </RowEditingTemplate>
             <PagerContent>
                 <MudTablePager />

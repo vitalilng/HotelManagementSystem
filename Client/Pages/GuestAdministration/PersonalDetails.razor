@@ -5,10 +5,8 @@
 @inject IJSRuntime js
 @inject ISnackbar snackBar
 
-
 @if (claims.Count() > 0)
-{
-    
+{    
     <MudCard Elevation="25">
         <MudCardHeader>
             <MudText Typo="Typo.h6">Personal Details</MudText>
@@ -36,8 +34,7 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();                
         var user = authState.User;
-
-        if (user.Identity.IsAuthenticated)
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
             authMessage = $"Hello {user.Identity.Name}, this is your personal page!";
             claims = user.Claims;

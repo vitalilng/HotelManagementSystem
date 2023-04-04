@@ -8,19 +8,19 @@
     <MudCardContent>
                 <MudText Align="Align.Center" Typo="Typo.h3">Make A Booking</MudText>
                 <MudContainer class="d-flex">
-                
-                <MudDatePicker Label="Arrival Date" @bind-Date="transactionParameters.DateOfArrival" 
-                        PickerVariant="PickerVariant.Dialog" Rounded="true" 
-                        Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date 
-                        Validation="@transactionParameters.ValidDateRange"/>
-                
-                <MudSpacer></MudSpacer>
-                
-                <MudDatePicker Label="Departure Date" @bind-Date="transactionParameters.DateOfDeparture" 
-                        PickerVariant="PickerVariant.Dialog" Rounded="true" 
-                        Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
+                @if (transactionParameters is not null)
+                {
+                <MudDatePicker Label="Arrival Date" @bind-Date="transactionParameters.DateOfArrival"
+                           PickerVariant="PickerVariant.Dialog" Rounded="true"
+                           Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
                            Validation="@transactionParameters.ValidDateRange" />
+                <MudSpacer></MudSpacer>
 
+                <MudDatePicker Label="Departure Date" @bind-Date="transactionParameters.DateOfDeparture"
+                           PickerVariant="PickerVariant.Dialog" Rounded="true"
+                           Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
+                           Validation="@transactionParameters.ValidDateRange" />
+                }
                 </MudContainer>
                 <br />
                 <MudContainer Class="d-flex justify-center align-center">
@@ -33,7 +33,7 @@
                 <br/>
                 <MudText Align="Align.Center" Typo="Typo.h3">List of available rooms:</MudText>
 
-                <MudTable Elevation="25" Items="rooms" @bind-rooms="rooms" >
+                <MudTable Elevation="25" Items="rooms" @bind-rooms="rooms" Dense=true Striped=true Bordered=true>
                     <ToolBarContent>                        
                         <MudSpacer />                        
                     </ToolBarContent>
@@ -79,9 +79,12 @@
 
     async Task GetAvailableRooms()
     {
-        var dateOfArrival = transactionParameters.DateOfArrival;
-        var dateOfDeparture = transactionParameters.DateOfDeparture;
-        var url = $"api/rooms/GetAvailableRooms?DateOfArrival={dateOfArrival}&DateOfDeparture={dateOfDeparture}";
-        rooms = await httpClient.GetFromJsonAsync<RoomDto[]>(url);        
+        if (transactionParameters is not null)
+        {
+            var dateOfArrival = transactionParameters.DateOfArrival;
+            var dateOfDeparture = transactionParameters.DateOfDeparture;
+            var url = $"api/rooms/GetAvailableRooms?DateOfArrival={dateOfArrival}&DateOfDeparture={dateOfDeparture}";
+            rooms = await httpClient.GetFromJsonAsync<RoomDto[]>(url);
+        }
     }
 }

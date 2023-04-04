@@ -29,7 +29,7 @@ namespace HotelManagementSystem.Server.Controllers
         /// <exception cref="ArgumentNullException"></exception>
         public GuestController(UserManager<ApplicationUser> userManager)
         {
-            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));            
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
         /// <summary>
@@ -52,8 +52,8 @@ namespace HotelManagementSystem.Server.Controllers
         /// </summary>
         /// <param name="guestId"></param>
         /// <returns>The guest by id</returns>
-        [Route("{guestId}")]                
-        [HttpGet]        
+        [Route("{guestId}")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -66,7 +66,7 @@ namespace HotelManagementSystem.Server.Controllers
                 return NotFound();
             }
             return Ok(applicationUser);
-        }        
+        }
 
         /// <summary>
         /// Create a Guest
