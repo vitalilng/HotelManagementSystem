@@ -11,53 +11,19 @@
             <MudCardContent>
                     <MudText Typo="Typo.h1">Create New Account:</MudText>
 
-                    <MudTextField Label="FullName" HelperText="Max. 15 characters"
-                                  @bind-Value="registrationModel.FullName"
-                                  For="@(() => registrationModel.FullName)"
-                                  Immediate="true" 
-                                  Variant="Variant.Filled" />
+                    <MudTextField Label="FullName" HelperText="Max. 15 characters" @bind-Value="registrationModel.FullName" For="@(() => registrationModel.FullName)" Immediate="true" Variant="Variant.Filled" />
 
-                    <MudTextField Label="Email" Class="mt-3"
-                                  @bind-Value="registrationModel.Email" 
-                                  For="@(() => registrationModel.Email)" 
-                                  Immediate="true" 
-                                  Variant="Variant.Filled" />
+                    <MudTextField Label="Email" Class="mt-3" @bind-Value="registrationModel.Email" For="@(() => registrationModel.Email)" Immediate="true" Variant="Variant.Filled" />
 
-                    <MudTextField Label="Username" HelperText="Max. 8 characters"
-                                  @bind-Value="registrationModel.UserName"
-                                  For="@(() => registrationModel.UserName)" 
-                                  Immediate="true" 
-                                  Variant="Variant.Filled" />
+                    <MudTextField Label="Username" HelperText="Max. 8 characters" @bind-Value="registrationModel.UserName" For="@(() => registrationModel.UserName)" Immediate="true" Variant="Variant.Filled" />
 
-                    <MudTextField Label="Phone Number" HelperText="Max. 15 characters"
-                                  @bind-Value="registrationModel.PhoneNumber"
-                                  For="@(() => registrationModel.PhoneNumber)" 
-                                  Immediate="true" 
-                                  Variant="Variant.Filled" />
+                    <MudTextField Label="Phone Number" HelperText="Max. 15 characters" @bind-Value="registrationModel.PhoneNumber" For="@(() => registrationModel.PhoneNumber)" Immediate="true" Variant="Variant.Filled" />
 
-                    <MudTextField Label="Country" @bind-Value="registrationModel.Country"
-                                  For="@(() => registrationModel.Country)"
-                                  Immediate="true" 
-                                  Variant="Variant.Filled" />
+                    <MudTextField Label="Country" @bind-Value="registrationModel.Country" For="@(() => registrationModel.Country)" Immediate="true" Variant="Variant.Filled" />
 
-                    <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
-                                  @bind-Value="registrationModel.Password"
-                                  For="@(() => registrationModel.Password)"
-                                  InputType="@PasswordInput" Immediate="true"
-                                  Variant="Variant.Filled" 
-                                  Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" 
-                                  OnAdornmentClick="ButtonTestClick" 
-                                  AdornmentAriaLabel="Show Password"/>
+                    <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3" @bind-Value="registrationModel.Password" For="@(() => registrationModel.Password)" InputType="@PasswordInput" Immediate="true" Variant="Variant.Filled" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestClick" AdornmentAriaLabel="Show Password"/>
 
-                    <MudTextField Label="Confirm Password" HelperText="Repeat the password" Class="mt-3"
-                                  @bind-Value="registrationModel.PasswordConfirm"
-                                  For="@(() => registrationModel.PasswordConfirm)"
-                                  InputType="@PasswordInput" Immediate="true"
-                                  Variant="Variant.Filled" 
-                                  Adornment="Adornment.End" 
-                                  AdornmentIcon="@PasswordInputIcon" 
-                                  OnAdornmentClick="ButtonTestClick" 
-                                  AdornmentAriaLabel="Show Password" />                
+                    <MudTextField Label="Confirm Password" HelperText="Repeat the password" Class="mt-3" @bind-Value="registrationModel.PasswordConfirm" For="@(() => registrationModel.PasswordConfirm)" InputType="@PasswordInput" Immediate="true" Variant="Variant.Filled" Adornment="Adornment.End"  AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestClick" AdornmentAriaLabel="Show Password" />                
             </MudCardContent>
                 <MudCardActions>
                     <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
@@ -66,11 +32,9 @@
     </MudItem>
     <MudItem xs="6">
         <MudPaper Class="pa-4 mud-height-full">               
-            @if (!success)          
+            @if (!string.IsNullOrEmpty(error))      
             {
-                <MudText Color="@Color.Error">
-                    <ValidationSummary />
-                </MudText>
+                <MudAlert Severity="Severity.Error" Dense=true ContentAlignment="HorizontalAlignment.Right">@error</MudAlert>
             }
         </MudPaper>
     </MudItem>
@@ -83,7 +47,7 @@
 
 @code {
     UserDetailsDto registrationModel { get; set; } = new UserDetailsDto();
-    string? error { get; set; }
+    string error = "";
     bool success;
     
     /// <summary>

@@ -1,9 +1,8 @@
 ﻿@page "/guests"
 @inject HttpClient httpClient
 @inject IJSRuntime js
-@attribute [Authorize(Roles="admin")]
-
 @inject ISnackbar snackBar
+@attribute [Authorize(Roles="admin")]
 
 @if (registeredGuests == null)
 {

@@ -3,30 +3,40 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient httpClient 
 
-
 <MudCard Outlined=true>
     <MudCardContent>
                 <MudText Align="Align.Center" Typo="Typo.h3">Make A Booking</MudText>
                 <MudContainer class="d-flex">
                 @if (transactionParameters is not null)
-                {
-                <MudDatePicker Label="Arrival Date" @bind-Date="transactionParameters.DateOfArrival"
-                           PickerVariant="PickerVariant.Dialog" Rounded="true"
-                           Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
-                           Validation="@transactionParameters.ValidDateRange" />
-                <MudSpacer></MudSpacer>
-
-                <MudDatePicker Label="Departure Date" @bind-Date="transactionParameters.DateOfDeparture"
-                           PickerVariant="PickerVariant.Dialog" Rounded="true"
-                           Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date
-                           Validation="@transactionParameters.ValidDateRange" />
+                {               
+                    <MudDatePicker Label="Arrival Date" @bind-Date="transactionParameters.DateOfArrival" PickerVariant="PickerVariant.Dialog" Rounded="true" Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date />
+                    <MudSpacer></MudSpacer>
+                    <MudDatePicker Label="Departure Date" @bind-Date="transactionParameters.DateOfDeparture" PickerVariant="PickerVariant.Dialog" Rounded="true" Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date />
                 }
+                </MudContainer>
+
+                <MudContainer Class="align-content-center">
+                    @if (!string.IsNullOrEmpty(arrivalDateError) && !string.IsNullOrEmpty(departureDateError))
+                    {
+                        <MudAlert Severity="Severity.Error" Dense=true ContentAlignment="HorizontalAlignment.Center">@arrivalDateError</MudAlert>
+                        <MudAlert Severity="Severity.Error" Dense=true ContentAlignment="HorizontalAlignment.Center">@departureDateError</MudAlert>
+                    }
+                    else if (!string.IsNullOrEmpty(arrivalDateError) && string.IsNullOrEmpty(departureDateError))
+                    {
+                        <MudAlert Severity="Severity.Error" Dense=true ContentAlignment="HorizontalAlignment.Center">@arrivalDateError</MudAlert>
+                    }
+                    else if (!string.IsNullOrEmpty(departureDateError) && string.IsNullOrEmpty(arrivalDateError))
+                    {
+                        <MudAlert Severity="Severity.Error" Dense=true ContentAlignment="HorizontalAlignment.Center">@departureDateError</MudAlert>
+                    }
+                    else if (!string.IsNullOrEmpty(validationError))
+                    {
+                        <MudAlert Severity="Severity.Error" Dense=true ContentAlignment="HorizontalAlignment.Center">@validationError</MudAlert>
+                    }
                 </MudContainer>
                 <br />
                 <MudContainer Class="d-flex justify-center align-center">
-                    <MudButton Class="pa-4" ButtonType="ButtonType.Button" Size=Size.Large 
-                        Variant="Variant.Filled" Color="Color.Tertiary" 
-                        OnClick="@GetAvailableRooms">Check Availability</MudButton>
+                    <MudButton Class="pa-4" ButtonType="ButtonType.Button" Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary" OnClick="@GetAvailableRooms">Check Availability</MudButton> 
                 </MudContainer>
                 
                 <br/>
@@ -54,9 +64,7 @@
                         <MudTd DataLabel="Max Persons Allowed">@context.MaxPersonsAllowed</MudTd>                        
                         <MudTd DataLabel="Price">@context.Price</MudTd>                        
                         <MudTd>
-                            <MudButton Class="py-5" ButtonType="ButtonType.Button"
-                               Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary"
-                            OnClick="() => GoToRoomDetailsPage(context.Id)">Details</MudButton>                                
+                            <MudButton Class="py-5" ButtonType="ButtonType.Button" Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary" OnClick="() => GoToRoomDetailsPage(context.Id)">Details</MudButton>                                
                         </MudTd>
                     </RowTemplate>            
                     <PagerContent>
@@ -67,24 +75,67 @@
 </MudCard>
 
 @code {
-
     RoomDto[]? rooms { get; set; }
     RoomDto room = new();
     TransactionParameters? transactionParameters { get; set; } = new();
-    
+    string arrivalDateError = "";
+    string departureDateError = "";
+    string validationError = "";
+
     private void GoToRoomDetailsPage(Guid roomId)
     {
         NavigationManager.NavigateTo($"rooms/{roomId}");
     }
 
+    private string ValidateDateRange(DateTime? dateTime)
+    {
+        if (dateTime.HasValue && transactionParameters.DateOfArrival.HasValue && dateTime.Value.Date < transactionParameters.DateOfArrival.Value.Date)
+        {
+            return "Departure date cannot be sooner than Arrival date!";
+        }
+        return null;
+    }
+
+
+
     async Task GetAvailableRooms()
     {
-        if (transactionParameters is not null)
+        if (transactionParameters is not null && transactionParameters.DateOfArrival < transactionParameters.DateOfDeparture)
         {
+            arrivalDateError = arrivalDateError.Remove(0);
+            departureDateError = departureDateError.Remove(0);
+            validationError = validationError.Remove(0);
             var dateOfArrival = transactionParameters.DateOfArrival;
             var dateOfDeparture = transactionParameters.DateOfDeparture;
             var url = $"api/rooms/GetAvailableRooms?DateOfArrival={dateOfArrival}&DateOfDeparture={dateOfDeparture}";
             rooms = await httpClient.GetFromJsonAsync<RoomDto[]>(url);
+        }
+        else if(transactionParameters is not null && transactionParameters.DateOfArrival > transactionParameters.DateOfDeparture)
+        {
+            arrivalDateError = arrivalDateError.Remove(0);
+            departureDateError = departureDateError.Remove(0);
+            validationError = "Departure Date should be after Arrival Date";
+        }
+        else if (!transactionParameters.DateOfArrival.HasValue && !transactionParameters.DateOfDeparture.HasValue)
+        {
+            arrivalDateError = "Please select Arrival Date";
+            departureDateError = "Please select Departure Date";
+        }
+        else if (!transactionParameters.DateOfArrival.HasValue)
+        {
+            arrivalDateError = "Please select Arrival Date";
+            departureDateError = departureDateError.Remove(0);
+        }
+        else if (!transactionParameters.DateOfDeparture.HasValue)
+        {            
+            arrivalDateError = arrivalDateError.Remove(0);            
+            departureDateError = "Please select Departure Date";
+        }
+        else if (transactionParameters.DateOfArrival == transactionParameters.DateOfDeparture)
+        {
+            arrivalDateError = arrivalDateError.Remove(0);
+            departureDateError = departureDateError.Remove(0);
+            validationError = "Departure Date should be at least 2 days after Arrival Date";
         }
     }
 }

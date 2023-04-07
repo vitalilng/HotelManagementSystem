@@ -47,20 +47,28 @@ namespace HotelManagementSystem.Server.Service
         /// Get all available rooms
         /// </summary>
         /// <returns></returns>
+        /// <exception cref="DateOfDepartureBadRequestException"></exception>
         public IEnumerable<RoomDto> GetAvailableRooms(TransactionParameters transactionParameters)
         {
-            if (transactionParameters.DateOfDeparture < transactionParameters.DateOfArrival)
-            {
-                throw new DateOfDepartureBadRequestException();
-            }
+            //if (transactionParameters.DateOfDeparture < transactionParameters.DateOfArrival)
+            //{
+            //    throw new DateOfDepartureBadRequestException();
+            //}
 
-            var rooms = _repositoryManager.RoomRepository.GetRoomsQueryable().Where(r => r!.Transactions.Any(t => (t.ArrivalDate >= transactionParameters.DateOfArrival && t.ArrivalDate <= transactionParameters.DateOfDeparture)
+            try
+            {
+                var rooms = _repositoryManager.RoomRepository.GetRoomsQueryable().Where(r => r!.Transactions.Any(t => (t.ArrivalDate >= transactionParameters.DateOfArrival && t.ArrivalDate <= transactionParameters.DateOfDeparture)
                                                                                                                            || (t.DepartureDate >= transactionParameters.DateOfArrival && t.DepartureDate <= transactionParameters.DateOfDeparture)
                                                                                                                            || (t.ArrivalDate >= transactionParameters.DateOfArrival && !transactionParameters.DateOfDeparture.HasValue)
                                                                                                                            || (!transactionParameters.DateOfArrival.HasValue && t.DepartureDate <= transactionParameters.DateOfDeparture)));
 
-            var roomsDto = _mapper.Map<IEnumerable<RoomDto>>(rooms);
-            return roomsDto;
+                var roomsDto = _mapper.Map<IEnumerable<RoomDto>>(rooms);
+                return roomsDto;
+            }
+            catch (DateOfDepartureBadRequestException)
+            {
+                throw new DateOfDepartureBadRequestException();
+            }
         }
 
         /// <summary>
@@ -99,7 +107,8 @@ namespace HotelManagementSystem.Server.Service
         /// <exception cref="RoomNotFoundException"></exception>
         public void UpdateRoom(Guid roomId, RoomDataForUpdateDto roomDataForUpdate)
         {
-            var roomToBeUpdated = _repositoryManager.RoomRepository.GetRoom(roomId) ?? throw new RoomNotFoundException(roomId);
+            var roomToBeUpdated = _repositoryManager.RoomRepository.GetRoom(roomId) 
+                                  ?? throw new RoomNotFoundException(roomId);
             _mapper.Map(roomDataForUpdate, roomToBeUpdated); //(source, destination)
             _repositoryManager.RoomRepository.UpdateRoom(roomToBeUpdated);
             _repositoryManager.Save();
@@ -112,13 +121,9 @@ namespace HotelManagementSystem.Server.Service
         /// <exception cref="RoomNotFoundException"></exception>
         public void DeleteRoom(Guid roomId)
         {
-            var roomToBeDeleted = _repositoryManager.RoomRepository.GetRoom(roomId);
-            if (roomToBeDeleted is null)
-            {
-                throw new RoomNotFoundException(roomId);
-            }
+            var roomToBeDeleted = _repositoryManager.RoomRepository.GetRoom(roomId)
+                                  ?? throw new RoomNotFoundException(roomId);
             _repositoryManager.RoomRepository.DeleteRoom(roomToBeDeleted);
-            _repositoryManager.Save();
         }
 
         /// <summary>
@@ -129,11 +134,8 @@ namespace HotelManagementSystem.Server.Service
         /// <exception cref="RoomNotFoundException"></exception>
         public (RoomDataForUpdateDto roomDataForUpdate, Room sourceRoom) GetRoomForPatch(Guid roomId)
         {
-            var roomToBePatched = _repositoryManager.RoomRepository.GetRoom(roomId);
-            if (roomToBePatched is null)
-            {
-                throw new RoomNotFoundException(roomId);
-            }
+            var roomToBePatched = _repositoryManager.RoomRepository.GetRoom(roomId)
+                                  ?? throw new RoomNotFoundException(roomId);
             var roomDataForPatch = _mapper.Map<RoomDataForUpdateDto>(roomToBePatched);
             return (roomDataForPatch, roomToBePatched);
         }

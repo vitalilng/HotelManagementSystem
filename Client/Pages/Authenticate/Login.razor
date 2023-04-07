@@ -54,10 +54,8 @@
     string[] errors = { };
     MudTextField<string>? passwordField;
     MudForm? form;  
-
-
     LoginDto loginModel { get; set; } = new LoginDto();
-    string? error { get; set; } = "";
+    string error = "";
 
     /// <summary>
     /// password visibility icon

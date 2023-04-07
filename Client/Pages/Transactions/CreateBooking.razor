@@ -50,10 +50,10 @@
                     <MudTextField Label="Total Sum" @bind-Value="totalSum" Variant="Variant.Outlined" ReadOnly=true DisableUnderLine=true />
                 }
 
-                @if (transactionModelForCreation is not null && totalSum is 0)
+                @if (!string.IsNullOrEmpty(validationError))
                 {
                     <br />
-                    <ValidationMessage For=@( () => totalSum) />
+                    <MudAlert Severity="Severity.Error" Dense=true ContentAlignment="HorizontalAlignment.Left" te>@validationError</MudAlert>
                 }
 
                 <br />
@@ -78,7 +78,8 @@
     int totalSum = 0;
     int roomPrice = 0;
     string userId = "";
-    string userType = "";    
+    string userType = "";
+    string validationError = "";
 
     protected async override Task OnInitializedAsync()
     {
@@ -116,9 +117,7 @@
 
     private void OnDepartureDateChange(DateTime? dateTime)
     {
-        if (RoomDetailsDto is not null 
-            && transactionParameters != null 
-            && dateTime > transactionParameters.DateOfArrival)
+        if (RoomDetailsDto is not null && transactionParameters != null && dateTime > transactionParameters.DateOfArrival)
         {
             var transactionData = new TransactionDataForCreationDto
             {
@@ -148,6 +147,7 @@
 
         if (RoomDetailsDto is not null && totalSum != 0)
         {
+            validationError = validationError.Remove(0);
             bookingModel = new TransactionDataForCreationDto
             {
                 ApplicationUserId = userId,
@@ -159,6 +159,14 @@
             };
             await httpClient.PostAsJsonAsync("api/transactions", bookingModel);
             navigationManager.NavigateTo("payment");
+        }
+        else if (transactionParameters.DateOfArrival == transactionParameters.DateOfDeparture)
+        {
+            validationError = "Departure Date should be at least 2 days after Arrival Date";
+        }
+        else if (totalSum == 0)
+        {
+            validationError = "Total Sum cannot be 0, please select the Arrival and Departure Dates";
         }
     }
 

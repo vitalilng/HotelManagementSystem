@@ -9,5 +9,13 @@
         protected NotFoundException(string message) : base(message)
         {
         }
+
+        protected NotFoundException()
+        {
+        }
+
+        protected NotFoundException(string? message, Exception? innerException) : base(message, innerException)
+        {
+        }
     }
 }
