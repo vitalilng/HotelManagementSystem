@@ -5,6 +5,7 @@ using HotelManagementSystem.Server.Models;
 using HotelManagementSystem.Server.Service.Contracts;
 using HotelManagementSystem.Shared.Dto;
 using HotelManagementSystem.Shared.Exceptions;
+using System.Collections.Generic;
 
 namespace HotelManagementSystem.Server.Service
 {
@@ -36,10 +37,17 @@ namespace HotelManagementSystem.Server.Service
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public IEnumerable<TransactionDto> GetTransactions()
-        {            
-            var transactions = _repositoryManager.TransactionRepository.GetTransactionsEnumerable();
-            var transactionsDto = _mapper.Map<IEnumerable<TransactionDto>>(transactions);
-            return transactionsDto;
+        {
+            try
+            {
+                var transactions = _repositoryManager.TransactionRepository.GetTransactionsEnumerable();
+                var transactionsDto = _mapper.Map<IEnumerable<TransactionDto>>(transactions);
+                return transactionsDto;
+            }
+            catch (Exception)
+            {
+                return new List<TransactionDto>();
+            }
         }
 
         /// <summary>

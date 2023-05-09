@@ -47,28 +47,31 @@ namespace HotelManagementSystem.Server.Service
         /// Get all available rooms
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="DateOfDepartureBadRequestException"></exception>
+        /// <exception cref="InValidDateRangeBadRequestException"></exception>
         public IEnumerable<RoomDto> GetAvailableRooms(TransactionParameters transactionParameters)
         {
-            //if (transactionParameters.DateOfDeparture < transactionParameters.DateOfArrival)
-            //{
-            //    throw new DateOfDepartureBadRequestException();
-            //}
-
-            try
+            if (!transactionParameters.DateOfArrival.HasValue || !transactionParameters.DateOfDeparture.HasValue)
             {
-                var rooms = _repositoryManager.RoomRepository.GetRoomsQueryable().Where(r => r!.Transactions.Any(t => (t.ArrivalDate >= transactionParameters.DateOfArrival && t.ArrivalDate <= transactionParameters.DateOfDeparture)
-                                                                                                                           || (t.DepartureDate >= transactionParameters.DateOfArrival && t.DepartureDate <= transactionParameters.DateOfDeparture)
-                                                                                                                           || (t.ArrivalDate >= transactionParameters.DateOfArrival && !transactionParameters.DateOfDeparture.HasValue)
-                                                                                                                           || (!transactionParameters.DateOfArrival.HasValue && t.DepartureDate <= transactionParameters.DateOfDeparture)));
-
-                var roomsDto = _mapper.Map<IEnumerable<RoomDto>>(rooms);
-                return roomsDto;
+                throw new InValidDateRangeBadRequestException("Both dates are required!");
             }
-            catch (DateOfDepartureBadRequestException)
+            else if (!transactionParameters.ValidDateRange)
             {
-                throw new DateOfDepartureBadRequestException();
+                throw new InValidDateRangeBadRequestException("Date of Departure should be higher than Date of Arrival!");
             }
+            else if (transactionParameters.DateOfArrival < DateTime.Now && transactionParameters.DateOfDeparture < DateTime.Now)
+            {
+                throw new InValidDateRangeBadRequestException("Please, choose the date starting from today!");
+            }
+
+            var rooms = _repositoryManager.RoomRepository.GetRoomsQueryable().Where(r => r.Transactions.Any(t => (t.ArrivalDate >= transactionParameters.DateOfArrival && t.ArrivalDate <= transactionParameters.DateOfDeparture)
+                                                                                                                || (t.DepartureDate >= transactionParameters.DateOfArrival && t.DepartureDate <= transactionParameters.DateOfDeparture)));
+            if (rooms is null)
+            {
+                return new List<RoomDto>();
+            }
+
+            var roomsDto = _mapper.Map<IEnumerable<RoomDto>>(rooms);
+            return roomsDto;
         }
 
         /// <summary>

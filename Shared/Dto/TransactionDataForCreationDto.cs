@@ -35,7 +35,7 @@ namespace HotelManagementSystem.Shared.Dto
 
         /// <summary>
         /// Transaction sum
-        /// </summary>        
+        /// </summary>
         [Range(1, int.MaxValue, ErrorMessage = "Total sum is required and cannot be 0")]
         public double TotalSum
         {
@@ -47,7 +47,7 @@ namespace HotelManagementSystem.Shared.Dto
                     _totalSum = (int)(RoomPrice * nrOfDays); //calculate the total sum                
                 }
                 return _totalSum;
-            }            
+            }
         }
     }
 }

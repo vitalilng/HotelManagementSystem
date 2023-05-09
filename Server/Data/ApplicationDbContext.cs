@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 namespace HotelManagementSystem.Server.Data
 {
     /// <summary>
-    /// 
+    /// ApplicationDbContext
     /// </summary>
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         /// <summary>
-        /// 
+        ///ApplicationDbContext Constructor
         /// </summary>
         /// <param name="options"></param>
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -20,7 +20,7 @@ namespace HotelManagementSystem.Server.Data
         }
 
         /// <summary>
-        /// 
+        /// OnModelCreating
         /// </summary>
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)

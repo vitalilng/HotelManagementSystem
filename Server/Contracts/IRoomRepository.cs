@@ -1,5 +1,4 @@
 ﻿using HotelManagementSystem.Server.Models;
-using HotelManagementSystem.Shared.RequestFeatures;
 
 namespace HotelManagementSystem.Server.Contracts
 {
@@ -15,7 +14,7 @@ namespace HotelManagementSystem.Server.Contracts
         IEnumerable<Room> GetRooms();
 
         /// <summary>
-        /// 
+        /// GetRoomsQueryable
         /// </summary>
         /// <returns></returns>
         IQueryable<Room> GetRoomsQueryable();
