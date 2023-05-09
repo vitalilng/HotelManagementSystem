@@ -371,3 +371,4 @@ bin/
 *.cache
 Server/internal_logs/internallog.txt
 Server/internal_logs/internallog.txt
+*.txt
