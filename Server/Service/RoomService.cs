@@ -50,28 +50,32 @@ namespace HotelManagementSystem.Server.Service
         /// <exception cref="InValidDateRangeBadRequestException"></exception>
         public IEnumerable<RoomDto> GetAvailableRooms(TransactionParameters transactionParameters)
         {
-            if (!transactionParameters.DateOfArrival.HasValue || !transactionParameters.DateOfDeparture.HasValue)
+            try
             {
-                throw new InValidDateRangeBadRequestException("Both dates are required!");
-            }
-            else if (!transactionParameters.ValidDateRange)
-            {
-                throw new InValidDateRangeBadRequestException("Date of Departure should be higher than Date of Arrival!");
-            }
-            else if (transactionParameters.DateOfArrival < DateTime.Now && transactionParameters.DateOfDeparture < DateTime.Now)
-            {
-                throw new InValidDateRangeBadRequestException("Please, choose the date starting from today!");
-            }
+                if (!transactionParameters.DateOfArrival.HasValue || !transactionParameters.DateOfDeparture.HasValue)
+                    throw new InValidDateRangeBadRequestException("Both dates are required!");
 
-            var rooms = _repositoryManager.RoomRepository.GetRoomsQueryable().Where(r => r.Transactions.Any(t => (t.ArrivalDate >= transactionParameters.DateOfArrival && t.ArrivalDate <= transactionParameters.DateOfDeparture)
-                                                                                                                || (t.DepartureDate >= transactionParameters.DateOfArrival && t.DepartureDate <= transactionParameters.DateOfDeparture)));
-            if (rooms is null)
-            {
-                return new List<RoomDto>();
-            }
+                if (!transactionParameters.ValidDateRange)
+                    throw new InValidDateRangeBadRequestException("Date of Departure should be higher than Date of Arrival!");
 
-            var roomsDto = _mapper.Map<IEnumerable<RoomDto>>(rooms);
-            return roomsDto;
+                if (transactionParameters.DateOfArrival < DateTime.Today && transactionParameters.DateOfDeparture < DateTime.Today)
+                    throw new InValidDateRangeBadRequestException("Please, choose the date starting from today!");
+
+                var rooms = _repositoryManager.RoomRepository.GetRoomsQueryable().Where(r => r.Transactions.Any(t => !(t.ArrivalDate >= transactionParameters.DateOfArrival && t.ArrivalDate <= transactionParameters.DateOfDeparture)
+                                                                                                                  && !(t.DepartureDate >= transactionParameters.DateOfArrival && t.DepartureDate <= transactionParameters.DateOfDeparture)));
+                if (rooms is null)
+                {
+                    return new List<RoomDto>();
+                }
+
+                var roomsDto = _mapper.Map<IEnumerable<RoomDto>>(rooms);
+                return roomsDto;
+            }
+            catch (InValidDateRangeBadRequestException ex)
+            {
+                _loggerManager.LogError($"{ex}");
+                throw;
+            }
         }
 
         /// <summary>
