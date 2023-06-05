@@ -13,7 +13,7 @@ namespace HotelManagementSystem.Server.Repository
         /// Transaction repository implementation constructor
         /// </summary>
         /// <param name="applicationDbContext"></param>
-        public TransactionRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext) 
+        public TransactionRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext)
         {
         }
 
@@ -31,10 +31,10 @@ namespace HotelManagementSystem.Server.Repository
         public IEnumerable<Transaction> GetTransactionsEnumerable() => FindAll().OrderBy(t => t.TransactionDateTime).ToList();
 
         /// <summary>
-        /// 
+        /// return all transactions queryable
         /// </summary>
         /// <returns></returns>
-        public IQueryable<Transaction> GetTransactionsQuerable() => FindAll().OrderBy(t => t.TransactionDateTime);
+        public IQueryable<Transaction> GetTransactionsQueryable() => FindAll().OrderBy(t => t.TransactionDateTime);
 
         /// <summary>
         /// Create 

@@ -10,19 +10,16 @@ namespace HotelManagementSystem.Server.Contracts
         /// <summary>
         /// Get all transactions
         /// </summary>
-        /// <returns></returns>
         IEnumerable<Transaction> GetTransactionsEnumerable();
 
         /// <summary>
         /// Get all transactions as querable
         /// </summary>
-        /// <returns></returns>
-        IQueryable<Transaction> GetTransactionsQuerable();
+        IQueryable<Transaction> GetTransactionsQueryable();
 
         /// <summary>
         /// Get transaction
         /// </summary>
-        /// <returns></returns>
         Transaction GetTransaction(Guid transactionId);
 
         /// <summary>
@@ -36,12 +33,11 @@ namespace HotelManagementSystem.Server.Contracts
         /// </summary>
         /// <param name="transaction"></param>
         void UpdateTransaction(Transaction transaction);
-        
+
         /// <summary>
         /// Delete transaction
         /// </summary>
         /// <param name="transaction"></param>
         void DeleteTransaction(Transaction transaction);
-
     }
 }

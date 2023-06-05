@@ -25,7 +25,7 @@ namespace HotelManagementSystem.Server.Service.Contracts
         /// Get room by id
         /// </summary>
         /// <param name="roomId"></param>
-        /// <returns></returns>
+        /// <returns> room ID</returns>
         RoomDto GetRoom(Guid roomId);
 
         /// <summary>

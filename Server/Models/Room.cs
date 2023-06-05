@@ -9,12 +9,12 @@
         /// Room Id
         /// </summary>
         public Guid Id { get; set; }
-        
+
         /// <summary>
         /// Type - single, double, king, president
         /// </summary>
         public string? RoomType { get; set; }
-        
+
         /// <summary>
         /// Size in square metters
         /// </summary>
@@ -44,7 +44,7 @@
         /// Some description
         /// </summary>
         public string? Description{ get; set; }
-        
+
         /// <summary>
         /// Room price
         /// </summary>

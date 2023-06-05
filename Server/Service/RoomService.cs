@@ -48,6 +48,7 @@ namespace HotelManagementSystem.Server.Service
         /// </summary>
         /// <returns></returns>
         /// <exception cref="InValidDateRangeBadRequestException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public IEnumerable<RoomDto> GetAvailableRooms(TransactionParameters transactionParameters)
         {
             try
@@ -61,20 +62,28 @@ namespace HotelManagementSystem.Server.Service
                 if (transactionParameters.DateOfArrival < DateTime.Today && transactionParameters.DateOfDeparture < DateTime.Today)
                     throw new InValidDateRangeBadRequestException("Please, choose the date starting from today!");
 
-                var rooms = _repositoryManager.RoomRepository.GetRoomsQueryable().Where(r => r.Transactions.Any(t => !(t.ArrivalDate >= transactionParameters.DateOfArrival && t.ArrivalDate <= transactionParameters.DateOfDeparture)
-                                                                                                                  && !(t.DepartureDate >= transactionParameters.DateOfArrival && t.DepartureDate <= transactionParameters.DateOfDeparture)));
-                if (rooms is null)
+                var rooms = _repositoryManager.RoomRepository.GetRoomsQueryable()
+                    .Where(r => r.Transactions.Any(t =>
+                            t.DepartureDate < transactionParameters.DateOfArrival ||
+                            t.ArrivalDate > transactionParameters.DateOfDeparture));
+
+
+
+                if (rooms?.Any() != true)
                 {
                     return new List<RoomDto>();
                 }
 
-                var roomsDto = _mapper.Map<IEnumerable<RoomDto>>(rooms);
-                return roomsDto;
+                return _mapper.Map<IEnumerable<RoomDto>>(rooms);
             }
             catch (InValidDateRangeBadRequestException ex)
             {
                 _loggerManager.LogError($"{ex}");
                 throw;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentNullException($"Message: {ex}");
             }
         }
 
@@ -87,8 +96,7 @@ namespace HotelManagementSystem.Server.Service
         public RoomDto GetRoom(Guid roomId)
         {
             var room = _repositoryManager.RoomRepository.GetRoom(roomId) ?? throw new RoomNotFoundException(roomId);
-            var roomDto = _mapper.Map<RoomDto>(room);
-            return roomDto;
+            return _mapper.Map<RoomDto>(room);
         }
 
         /// <summary>
@@ -101,9 +109,7 @@ namespace HotelManagementSystem.Server.Service
             var newRoom = _mapper.Map<Room>(roomDataForCreation); //Map<Tdestination>(Tsource) - map roomDataForCreation to Room model
             _repositoryManager.RoomRepository.CreateRoom(newRoom);
             _repositoryManager.Save();
-
-            var roomToReturn = _mapper.Map<RoomDto>(newRoom);
-            return roomToReturn;
+            return _mapper.Map<RoomDto>(newRoom);            
         }
 
         /// <summary>
@@ -114,7 +120,7 @@ namespace HotelManagementSystem.Server.Service
         /// <exception cref="RoomNotFoundException"></exception>
         public void UpdateRoom(Guid roomId, RoomDataForUpdateDto roomDataForUpdate)
         {
-            var roomToBeUpdated = _repositoryManager.RoomRepository.GetRoom(roomId) 
+            var roomToBeUpdated = _repositoryManager.RoomRepository.GetRoom(roomId)
                                   ?? throw new RoomNotFoundException(roomId);
             _mapper.Map(roomDataForUpdate, roomToBeUpdated); //(source, destination)
             _repositoryManager.RoomRepository.UpdateRoom(roomToBeUpdated);

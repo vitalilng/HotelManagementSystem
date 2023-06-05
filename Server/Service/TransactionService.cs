@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Duende.IdentityServer.Extensions;
 using HotelManagementSystem.Server.Contracts;
 using HotelManagementSystem.Server.Models;
 using HotelManagementSystem.Server.Service.Contracts;
 using HotelManagementSystem.Shared.Dto;
 using HotelManagementSystem.Shared.Exceptions;
-using System.Collections.Generic;
 
 namespace HotelManagementSystem.Server.Service
 {
@@ -21,9 +21,9 @@ namespace HotelManagementSystem.Server.Service
         /// <summary>
         /// Transaction Service constructor
         /// </summary>
-        /// <param name="loggerManager"></param>
-        /// <param name="mapper"></param>
         /// <param name="repositoryManager"></param>
+        /// <param name="mapper"></param>
+        /// <param name="loggerManager"></param>
         public TransactionService(IRepositoryManager repositoryManager, IMapper mapper, ILoggerManager loggerManager)
         {
             _repositoryManager = repositoryManager;
@@ -34,15 +34,13 @@ namespace HotelManagementSystem.Server.Service
         /// <summary>
         /// Get all transactions
         /// </summary>
-        /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public IEnumerable<TransactionDto> GetTransactions()
         {
             try
             {
                 var transactions = _repositoryManager.TransactionRepository.GetTransactionsEnumerable();
-                var transactionsDto = _mapper.Map<IEnumerable<TransactionDto>>(transactions);
-                return transactionsDto;
+                return _mapper.Map<IEnumerable<TransactionDto>>(transactions);
             }
             catch (Exception)
             {
@@ -53,74 +51,62 @@ namespace HotelManagementSystem.Server.Service
         /// <summary>
         /// Get all transactions for displaying to UI
         /// </summary>
-        /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public IEnumerable<TransactionDataToDisplayDto> GetTransactionsToBeDisplayed()
         {
-            var transactions = _repositoryManager.TransactionRepository.GetTransactionsQuerable().ProjectTo<TransactionDataToDisplayDto>(_mapper.ConfigurationProvider).OrderByDescending(t => t.TransactionDateTime);
-            var transactionsToDisplayDto = _mapper.Map<IEnumerable<TransactionDataToDisplayDto>>(transactions);
-            return transactionsToDisplayDto;
+            var transactions = _repositoryManager
+                .TransactionRepository
+                .GetTransactionsQueryable()
+                .ProjectTo<TransactionDataToDisplayDto>(_mapper.ConfigurationProvider)
+                .OrderByDescending(t => t.TransactionDateTime);
+
+            return _mapper.Map<IEnumerable<TransactionDataToDisplayDto>>(transactions);
         }
 
         /// <summary>
         /// Get bookings by username
-        /// </summary>        
+        /// </summary>
         /// <param name="username"></param>
-        /// <returns></returns>
         public IEnumerable<TransactionDataToDisplayDto> GetTransactionsByUsername(string username)
-        {            
-            var transactions = _repositoryManager.TransactionRepository.GetTransactionsQuerable();
-            var transactionDataToDisplay = transactions
-                                                .Where(t => t.ApplicationUser != null && t.Room != null && t.ApplicationUser.UserName == username)                                                
-                                                .Select(t => new
-            {
-                t.ApplicationUser.UserName, 
-                t.Room.RoomType,
-                t.ArrivalDate,
-                t.DepartureDate,
-                t.Room.Price,
-                t.TotalSum,
-                t.TransactionDateTime 
-              });
+        {
+            var transactions = _repositoryManager.TransactionRepository.GetTransactionsQueryable();
 
-            TransactionDataToDisplayDto transactionDto = new();
-
-            foreach (var transaction in transactionDataToDisplay)
+            //return empty if no transactions found
+            if (transactions.IsNullOrEmpty())
             {
-                transactionDto = new()
-                {
-                    UserName = transaction.UserName,
-                    RoomType = transaction.RoomType,
-                    ArrivalDate = transaction.ArrivalDate,
-                    DepartureDate = transaction.DepartureDate,
-                    RoomPrice = transaction.Price,
-                    TotalSum = transaction.TotalSum,
-                    TransactionDateTime = transaction.TransactionDateTime
-                };
+                return Enumerable.Empty<TransactionDataToDisplayDto>().AsQueryable();
             }
 
-            yield return transactionDto;
+            return transactions
+                .Where(t => t.ApplicationUser != null && t.Room != null && t.ApplicationUser.UserName == username)
+                .Select(t => new TransactionDataToDisplayDto
+                {
+                    UserName = t.ApplicationUser.UserName,
+                    RoomType = t.Room.RoomType,
+                    ArrivalDate = t.ArrivalDate,
+                    DepartureDate = t.DepartureDate,
+                    RoomPrice = t.Room.Price,
+                    TotalSum = t.TotalSum,
+                    TransactionDateTime = t.TransactionDateTime
+                });
         }
-
 
         /// <summary>
         /// Get transaction by Id
         /// </summary>
         /// <param name="transactionId"></param>
-        /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
+        /// <exception cref="TransactionNotFoundException"></exception>
         public TransactionDto GetTransaction(Guid transactionId)
         {
             var transaction = _repositoryManager.TransactionRepository.GetTransaction(transactionId) ?? throw new TransactionNotFoundException(transactionId);
-            var transactionDto = _mapper.Map<TransactionDto>(transaction);
-            return transactionDto;
+            return _mapper.Map<TransactionDto>(transaction);
         }
 
         /// <summary>
         /// Create new transaction
         /// </summary>
         /// <param name="transactionCreateDataDto"></param>
-        /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public TransactionDto CreateTransaction(TransactionDataForCreationDto transactionCreateDataDto)
         {
@@ -128,9 +114,7 @@ namespace HotelManagementSystem.Server.Service
             transaction.TransactionDateTime = DateTime.UtcNow;
             _repositoryManager.TransactionRepository.CreateTransaction(transaction);
             _repositoryManager.Save();
-
-            var transactionToReturn = _mapper.Map<TransactionDto>(transaction);
-            return transactionToReturn;
+            return _mapper.Map<TransactionDto>(transaction);
         }
 
         /// <summary>
@@ -139,13 +123,11 @@ namespace HotelManagementSystem.Server.Service
         /// <param name="transactionId"></param>
         /// <param name="transactionUpdateDataDto"></param>
         /// <exception cref="NotImplementedException"></exception>
+        /// <exception cref="TransactionNotFoundException"></exception>
         public void UpdateTransaction(Guid transactionId, TransactionDataForUpdateDto transactionUpdateDataDto)
         {
-            var transactionToBeUpdated = _repositoryManager.TransactionRepository.GetTransaction(transactionId);
-            if (transactionToBeUpdated is null)
-            {
-                throw new TransactionNotFoundException(transactionId);
-            }
+            var transactionToBeUpdated = _repositoryManager.TransactionRepository.GetTransaction(transactionId)
+                ?? throw new TransactionNotFoundException(transactionId);
             _mapper.Map(transactionUpdateDataDto, transactionToBeUpdated); //Map(source, destination)
             _repositoryManager.TransactionRepository.UpdateTransaction(transactionToBeUpdated);
             _repositoryManager.Save();
@@ -155,7 +137,6 @@ namespace HotelManagementSystem.Server.Service
         /// Get transaction for patch update
         /// </summary>
         /// <param name="transactionId"></param>
-        /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public (TransactionDataForUpdateDto transactionDataForUpdate, Transaction transaction) GetTransactionForPatch(Guid transactionId)
         {
@@ -191,6 +172,6 @@ namespace HotelManagementSystem.Server.Service
             var transactionToBeDeleted = _repositoryManager.TransactionRepository.GetTransaction(transactionId) ?? throw new TransactionNotFoundException(transactionId);
             _repositoryManager.TransactionRepository.DeleteTransaction(transactionToBeDeleted);
             _repositoryManager.Save();
-        }          
+        }
     }
 }

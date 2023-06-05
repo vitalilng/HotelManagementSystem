@@ -8,7 +8,7 @@ namespace HotelManagementSystem.Shared.Dto
 
         [Required(ErrorMessage = "Room Type is a required field.")]
         public string? RoomType { get; set; }
-        
+
         [Required(ErrorMessage = "Room Size is a required field.")]
         public string? RoomSize { get; set; }
 

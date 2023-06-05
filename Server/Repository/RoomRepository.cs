@@ -21,10 +21,11 @@ namespace HotelManagementSystem.Server.Repository
         /// Return room by id
         /// </summary>
         /// <param name="roomId"></param>
-        /// <returns></returns>
         public Room GetRoom(Guid roomId)
         {
-            return FindByCondition(c => c.Id.Equals(roomId)).SingleOrDefault();
+            var roomById = FindByCondition(c => c.Id.Equals(roomId)).SingleOrDefault();
+            return roomById
+                ?? throw new Exception("Room wasn't found !"); //if room is null return exception
         }
 
         /// <summary>
@@ -34,12 +35,11 @@ namespace HotelManagementSystem.Server.Repository
         public IEnumerable<Room> GetRooms() => FindAll().OrderBy(c => c.Price).ToList();
 
         /// <summary>
-        /// 
+        /// Return IQueryable of all available Rooms
         /// </summary>
         /// <returns></returns>
         public IQueryable<Room> GetRoomsQueryable() => FindAll();
-        
-        
+
         /// <summary>
         /// Create new room
         /// </summary>
@@ -57,6 +57,5 @@ namespace HotelManagementSystem.Server.Repository
         /// </summary>
         /// <param name="room"></param>
         public void UpdateRoom(Room room) => Update(room);
-        
     }
 }

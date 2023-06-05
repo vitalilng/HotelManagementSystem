@@ -48,7 +48,7 @@
         /// <summary>
         /// Application user navigation property
         /// </summary>
-        public ApplicationUser? ApplicationUser { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
         /// <summary>
         /// Room navigation property

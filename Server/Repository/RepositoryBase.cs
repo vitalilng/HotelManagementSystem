@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 namespace HotelManagementSystem.Server.Repository
 {
     /// <summary>
-    /// 
+    /// RepositoryBase
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
@@ -14,12 +14,12 @@ namespace HotelManagementSystem.Server.Repository
         /// database context class
         /// </summary>
         protected ApplicationDbContext ApplicationDbContext;
-        
+
         /// <summary>
         /// Repository constructor with dbContext dependency injection
         /// </summary>
         /// <param name="applicationDbContext"></param>
-        public RepositoryBase(ApplicationDbContext applicationDbContext)
+        protected RepositoryBase(ApplicationDbContext applicationDbContext)
         {
             ApplicationDbContext = applicationDbContext;
         }
@@ -43,13 +43,14 @@ namespace HotelManagementSystem.Server.Repository
         public void Delete(T entity) => ApplicationDbContext.Set<T>().Remove(entity);
 
         /// <summary>
-        /// 
+        /// FindAll
         /// </summary>
         /// <returns></returns>
         public IQueryable<T> FindAll()
             => ApplicationDbContext.Set<T>();
 
         /// <summary>
+        /// FindByCondition
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>

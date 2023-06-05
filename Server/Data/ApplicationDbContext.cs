@@ -73,7 +73,7 @@ namespace HotelManagementSystem.Server.Data
             modelBuilder.Entity<Room>()
                 .HasMany(b => b.Transactions)
                 .WithOne(b => b.Room);
-            
+
             Guid g = new ("11223344-5566-7788-99AA-BBCCDDEEFF00");
 
             modelBuilder.Entity<Room>()
@@ -90,7 +90,7 @@ namespace HotelManagementSystem.Server.Data
                     Price = 123
                 });
 
-            modelBuilder.Entity<Transaction>()                
+            modelBuilder.Entity<Transaction>()
                 .HasData(new Transaction()
                 {
                     Id = Guid.NewGuid(),
