@@ -33,20 +33,17 @@ namespace HotelManagementSystem.Server.Service
         /// <summary>
         /// Return all rooms
         /// </summary>
-        /// <returns></returns>
         public IEnumerable<RoomDto> GetRooms()
         {
             var rooms = _repositoryManager.RoomRepository.GetRooms();
 
             //map rooms to RoomDto using automapper
-            var roomsDto = _mapper.Map<IEnumerable<RoomDto>>(rooms);
-            return roomsDto;
+            return _mapper.Map<IEnumerable<RoomDto>>(rooms);
         }
 
         /// <summary>
         /// Get all available rooms
         /// </summary>
-        /// <returns></returns>
         /// <exception cref="InValidDateRangeBadRequestException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public IEnumerable<RoomDto> GetAvailableRooms(TransactionParameters transactionParameters)
@@ -63,11 +60,9 @@ namespace HotelManagementSystem.Server.Service
                     throw new InValidDateRangeBadRequestException("Please, choose the date starting from today!");
 
                 var rooms = _repositoryManager.RoomRepository.GetRoomsQueryable()
-                    .Where(r => r.Transactions.Any(t =>
+                    .Where(r => r.Transactions != null && r.Transactions.Any(t =>
                             t.DepartureDate < transactionParameters.DateOfArrival ||
                             t.ArrivalDate > transactionParameters.DateOfDeparture));
-
-
 
                 if (rooms?.Any() != true)
                 {
@@ -91,7 +86,6 @@ namespace HotelManagementSystem.Server.Service
         /// Return current room
         /// </summary>
         /// <param name="roomId"></param>
-        /// <returns></returns>
         /// <exception cref="RoomNotFoundException"></exception>
         public RoomDto GetRoom(Guid roomId)
         {
@@ -103,7 +97,6 @@ namespace HotelManagementSystem.Server.Service
         /// Create new room
         /// </summary>
         /// <param name="roomDataForCreation"></param>
-        /// <returns></returns>
         public RoomDto CreateRoom(RoomDataForCreationDto roomDataForCreation)
         {
             var newRoom = _mapper.Map<Room>(roomDataForCreation); //Map<Tdestination>(Tsource) - map roomDataForCreation to Room model
@@ -143,7 +136,6 @@ namespace HotelManagementSystem.Server.Service
         /// Update only one value from room
         /// </summary>
         /// <param name="roomId"></param>
-        /// <returns></returns>
         /// <exception cref="RoomNotFoundException"></exception>
         public (RoomDataForUpdateDto roomDataForUpdate, Room sourceRoom) GetRoomForPatch(Guid roomId)
         {
