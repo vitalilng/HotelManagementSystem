@@ -1,0 +1,5 @@
+﻿@HotelManagementSystem.Server_HostAddress = https://localhost:7269
+
+GET {{HotelManagementSystem.Server_HostAddress}}/api/transactions/GetUserTransactions?username=string
+
+###
