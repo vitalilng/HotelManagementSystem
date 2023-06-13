@@ -42,9 +42,10 @@ namespace HotelManagementSystem.Server.Service
                 var transactions = _repositoryManager.TransactionRepository.GetTransactionsEnumerable();
                 return _mapper.Map<IEnumerable<TransactionDto>>(transactions);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new List<TransactionDto>();
+                _loggerManager.LogDebug($"There is an exception: {ex}");
+                return new List<TransactionDto>();                
             }
         }
 
@@ -74,6 +75,7 @@ namespace HotelManagementSystem.Server.Service
             //return empty if no transactions found
             if (transactions.IsNullOrEmpty())
             {
+                _loggerManager.LogDebug("Transactions list is empty!");
                 return Enumerable.Empty<TransactionDataToDisplayDto>().AsQueryable();
             }
 
