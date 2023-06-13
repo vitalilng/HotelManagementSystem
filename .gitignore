@@ -369,5 +369,5 @@ MigrationBackup/
 obj/
 bin/
 *.cache
-internallog.txt
+Server/internal_logs/
 *.txt
