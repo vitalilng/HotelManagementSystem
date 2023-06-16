@@ -53,6 +53,6 @@
         /// <summary>
         /// Room navigation property
         /// </summary>
-        public Room? Room { get; set; }
+        public Room Room { get; set; }
     }
 }

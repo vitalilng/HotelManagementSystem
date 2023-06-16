@@ -29,4 +29,10 @@
     <ProjectReference Include="..\Server\HotelManagementSystem.Server.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ApplicationUserTests\" />
+    <Folder Include="RoomTests\" />
+    <Folder Include="TransactionsTests\" />
+  </ItemGroup>
+
 </Project>

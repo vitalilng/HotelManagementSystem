@@ -45,7 +45,7 @@ namespace HotelManagementSystem.Server.Service
             catch (Exception ex)
             {
                 _loggerManager.LogDebug($"There is an exception: {ex}");
-                return new List<TransactionDto>();                
+                return new List<TransactionDto>();
             }
         }
 
@@ -61,6 +61,12 @@ namespace HotelManagementSystem.Server.Service
                 .ProjectTo<TransactionDataToDisplayDto>(_mapper.ConfigurationProvider)
                 .OrderByDescending(t => t.TransactionDateTime);
 
+            if (transactions.IsNullOrEmpty())
+            {
+                _loggerManager.LogDebug("No transactions found!");
+                return Enumerable.Empty<TransactionDataToDisplayDto>().AsQueryable();
+            }
+
             return _mapper.Map<IEnumerable<TransactionDataToDisplayDto>>(transactions);
         }
 
@@ -75,7 +81,7 @@ namespace HotelManagementSystem.Server.Service
             //return empty if no transactions found
             if (transactions.IsNullOrEmpty())
             {
-                _loggerManager.LogDebug("Transactions list is empty!");
+                _loggerManager.LogDebug("No transactions found!");
                 return Enumerable.Empty<TransactionDataToDisplayDto>().AsQueryable();
             }
 
@@ -116,6 +122,7 @@ namespace HotelManagementSystem.Server.Service
             transaction.TransactionDateTime = DateTime.UtcNow;
             _repositoryManager.TransactionRepository.CreateTransaction(transaction);
             _repositoryManager.Save();
+
             return _mapper.Map<TransactionDto>(transaction);
         }
 

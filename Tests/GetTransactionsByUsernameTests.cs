@@ -17,7 +17,7 @@ namespace HotelManagementSystem.Tests
         public Mock<ILoggerManager> loggerManager;
         public IMapper mapper;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void Setup()
         {
             var profile = new MappingProfile();
@@ -75,7 +75,8 @@ namespace HotelManagementSystem.Tests
                     Room = room
                 }
             }.AsQueryable();
-            transactionRepository.Setup(r => r.GetTransactionsQueryable()).Returns(transactions);
+            transactionRepository.Setup(r => r.GetTransactionsQueryable())
+                                 .Returns(transactions);
 
             //Act
             var result = transactionService.GetTransactionsByUsername(username);
@@ -99,6 +100,33 @@ namespace HotelManagementSystem.Tests
             {
                 Id = "22",
                 UserName = username
+            };
+
+            var room = new Room()
+            {
+                Id = Guid.NewGuid(),
+                Price = 1000,
+            };
+            var transactions = new List<Transaction>().AsQueryable();
+            transactionRepository.Setup(tr => tr.GetTransactionsQueryable()).Returns(transactions);
+
+            //Act
+            var result = transactionService.GetTransactionsByUsername(username);
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void GetTransactionsByUsername_InvalidUsername_ReturnsNoTransactions()
+        {
+            //Arrange
+            const string username = "invaliduser";
+            var user = new ApplicationUser()
+            {
+                Id = "22",
+                UserName = "testuser"
             };
 
             var room = new Room()
