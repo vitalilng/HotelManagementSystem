@@ -11,7 +11,8 @@ namespace HotelManagementSystem.Server.Extensions
     public static class ExceptionMiddlewareExtensions
     {
         /// <summary>
-        /// ConfigureExceptionHandler
+        /// It captures exceptions that occur during request processing, sets the appropriate response status code based on the exception type,
+        /// logs the error, and sends the error details as JSON in the response.
         /// </summary>
         /// <param name="app"></param>
         /// <param name="loggerManager"></param>
