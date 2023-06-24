@@ -6,6 +6,11 @@
 
 <EditForm class="form-signin" OnValidSubmit="CreateGuest" Model="registrationModel">
     <DataAnnotationsValidator />
+    <br />
+    <MudPaper Elevation="0">
+        <MudButton Variant="Variant.Filled" Color="Color.Surface" Class="ml-auto align-content-lg-start" Href="/guests">Back</MudButton>
+    </MudPaper>
+    <br />
     <MudGrid>
         <MudItem xs="12" sm="7">
             <MudCard Outlined="true">
@@ -59,7 +64,9 @@
                                   AdornmentAriaLabel="Show Password" />
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                    <MudPaper>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size=Size.Large Class="ml-auto">Register</MudButton>
+                    </MudPaper>
                 </MudCardActions>
             </MudCard>
         </MudItem>

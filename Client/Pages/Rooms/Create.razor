@@ -6,30 +6,28 @@
 
 <EditForm class="form-signin" OnValidSubmit="CreateRoom" Model="roomModel">
     <DataAnnotationsValidator />
+    <br />
+    <MudPaper Elevation="0">
+        <MudButton Variant="Variant.Filled" Color="Color.Surface" Class="ml-auto align-content-lg-start" Href="/rooms">Back</MudButton>
+    </MudPaper>
+    <br />
     <MudGrid>
         <MudItem xs="12" sm="7">
             <MudCard Outlined="true">
                 <MudCardContent>
-
                     <MudTextField Label="Room Type" HelperText="Max. 15 characters" @bind-Value="roomModel.RoomType" For=@(() => roomModel.RoomType ) Immediate=true Variant="Variant.Text"/>
-
-                    <MudTextField Label="Room Size" HelperText="Max. 15 characters" @bind-Value="roomModel.RoomSize" For=@(() => roomModel.RoomSize ) Immediate=true Variant="Variant.Text" />                    
-                    
-                    <MudTextField Label="Beds and Sizes" HelperText="Max. 15 characters" @bind-Value="roomModel.NrOfBedsAndSizes" For=@(() => roomModel.NrOfBedsAndSizes) Immediate=true Variant="Variant.Text" />
-                    
-                    <MudTextField Label="Options" HelperText="Max. 15 characters" @bind-Value="roomModel.RoomOptions" For=@(() => roomModel.RoomOptions) Immediate=true Variant="Variant.Text" /> 
-                    
-                    <MudTextField Label="Max Persons Allowed" HelperText="Max. 15 characters" @bind-Value="roomModel.MaxPersonsAllowed" For=@(() => roomModel.MaxPersonsAllowed) Immediate=true Variant="Variant.Text" />
-                    
-                    <MudTextField Label="Availability" HelperText="Max. 15 characters" @bind-Value="roomModel.Availability" For=@(() => roomModel.Availability) Immediate=true Variant="Variant.Text" /> 
-                    
-                    <MudTextField Label="Description" HelperText="Max. 15 characters" @bind-Value="roomModel.Description" For=@(() => roomModel.Description) Immediate=true Variant="Variant.Text" />
-
+                    <MudTextField Label="Room Size" HelperText="Max. 15 characters" @bind-Value="roomModel.RoomSize" For=@(() => roomModel.RoomSize ) Immediate=true Variant="Variant.Text"/>                    
+                    <MudTextField Label="Beds and Sizes" HelperText="Max. 15 characters" @bind-Value="roomModel.NrOfBedsAndSizes" For=@(() => roomModel.NrOfBedsAndSizes) Immediate=true Variant="Variant.Text"/>
+                    <MudTextField Label="Options" HelperText="Max. 15 characters" @bind-Value="roomModel.RoomOptions" For=@(() => roomModel.RoomOptions) Immediate=true Variant="Variant.Text"/> 
+                    <MudTextField Label="Max Persons Allowed" HelperText="Max. 15 characters" @bind-Value="roomModel.MaxPersonsAllowed" For=@(() => roomModel.MaxPersonsAllowed) Immediate=true Variant="Variant.Text"/>
+                    <MudTextField Label="Availability" HelperText="Max. 15 characters" @bind-Value="roomModel.Availability" For=@(() => roomModel.Availability) Immediate=true Variant="Variant.Text"/> 
+                    <MudTextField Label="Description" HelperText="Max. 15 characters" @bind-Value="roomModel.Description" For=@(() => roomModel.Description) Immediate=true Variant="Variant.Text"/>
                     <MudTextField Label="Price" HelperText="Max. 15 characters" @bind-Value="roomModel.Price" For=@(() => roomModel.Price) Immediate=true Variant="Variant.Text" />
-
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Create</MudButton> 
+                    <MudPaper>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size=Size.Large Class="ml-auto">Create</MudButton> 
+                    </MudPaper>
                 </MudCardActions>
             </MudCard>
         </MudItem>

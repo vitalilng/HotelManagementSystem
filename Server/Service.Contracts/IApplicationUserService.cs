@@ -1,31 +1,32 @@
 ﻿using HotelManagementSystem.Server.Models;
+using HotelManagementSystem.Server.Responses;
 using HotelManagementSystem.Shared.Dto;
 
 namespace HotelManagementSystem.Server.Service.Contracts
 {
     /// <summary>
-    /// ApplicationUser service   
+    /// ApplicationUser service
     /// </summary>
     public interface IApplicationUserService
     {
         /// <summary>
         /// Get All guest users
         /// </summary>
-        /// <returns></returns>
-        IEnumerable<UserDetailsDto> GetApplicationUsers();
+        //IEnumerable<UserDetailsDto> GetApplicationUsers();
+
+        ApiBaseResponse GetApplicationUsers();
 
         /// <summary>
         /// Get user by id
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns></returns>
-        UserDetailsDto GetApplicationUser(string userId);
+        //UserDetailsDto GetApplicationUser(string userId);
+        ApiBaseResponse GetApplicationUser(string userId);
 
         /// <summary>
         /// Create application guest user
         /// </summary>
         /// <param name="userCreationDataToBeDisplayed"></param>
-        /// <returns></returns>
         UserDetailsDto CreateApplicationUser(UserDataForCreationDto userCreationDataToBeDisplayed);
 
         /// <summary>
@@ -45,7 +46,6 @@ namespace HotelManagementSystem.Server.Service.Contracts
         /// Patch guest user
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns></returns>
         (UserDataForUpdateDto userDataForUpdate, ApplicationUser applicationUser) GetApplicationUserForPatch(string userId);
 
         /// <summary>

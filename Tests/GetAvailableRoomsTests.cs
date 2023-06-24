@@ -87,7 +87,7 @@ namespace HotelManagementSystem.Tests
         [Test]
         public void GetAvailableRooms_InvalidDateFormat_ReturnsException()
         {
-            //Arrange            
+            //Arrange
             var transactionParameters = new TransactionParameters()
             {
                 DateOfArrival = new DateTime(00),

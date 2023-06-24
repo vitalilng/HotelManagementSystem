@@ -2,8 +2,6 @@
 using HotelManagementSystem.Shared;
 using HotelManagementSystem.Shared.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using System.Net;
 
 namespace HotelManagementSystem.Server.Extensions
 {
@@ -13,7 +11,7 @@ namespace HotelManagementSystem.Server.Extensions
     public static class ExceptionMiddlewareExtensions
     {
         /// <summary>
-        /// 
+        /// ConfigureExceptionHandler
         /// </summary>
         /// <param name="app"></param>
         /// <param name="loggerManager"></param>

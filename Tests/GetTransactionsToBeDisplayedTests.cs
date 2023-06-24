@@ -1,17 +1,10 @@
 ﻿using AutoMapper;
-using HotelManagementSystem.Server.Contracts;
-using HotelManagementSystem.Server.Service.Contracts;
-using HotelManagementSystem.Server.Service;
 using HotelManagementSystem.Server;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using HotelManagementSystem.Server.Contracts;
 using HotelManagementSystem.Server.Models;
-using AutoMapper.QueryableExtensions;
-using HotelManagementSystem.Shared.Dto;
+using HotelManagementSystem.Server.Service;
+using HotelManagementSystem.Server.Service.Contracts;
+using Moq;
 
 namespace HotelManagementSystem.Tests
 {
@@ -48,7 +41,7 @@ namespace HotelManagementSystem.Tests
                 .OrderByDescending(t => t.TransactionDateTime);
 
             transactionRepository.Setup(tr => tr
-                .GetTransactionsQueryable()                )
+                .GetTransactionsQueryable())
                 .Returns(transactions);
 
             //Act

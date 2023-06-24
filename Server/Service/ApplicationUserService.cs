@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotelManagementSystem.Server.Contracts;
 using HotelManagementSystem.Server.Models;
+using HotelManagementSystem.Server.Responses;
 using HotelManagementSystem.Server.Service.Contracts;
 using HotelManagementSystem.Shared.Dto;
 using HotelManagementSystem.Shared.Exceptions;
@@ -34,9 +35,10 @@ namespace HotelManagementSystem.Server.Service
         /// method from the ApplicationUserRepository class and return all the guest users
         /// from the database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An instance of <see cref="ApiBaseResponse"/> containing the guest users.</returns>
         /// <exception cref="Exception"></exception>
-        public IEnumerable<UserDetailsDto> GetApplicationUsers()
+        //public IEnumerable<UserDetailsDto> GetApplicationUsers()
+        public ApiBaseResponse GetApplicationUsers()
         {
             IEnumerable<ApplicationUser> guests = _repositoryManager.ApplicationUserRepository.GetApplicationUsers()
                                                            .Where(u => u.UserName != "admin"); // get all guest users
@@ -44,36 +46,43 @@ namespace HotelManagementSystem.Server.Service
             // The source type is inferred from the source object.
             // Map<TDestination>(object source);
             var guestsDto = _mapper.Map<IEnumerable<UserDetailsDto>>(guests);
-            return guestsDto;
+            //return guestsDto;
+            return new ApiOkResponse<IEnumerable<UserDetailsDto>>(guestsDto);
         }
 
         /// <summary>
         /// Get user by id from the Repository
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns></returns>
-        /// <exception cref="RoomNotFoundException"></exception>
-        public UserDetailsDto GetApplicationUser(string userId)
+        /// <returns>An instance of <see cref="ApiBaseResponse"/> containing the guest user by id.</returns>
+        /// <exception cref="ApplicationUserNotFoundException"></exception>
+        /// public UserDetailsDto GetApplicationUser(string userId)
+        public ApiBaseResponse GetApplicationUser(string userId)
         {
             ApplicationUser? applicationUser = _repositoryManager.ApplicationUserRepository.GetApplicationUser(userId);
+
             if (applicationUser is null)
             {
+                _loggerManager.LogError("User not found.");
                 throw new ApplicationUserNotFoundException(userId);
             }
             var applicationUserDto = _mapper.Map<UserDetailsDto>(applicationUser);
-            return applicationUserDto;
+            //return applicationUserDto;
+            return new ApiOkResponse<UserDetailsDto>(applicationUserDto);
         }
 
         /// <summary>
         /// Create application guest user
         /// </summary>
         /// <param name="userCreationDataToBeDisplayed"></param>
-        /// <returns></returns>
+        /// <returns>The created guest user as a <see cref="UserDetailsDto"/>.</returns>
         public UserDetailsDto CreateApplicationUser(UserDataForCreationDto userCreationDataToBeDisplayed)
         {
             var guestUser = _mapper.Map<ApplicationUser>(userCreationDataToBeDisplayed); //Map<Tdestination>(Tsource)
+
             _repositoryManager.ApplicationUserRepository.CreateApplicationUser(guestUser);
             _repositoryManager.Save();
+
             var guestUserToReturn = _mapper.Map<UserDetailsDto>(guestUser);
             return guestUserToReturn;
         }
@@ -85,9 +94,12 @@ namespace HotelManagementSystem.Server.Service
         /// <exception cref="RoomNotFoundException"></exception>
         public void DeleteApplicationUser(string userId)
         {
-            var guestUser = _repositoryManager.ApplicationUserRepository.GetApplicationUser(userId);
+            var guestUser = _repositoryManager
+                .ApplicationUserRepository
+                .GetApplicationUser(userId);
             if (guestUser is null)
             {
+                _loggerManager.LogError("User not founf");
                 throw new ApplicationUserNotFoundException(userId);
             }
             _repositoryManager.ApplicationUserRepository.DeleteApplicationUser(guestUser);
@@ -99,16 +111,17 @@ namespace HotelManagementSystem.Server.Service
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="userUpdateDataToBeDisplayed"></param>
+        /// <exception cref="ApplicationUserNotFoundException"></exception>
         public void UpdateApplicationUser(string userId, UserDataForUpdateDto userUpdateDataToBeDisplayed)
         {
             //get the user we want to update
             var userToBeUpdated = _repositoryManager.ApplicationUserRepository.GetApplicationUser(userId);
-
             if (userToBeUpdated is null)
             {
+                _loggerManager.LogError("User to be updated not found");
                 throw new ApplicationUserNotFoundException(userId);
             }
-            
+
             //map user we want to update to user data to be updated
             _mapper.Map(userUpdateDataToBeDisplayed, userToBeUpdated); //(source, destination)            
             _repositoryManager.ApplicationUserRepository.UpdateApplicationUser(userToBeUpdated);
@@ -116,26 +129,25 @@ namespace HotelManagementSystem.Server.Service
         }
 
         /// <summary>
-        /// 
+        /// Get the user data for patching
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns></returns>
+        /// <returns>The actual user to be modified, and the modifications to be applied</returns>
         public (UserDataForUpdateDto userDataForUpdate, ApplicationUser applicationUser) GetApplicationUserForPatch(string userId)
         {
             //get the user we want to patch update any details
-            var applicationUser = _repositoryManager.ApplicationUserRepository.GetApplicationUser(userId); 
-            
+            var applicationUser = _repositoryManager.ApplicationUserRepository.GetApplicationUser(userId);
             if (applicationUser is null)
             {
-                throw new ApplicationUserNotFoundException(userId);
+                _loggerManager.LogError("User to be updated not found.");
+                 throw new ApplicationUserNotFoundException(userId);
             }
-
             var userDataForPatch = _mapper.Map<UserDataForUpdateDto>(applicationUser);
             return (userDataForPatch, applicationUser);
         }
 
         /// <summary>
-        /// 
+        /// Get user to be patched, and the modified data to be applied
         /// </summary>
         /// <param name="userDataForUpdate"></param>
         /// <param name="applicationUser"></param>
@@ -144,6 +156,6 @@ namespace HotelManagementSystem.Server.Service
         {
             _mapper.Map(userDataForUpdate, applicationUser);
             _repositoryManager.Save();
-        }        
+        }
     }
 }

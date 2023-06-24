@@ -1,4 +1,5 @@
-﻿using HotelManagementSystem.Server.Service.Contracts;
+﻿using HotelManagementSystem.Server.Extensions;
+using HotelManagementSystem.Server.Service.Contracts;
 using HotelManagementSystem.Shared.Dto;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -6,11 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace HotelManagementSystem.Server.Controllers
 {
     /// <summary>
-    /// Controller for all guest and admin users
+    /// Controller for application users
     /// </summary>
     [Route("api/guestusers")]
     [ApiController]
-    public class ApplicationUsersController : ControllerBase
+    public class ApplicationUsersController : ApiControllerBase
     {
         private readonly IServiceManager _serviceManager;
 
@@ -24,33 +25,42 @@ namespace HotelManagementSystem.Server.Controllers
         }
 
         /// <summary>
-        /// Get all guest users
+        /// Get all users. We extract the result from the service layer and cast the baseResult to the
+        /// specific ApiOkResponse type, and use the Result property to extract our required result
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
-        public IActionResult GetGuests()
+        public IActionResult GetUsers()
         {
-            var guests = _serviceManager.ApplicationUserService.GetApplicationUsers();
-            return Ok(guests);
+            var baseResult = _serviceManager.ApplicationUserService.GetApplicationUsers();
+            var users = baseResult.GetResult<IEnumerable<UserDetailsDto>>();
+            return Ok(users);
         }
 
         /// <summary>
-        /// Get guest user by id
+        /// Get user by id
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns></returns>
         [HttpGet("{userId}", Name ="ApplicationUserById")]
         public IActionResult GetApplicationUser(string userId)
         {
-            var applicationUser = _serviceManager.ApplicationUserService.GetApplicationUser(userId);
-            return Ok(applicationUser);
+            //extract the user from the service layer
+            var baseResult = _serviceManager.ApplicationUserService.GetApplicationUser(userId);
+
+            //check if the result is succesfull, if not return the result of 
+            //ProcessError method
+            if (!baseResult.Success)
+            {
+                return ProcessError(baseResult);
+            }
+
+            var user = baseResult.GetResult<UserDetailsDto>();
+            return Ok(user);
         }
 
         /// <summary>
         /// Create Guest user
         /// </summary>
         /// <param name="userDataForCreation"></param>
-        /// <returns></returns>
         [HttpPost]
         public IActionResult CreateGuestUser([FromBody] UserDataForCreationDto userDataForCreation)
         {
@@ -67,7 +77,6 @@ namespace HotelManagementSystem.Server.Controllers
         /// Delete guest user from db
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns></returns>
         [HttpDelete("{userId}")]
         public IActionResult DeleteGuestUser(string userId)
         {
@@ -80,7 +89,6 @@ namespace HotelManagementSystem.Server.Controllers
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="userDataForUpdate"></param>
-        /// <returns></returns>
         [HttpPut("{userId}")]
         public IActionResult UpdateGuestUser(string userId, [FromBody] UserDataForUpdateDto userDataForUpdate)
         {
@@ -97,7 +105,6 @@ namespace HotelManagementSystem.Server.Controllers
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="patchDoc"></param>
-        /// <returns></returns>
         [HttpPatch("{userId}")]
         public IActionResult PartialUpdateApplicationUser(string userId,
                                                           [FromBody] JsonPatchDocument<UserDataForUpdateDto> patchDoc)
