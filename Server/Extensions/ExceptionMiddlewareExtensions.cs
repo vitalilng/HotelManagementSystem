@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Diagnostics;
 namespace HotelManagementSystem.Server.Extensions
 {
     /// <summary>
-    /// Error handling
+    /// Static class that contain extension method for WebApplication class
     /// </summary>
     public static class ExceptionMiddlewareExtensions
     {
@@ -18,6 +18,9 @@ namespace HotelManagementSystem.Server.Extensions
         /// <param name="loggerManager"></param>
         public static void ConfigureExceptionHandler(this WebApplication app, ILoggerManager loggerManager)
         {
+            ///he UseExceptionHandler middleware is added to the application pipeline. 
+            ///This middleware is responsible for handling exceptions that occur during the processing of HTTP requests.
+            ///It takes a callback function (appError) as an argument.
             app.UseExceptionHandler(appError =>
             {
                 appError.Run(async context =>
