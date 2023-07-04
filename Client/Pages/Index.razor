@@ -2,16 +2,17 @@
 @inject ISnackbar snackBar
 @inject NavigationManager NavigationManager
 @inject HttpClient httpClient 
+@inject IStringLocalizer<Resource> localizer
 
 <MudCard Outlined=true>
     <MudCardContent>
-                <MudText Align="Align.Center" Typo="Typo.h3">Make A Booking</MudText>
+                <MudText Align="Align.Center" Typo="Typo.h3">@localizer["booking"]</MudText>
                 <MudContainer class="d-flex">
                 @if (transactionParameters is not null)
                 {               
-                    <MudDatePicker Label="Arrival Date" @bind-Date="transactionParameters.DateOfArrival" PickerVariant="PickerVariant.Dialog" Rounded="true" Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date />
+                    <MudDatePicker Label=@localizer["startDate"] @bind-Date="transactionParameters.DateOfArrival" PickerVariant="PickerVariant.Dialog" Rounded="true" Elevation="1" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date />
                     <MudSpacer></MudSpacer>
-                    <MudDatePicker Label="Departure Date" @bind-Date="transactionParameters.DateOfDeparture" PickerVariant="PickerVariant.Dialog" Rounded="true" Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date />
+                    <MudDatePicker Label=@localizer["endDate"] @bind-Date="transactionParameters.DateOfDeparture" PickerVariant="PickerVariant.Dialog" Rounded="true" Elevation="12" DateFormat="dd-MM-yyyy" MinDate=DateTime.Now.Date />
                 }
                 </MudContainer>
 
@@ -36,12 +37,12 @@
                 </MudContainer>
                 <br />
                 <MudContainer Class="d-flex justify-center align-center">
-                    <MudButton Class="pa-4" ButtonType="ButtonType.Button" Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary" OnClick="@GetAvailableRooms">Check Availability</MudButton> 
+                    <MudButton Class="pa-4" ButtonType="ButtonType.Button" Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary" OnClick="@GetAvailableRooms">@localizer["checkAvailability"]</MudButton> 
                 </MudContainer>
                 
                 <br/>
                 <br/>
-                <MudText Align="Align.Center" Typo="Typo.h3">List of available rooms:</MudText>
+                <MudText Align="Align.Center" Typo="Typo.h3">@localizer["listOfRooms"]:</MudText>
 
                 <MudTable Elevation="25" Items="rooms" @bind-rooms="rooms" Dense=true Striped=true Bordered=true>
                     <ToolBarContent>                        
@@ -95,8 +96,6 @@
         }
         return null;
     }
-
-
 
     async Task GetAvailableRooms()
     {

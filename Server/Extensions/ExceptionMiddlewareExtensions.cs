@@ -18,22 +18,22 @@ namespace HotelManagementSystem.Server.Extensions
         /// <param name="loggerManager"></param>
         public static void ConfigureExceptionHandler(this WebApplication app, ILoggerManager loggerManager)
         {
-            ///The UseExceptionHandler middleware is added to the application pipeline. 
-            ///This middleware is responsible for handling exceptions that occur during the processing of HTTP requests.
-            ///It takes a callback function (appError) as an argument.
+            //The UseExceptionHandler middleware is added to the application pipeline. 
+            //This middleware is responsible for handling exceptions that occur during the processing of HTTP requests.
+            //It takes a callback function (appError) as an argument.
             app.UseExceptionHandler(appError =>
             {
-                ///Run method is called to handle the exception asynchronously
-                ///context is the current HTTP request context
+                //Run method is called to handle the exception asynchronously
+                //context is the current HTTP request context
                 appError.Run(async context =>
                 {
                     //response content type is set to "application/json"
                     context.Response.ContentType = "application/json";
-                    
+
                     //IExceptionHandlerFeature is retrieved from the request context features
                     //IExceptionHandlerFeature contains information about the exception that occured during request processing.                    
                     var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-                    
+
                     //if not null, indicates that an exception occured, then the exception handling logic is executed
                     if (contextFeature != null)
                     {

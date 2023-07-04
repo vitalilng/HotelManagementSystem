@@ -1,4 +1,5 @@
 using HotelManagementSystem.Client;
+using HotelManagementSystem.Client.Extensions;
 using HotelManagementSystem.Client.Services;
 using HotelManagementSystem.Shared;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -18,13 +19,11 @@ builder.Services.AddSingleton(new HttpClient
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddHttpClient("HotelManagementSystem.ServerAPI", client =>
-{
-    client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-})
-    .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+builder.Services.AddHttpClient("HotelManagementSystem.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+                .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
 builder.Services.AddOptions();
+builder.Services.AddLocalization();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<CustomStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<CustomStateProvider>());
@@ -32,8 +31,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddMudServices();
 builder.Services.AddSingleton<StateContainer>();
 builder.Services.AddSingleton<GlobalStateContainer>();
-builder.Services.AddOidcAuthentication(options =>
-{
-    builder.Configuration.Bind("Local", options.ProviderOptions);
-});
+builder.Services.AddOidcAuthentication(options => builder.Configuration.Bind("Local", options.ProviderOptions));
+
+await builder.Build().SetDefaultCulture(); //used for localization
 await builder.Build().RunAsync();

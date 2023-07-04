@@ -22,6 +22,8 @@
                 </NotAuthorized>
             </AuthorizeView>
         <MudSpacer/>
+        <CultureSelector />
+        <MudSpacer />
         <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" Edge="Edge.Start" OnClick="@LogoutClick" />
     </MudAppBar>
     <MudDrawer @bind-Open="@open" Elevation="1" ClipMode="clipMode" DisableOverlay="true" Variant="@DrawerVariant.Mini">
@@ -33,7 +35,7 @@
                 <MudNavLink Href="/rooms" Icon="@Icons.Material.Filled.Room">Rooms</MudNavLink>
                 <MudNavLink Href="/transactions" Icon="@Icons.Material.Filled.AssuredWorkload">Transactions</MudNavLink>
             </AuthorizeView>
-            <MudNavLink Href="/about" Icon="@Icons.Filled.Info">About</MudNavLink>
+            <MudNavLink Href="/about" Icon="@Icons.Material.Filled.Info">About</MudNavLink>
         </MudNavMenu>
 </MudDrawer>
     <MudMainContent Class="pt-16 px-10">
