@@ -27,5 +27,7 @@ namespace HotelManagementSystem.Shared.Dto
 
         [Required(ErrorMessage = "Price is a required field.")]
         public long Price { get; set; }
+
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }

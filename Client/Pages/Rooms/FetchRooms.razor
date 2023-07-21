@@ -23,51 +23,68 @@ else
     </MudCard>
     <br />
 
-    <MudTable Elevation="25" Items="rooms" Hover="true" Breakpoint="Breakpoint.Sm" @bind-rooms="rooms" Striped=true
-          Filter="new Func<RoomDto, bool>(SearchRoom)" CanCancelEdit="true" Bordered=true Dense=true>
+    <MudTable Items="rooms" Hover="true" @bind-rooms="rooms" Filter="new Func<RoomDto, bool>(SearchRoom)" 
+        EditButtonPosition="@editButtonPosition" EditTrigger="@tableEditTrigger" CanCancelEdit="true" 
+        Dense=true CommitEditTooltip="Commit changes" OnCommitEditClick="@(() => snackBar.Add("Commit Edit Handler Invoked"))"
+        RowEditCommit="ItemHasBeenCommitted">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Rooms</MudText>
             <MudSpacer />
-            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"/>
         </ToolBarContent>
+        <ColGroup >
+            <col style="width:3%;"/>
+            <col style="width:10%;"/>
+            <col style="width:10%;"/>
+            <col style="width:3%;" />
+            <col style="width:10%;" />
+            <col style="width:20%;" />
+            <col style="width:1%;" />
+            <col style="width:50%;" />
+            <col style="width:1%;" />
+        </ColGroup>
         <HeaderContent>
-            <MudTh>Room Type</MudTh>
-            <MudTh>Room Size</MudTh>
-            <MudTh>Beds and Sizes</MudTh>
-            <MudTh>Options</MudTh>
-            <MudTh>Max Persons Allowed</MudTh>
-            <MudTh>Availability</MudTh>
+            <MudTh>Image</MudTh>
+            <MudTh>Type</MudTh>
+            <MudTh>Size</MudTh>
+            <MudTh>Nr Of Beds</MudTh>
+            <MudTh>Room Options</MudTh>
+            <MudTh>Max Persons</MudTh>
             <MudTh>Description</MudTh>
             <MudTh>Price</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Room Type">@context.RoomType</MudTd>
-            <MudTd DataLabel="Room Size">@context.RoomSize</MudTd>
-            <MudTd DataLabel="Beds and Sizes">@context.NrOfBedsAndSizes</MudTd>
-            <MudTd DataLabel="Options">@context.RoomOptions</MudTd>
-            <MudTd DataLabel="Max Persons Allowed">@context.MaxPersonsAllowed</MudTd>
-            <MudTd DataLabel="Availability">@context.Availability</MudTd>
+            <MudTd DataLabel="Image">
+                <MudImage Src="@context.ImageUrl" Elevation="25" Width="200" Height="150" />
+            </MudTd>
+            <MudTd DataLabel="Type">@context.RoomType</MudTd>
+            <MudTd DataLabel="Size">@context.RoomSize</MudTd>
+            <MudTd DataLabel="Nr Of beds">@context.NrOfBedsAndSizes</MudTd>
+            <MudTd DataLabel="Room Options">@context.RoomOptions</MudTd>
+            <MudTd DataLabel="Max Persons">@context.MaxPersonsAllowed</MudTd>
             <MudTd DataLabel="Description">@context.Description</MudTd>
-            <MudTd DataLabel="Price">@context.Price</MudTd>
+            <MudTd DataLabel="Price">$@context.Price</MudTd>
         </RowTemplate>
         <RowEditingTemplate>
-            <MudTd DataLabel="Room Type">
+            <MudTd DataLabel="Image">
+                <div class="col-md-10">
+                        <ImageUpload OnChange="SetImageUrl"/>
+                    </div>
+            </MudTd>
+            <MudTd DataLabel="Type">
                 <MudTextField @bind-Value="@context.RoomType" Required />
             </MudTd>
-            <MudTd DataLabel="Room Size">
+            <MudTd DataLabel="Size">
                 <MudTextField @bind-Value="@context.RoomSize" Required />
             </MudTd>
-            <MudTd DataLabel="Beds and Sizes">
+            <MudTd DataLabel="NrOfBeds">
                 <MudTextField @bind-Value="@context.NrOfBedsAndSizes" Required />
             </MudTd>
-            <MudTd DataLabel="Options">
+            <MudTd DataLabel="RoomOptions">
                 <MudTextField @bind-Value="@context.RoomOptions" Required />
             </MudTd>
-            <MudTd DataLabel="Max Persons Allowed">
+            <MudTd DataLabel="Max Persons">
                 <MudTextField @bind-Value="@context.MaxPersonsAllowed" Required />
-            </MudTd>
-            <MudTd DataLabel="Availability">
-                <MudTextField @bind-Value="@context.Availability" Required />
             </MudTd>
             <MudTd DataLabel="Description">
                 <MudTextField @bind-Value="@context.Description" Required />
@@ -79,7 +96,11 @@ else
         <PagerContent>
             <MudTablePager />
         </PagerContent>
+        <EditButtonContent Context="button">
+            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+        </EditButtonContent>
     </MudTable>
+
     <MudCard Elevation="25">
         <MudCardHeader>
             <CardHeaderContent>
@@ -96,16 +117,20 @@ else
     private string searchString = "";
     private bool canCancelEdit = false;
     private List<string> editEvents = new();
+    private TableEditButtonPosition editButtonPosition = TableEditButtonPosition.Start;
+    private TableEditTrigger tableEditTrigger = TableEditTrigger.EditButton;
 
     protected override async Task OnInitializedAsync()
     {
         rooms = await httpClient.GetFromJsonAsync<RoomDto[]>("api/rooms");
     }
 
+    private void SetImageUrl(string imgUrl) => room.ImageUrl = imgUrl;
+
     private bool SearchRoom(RoomDto roomDto)
     {
-        if (string.IsNullOrEmpty(searchString)) return true;
-        if(room.RoomType.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        if (string.IsNullOrEmpty(searchString)) return true;        
+        if (room.RoomType.Contains(searchString, StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }
@@ -116,5 +141,10 @@ else
     {
         editEvents.Add(message);
         StateHasChanged();
+    }
+
+    private void ItemHasBeenCommitted(object element)
+    {
+        AddEditionEvent($"RowEditCommit event: Changes to Element {room.Id} committed");
     }
 }

@@ -4,19 +4,24 @@
 @inject StateContainer StateContainer
 @inject GlobalStateContainer globalStateContainer
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@implements IDisposable
 @inject ISnackbar snackBar
-
+@implements IDisposable
 
 <EditForm Model="@transactionModelForCreation">
     <DataAnnotationsValidator />
-    <MudPaper>
+    <MudPaper Elevation="0" MaxWidth="20%">
+        <br />
+        <MudButton Variant="Variant.Filled" Color="Color.Default" Class="ml-auto align-content-lg-start" Href=@($"/rooms/{roomId}")>Back</MudButton>
+        <br />
+    </MudPaper>
+    <br />
+    <MudPaper MaxWidth="60%">
         <MudCard Outlined="true">
             <MudCardHeader>
                 <MudText Typo="Typo.h5" Color="Color.Info">Please, select the Arrival and Departure Dates</MudText>
             </MudCardHeader>
             <MudCardContent>
-                <MudTextField Label="Room Type" Immediate=true Variant="Variant.Outlined" Value="roomType" ReadOnly=true />
+                <MudTextField Label="Room Type" Immediate=true Variant="Variant.Outlined" Value="roomType" ReadOnly=true/>
                 <br />
                 <MudDatePicker Label="Arrival Date"
                                Date="transactionParameters.DateOfArrival"
@@ -53,7 +58,7 @@
                 @if (!string.IsNullOrEmpty(validationError))
                 {
                     <br />
-                    <MudAlert Severity="Severity.Error" Dense=true ContentAlignment="HorizontalAlignment.Left" te>@validationError</MudAlert>
+                    <MudAlert Severity="Severity.Error" Dense=true ContentAlignment="HorizontalAlignment.Left">@validationError</MudAlert>
                 }
 
                 <br />
@@ -74,12 +79,15 @@
     private RoomDto? RoomDetailsDto { get; set; } = new();
     private TransactionParameters transactionParameters { get; set; } = new();    
 
+    [Parameter]
+    public Guid roomId { get; set; }
     string? roomType = "";
     int totalSum = 0;
     int roomPrice = 0;
     string userId = "";
     string userType = "";
     string validationError = "";
+    
 
     protected async override Task OnInitializedAsync()
     {
@@ -103,6 +111,7 @@
         {
             roomType = RoomDetailsDto.RoomType;
             roomPrice = RoomDetailsDto.Price;
+            roomId = RoomDetailsDto.Id;
         }
     }   
 

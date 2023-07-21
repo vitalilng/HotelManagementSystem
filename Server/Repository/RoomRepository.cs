@@ -56,6 +56,6 @@ namespace HotelManagementSystem.Server.Repository
         /// Update room details
         /// </summary>
         /// <param name="room"></param>
-        public void UpdateRoom(Room room) => Update(room);
+        public void UpdateRoom(Room room) => Update(room);       
     }
 }

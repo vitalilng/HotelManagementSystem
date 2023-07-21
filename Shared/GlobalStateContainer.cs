@@ -6,7 +6,7 @@
     public class GlobalStateContainer
     {
         /// <summary>
-        /// 
+        /// State value
         /// </summary>
         public DateTime? Value { get; set; }
 

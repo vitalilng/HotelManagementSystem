@@ -24,7 +24,6 @@ namespace HotelManagementSystem.Server.Controllers
         /// <summary>
         /// Get all rooms
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -37,7 +36,6 @@ namespace HotelManagementSystem.Server.Controllers
         /// <summary>
         /// Get all current available rooms
         /// </summary>
-        /// <returns></returns>
         [HttpGet("GetAvailableRooms")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -51,7 +49,6 @@ namespace HotelManagementSystem.Server.Controllers
         /// Return room by id
         /// </summary>
         /// <param name="roomId"></param>
-        /// <returns></returns>
         [HttpGet("{roomId}", Name = "RoomById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -69,7 +66,6 @@ namespace HotelManagementSystem.Server.Controllers
         /// CreateRoom
         /// </summary>
         /// <param name="roomDataForCreation"></param>
-        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -92,7 +88,6 @@ namespace HotelManagementSystem.Server.Controllers
         /// </summary>
         /// <param name="roomId"></param>
         /// <param name="roomDataForUpdate"></param>
-        /// <returns></returns>
         [HttpPut("{roomId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -110,7 +105,6 @@ namespace HotelManagementSystem.Server.Controllers
         /// Delete room
         /// </summary>
         /// <param name="roomId"></param>
-        /// <returns></returns>
         [HttpDelete("{roomId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -129,7 +123,6 @@ namespace HotelManagementSystem.Server.Controllers
         /// </summary>
         /// <param name="roomId"></param>
         /// <param name="returnedRoomDataForPatch"></param>
-        /// <returns></returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPatch("{roomId}")]

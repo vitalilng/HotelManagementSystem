@@ -51,6 +51,16 @@
         public long Price { get; set; }
 
         /// <summary>
+        /// base64 image url
+        /// </summary>
+        public string ImageUrl { get; set; } = string.Empty;
+
+        /// <summary>
+        /// navigation properties to Image
+        /// </summary>
+        public List<Image> Images { get; set; } = new List<Image>();
+
+        /// <summary>
         /// Navigation property to transaction model
         /// </summary>
         public List<Transaction>? Transactions { get; set; }

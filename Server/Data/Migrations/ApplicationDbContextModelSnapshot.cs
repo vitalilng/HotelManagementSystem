@@ -103,18 +103,48 @@ namespace HotelManagementSystem.Server.Migrations
                         {
                             Id = "2d5168cc-2092-4eaa-b62a-95ee7d587951",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c154b6bc-5c5c-4b91-9815-e8f3fbef8625",
+                            ConcurrencyStamp = "c797a1af-eb30-4c2d-aada-c449dd16778f",
                             Email = "administrator@page.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "administrator@page.com",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEO7Aqu+EVWEpL5gSA5g6U8UEQPD0GxquqfjG6RlQLMQxY/OjJ9+HiQUIgUX6vO3Rlg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELOQ+zNjmdT0f8C5wb9c7sc+MDnO1aCHZa5maYg1iWt1lNTQuTCtxO9PB2QPNVrs9w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "32a6b82b-eb86-4e98-a1f3-1348a52b3438",
+                            SecurityStamp = "e6f3a383-2a37-474c-8291-3050f3c1d0e3",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
+                });
+
+            modelBuilder.Entity("HotelManagementSystem.Server.Models.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Base64Data")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("RoomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("Image");
                 });
 
             modelBuilder.Entity("HotelManagementSystem.Server.Models.Room", b =>
@@ -130,6 +160,10 @@ namespace HotelManagementSystem.Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaxPersonsAllowed")
@@ -162,6 +196,7 @@ namespace HotelManagementSystem.Server.Migrations
                             Id = new Guid("11223344-5566-7788-99aa-bbccddeeff00"),
                             Availability = "Available",
                             Description = "Room Description",
+                            ImageUrl = "imageurlstring",
                             MaxPersonsAllowed = "2",
                             NrOfBedsAndSizes = "Single Bed(1.60 x 2.00)",
                             Price = 123L,
@@ -178,6 +213,7 @@ namespace HotelManagementSystem.Server.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("ArrivalDate")
@@ -209,14 +245,14 @@ namespace HotelManagementSystem.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e4fabb77-f241-4fbc-9bef-b301a515c22c"),
+                            Id = new Guid("b366e970-394e-48f0-87d7-0c0784bf7d99"),
                             ApplicationUserId = "2d5168cc-2092-4eaa-b62a-95ee7d587951",
                             ArrivalDate = new DateTime(2023, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartureDate = new DateTime(2023, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RoomId = new Guid("11223344-5566-7788-99aa-bbccddeeff00"),
                             RoomPrice = 1230.0,
                             TotalSum = 23456.0,
-                            TransactionDateTime = new DateTimeOffset(new DateTime(2023, 3, 29, 11, 20, 17, 374, DateTimeKind.Unspecified).AddTicks(4914), new TimeSpan(0, 3, 0, 0, 0))
+                            TransactionDateTime = new DateTimeOffset(new DateTime(2023, 7, 15, 0, 27, 9, 828, DateTimeKind.Unspecified).AddTicks(4781), new TimeSpan(0, 3, 0, 0, 0))
                         });
                 });
 
@@ -249,15 +285,15 @@ namespace HotelManagementSystem.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b61805b4-1114-4710-b46f-a9048aa547cf",
-                            ConcurrencyStamp = "3d1d6c19-896f-4538-a9e3-eb2a0e2cd249",
+                            Id = "833368a9-0910-4e9c-97e7-dc4836ea92d1",
+                            ConcurrencyStamp = "79a95988-b751-4ac4-a557-3f50e815cbd5",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         },
                         new
                         {
                             Id = "2d5168cc-2092-4eaa-b62a-95ee7d587951",
-                            ConcurrencyStamp = "40ba9434-3121-4465-8ca6-5bb7450a3351",
+                            ConcurrencyStamp = "fee208f5-0cbc-42d2-b2d4-4bdb4d3ba16a",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         });
@@ -376,6 +412,13 @@ namespace HotelManagementSystem.Server.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("HotelManagementSystem.Server.Models.Image", b =>
+                {
+                    b.HasOne("HotelManagementSystem.Server.Models.Room", null)
+                        .WithMany("Images")
+                        .HasForeignKey("RoomId");
+                });
+
             modelBuilder.Entity("HotelManagementSystem.Server.Models.Room", b =>
                 {
                     b.HasOne("HotelManagementSystem.Server.Models.ApplicationUser", null)
@@ -387,7 +430,9 @@ namespace HotelManagementSystem.Server.Migrations
                 {
                     b.HasOne("HotelManagementSystem.Server.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Transactions")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HotelManagementSystem.Server.Models.Room", "Room")
                         .WithMany("Transactions")
@@ -460,6 +505,8 @@ namespace HotelManagementSystem.Server.Migrations
 
             modelBuilder.Entity("HotelManagementSystem.Server.Models.Room", b =>
                 {
+                    b.Navigation("Images");
+
                     b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618

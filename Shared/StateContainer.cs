@@ -8,7 +8,7 @@ namespace HotelManagementSystem.Shared
     public class StateContainer
     {
         /// <summary>
-        /// 
+        /// Value
         /// </summary>
         public RoomDto? Value { get; set; }
 

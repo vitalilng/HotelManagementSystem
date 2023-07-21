@@ -27,7 +27,7 @@ namespace HotelManagementSystem.Server.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
-            
+
             //creating and seeding admin user to DB
             const string adminID = "2d5168cc-2092-4eaa-b62a-95ee7d587951";
             const string roleId = adminID;
@@ -65,7 +65,7 @@ namespace HotelManagementSystem.Server.Data
                 });
 
             // Application User relationship to Transactions table
-            modelBuilder.Entity<ApplicationUser>()                
+            modelBuilder.Entity<ApplicationUser>()
                 .HasMany(b => b.Transactions)
                 .WithOne(b => b.ApplicationUser);
 
@@ -87,7 +87,8 @@ namespace HotelManagementSystem.Server.Data
                     MaxPersonsAllowed = "2",
                     Availability = "Available",
                     Description = "Room Description",
-                    Price = 123
+                    Price = 123,
+                    ImageUrl = "imageurlstring"
                 });
 
             modelBuilder.Entity<Transaction>()

@@ -29,5 +29,7 @@ namespace HotelManagementSystem.Shared.Dto
 
         [Range(1,int.MaxValue, ErrorMessage = "Price is required and should higher than 0.")]
         public int Price { get; set; }
+
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }

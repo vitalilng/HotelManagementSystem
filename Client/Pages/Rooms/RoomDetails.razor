@@ -2,72 +2,44 @@
 @inject HttpClient httpClient
 @inject NavigationManager NavigationManager
 @inject StateContainer StateContainer
-@implements IDisposable
 @inject ISnackbar snackBar
+@implements IDisposable
 
-<MudPaper>
-    <MudCard>
-        <MudCardHeader>
-            <CardHeaderContent>
-                <MudText Typo="Typo.h4">Room Details</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-    </MudCard>
-    <MudCard Outlined=true>
-        <MudCardContent>
-                <MudTextField Label="Room Type" @bind-Value="RoomDetailsDto.RoomType" ReadOnly=true DisableUnderLine=true></MudTextField>
-        </MudCardContent>        
-    </MudCard>    
-    <MudCard Outlined=true>
-        <MudCardContent>
-            <MudTextField Label="Room Size" @bind-Value="RoomDetailsDto.RoomSize" ReadOnly=true DisableUnderLine=true></MudTextField>
-        </MudCardContent>
-    </MudCard>
-    <MudCard Outlined=true>
-        <MudCardContent>
-            <MudTextField Label="Nr of Beds" @bind-Value="RoomDetailsDto.NrOfBedsAndSizes" ReadOnly=true DisableUnderLine=true></MudTextField>
-        </MudCardContent>
-    </MudCard>
-    <MudCard Outlined=true>
-        <MudCardContent>
-            <MudTextField Label="Room Options" @bind-Value="RoomDetailsDto.RoomOptions" ReadOnly=true DisableUnderLine=true></MudTextField>
-        </MudCardContent>
-    </MudCard>
-    <MudCard Outlined=true>
-        <MudCardContent>
-            <MudTextField Label="Maximum Persons Allowed" @bind-Value="RoomDetailsDto.MaxPersonsAllowed" ReadOnly=true DisableUnderLine=true></MudTextField>
-        </MudCardContent>
-    </MudCard>
-    <MudCard Outlined=true>
-        <MudCardContent>
-            <MudTextField Label="Description" @bind-Value="RoomDetailsDto.Description" ReadOnly=true DisableUnderLine=true></MudTextField>
-        </MudCardContent>
-    </MudCard>
-    <MudCard Outlined=true>
-        <MudCardContent>
-            <MudTextField Label="Price" @bind-Value="RoomDetailsDto.Price" ReadOnly=true DisableUnderLine=true></MudTextField>
-        </MudCardContent>
-    </MudCard>
+<MudPaper Elevation="0" MaxWidth="20%" >
+    <br />
+    <MudButton Variant="Variant.Filled" Color="Color.Default" Class="ml-auto align-content-lg-start" Href="/">Back</MudButton>
+    <br/>
 </MudPaper>
-<MudPaper>
-    <MudCard>
-        <MudCardActions>
+<br/>
+<MudCard Elevation="15" Style="width:80%">
+    <MudImage Src="@RoomDetailsDto.ImageUrl" Elevation="0" Width="200" Height="150" />
+    <MudCardContent>
+        <MudTextField Label="Room Type" @bind-Value="RoomDetailsDto.RoomType" ReadOnly=true DisableUnderLine=true />
+        <MudTextField Label="Room Size" @bind-Value="RoomDetailsDto.RoomSize" ReadOnly=true DisableUnderLine=true />
+        <MudTextField Label="Nr of Beds" @bind-Value="RoomDetailsDto.NrOfBedsAndSizes" ReadOnly=true DisableUnderLine=true />
+        <MudTextField Label="Room Options" @bind-Value="RoomDetailsDto.RoomOptions" ReadOnly=true DisableUnderLine=true />
+        <MudTextField Label="Maximum Persons Allowed" @bind-Value="RoomDetailsDto.MaxPersonsAllowed" ReadOnly=true DisableUnderLine=true />
+        <MudTextField Label="Description" @bind-Value="RoomDetailsDto.Description" ReadOnly=true DisableUnderLine=true />
+        <MudTextField Label="Price" @bind-Value="RoomDetailsDto.Price" ReadOnly=true DisableUnderLine=true   />
+    </MudCardContent>
+    <MudCardActions>
         <MudButton Class="py-5" ButtonType="ButtonType.Button"
-                   Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary" OnClick="() => HandleButton()" >Go to Booking</MudButton>
-        </MudCardActions>
-    </MudCard>
-</MudPaper>
+                   Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary" OnClick="() => HandleButton()">Go to Booking</MudButton>
+    </MudCardActions>
+</MudCard>
+
 
 @code {
     [Parameter]
     public Guid roomId { get; set; }
     RoomDto RoomDetailsDto { get; set; } = new();
-
+    
     protected override async Task OnInitializedAsync()
     {        
         RoomDetailsDto = await httpClient.GetFromJsonAsync<RoomDto>($"/api/rooms/{roomId}");
         StateContainer.OnStateChange += StateHasChanged;
     }
+    
 
     private void HandleButton()
     {
@@ -78,6 +50,5 @@
     public void Dispose()
     {
         StateContainer.OnStateChange -= StateHasChanged;
-    }
-    
+    }   
 }

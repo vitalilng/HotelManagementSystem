@@ -44,28 +44,45 @@
                 <br/>
                 <MudText Align="Align.Center" Typo="Typo.h3">@localizer["listOfRooms"]:</MudText>
 
-                <MudTable Elevation="25" Items="rooms" @bind-rooms="rooms" Dense=true Striped=true Bordered=true>
+                <MudTable Elevation="25" Items="rooms" @bind-rooms="rooms" Dense=true Striped=false Bordered=false Hover=true >
                     <ToolBarContent>                        
                         <MudSpacer />                        
                     </ToolBarContent>
+                    <ColGroup>
+                        <col style="width:10%;" />
+                        <col style="width:10%;" />
+                        <col style="width:3%;" />
+                        <col style="width:10%;" />
+                        <col style="width:20%;" />
+                        <col style="width:1%;" />
+                        <col style="width:30%;" />
+                        <col style="width:1%;" />
+                        <col style="width:5%;" />
+                    </ColGroup>
                     <HeaderContent>
-                        <MudTh>Room Type</MudTh>
-                        <MudTh>Room Size</MudTh>
-                        <MudTh>Beds and Sizes</MudTh>
-                        <MudTh>Options</MudTh>
-                        <MudTh>Max Persons Allowed</MudTh>                        
+                        <MudTh>Image</MudTh>
+                        <MudTh>Type</MudTh>
+                        <MudTh>Size</MudTh>
+                        <MudTh>Nr Of Beds</MudTh>
+                        <MudTh>Room Options</MudTh>
+                        <MudTh>Max Persons</MudTh>
+                        <MudTh>Description</MudTh>
                         <MudTh>Price</MudTh>
-                        <MudTh>Action</MudTh>
+                        <MudTh></MudTh>
                     </HeaderContent>
                     <RowTemplate>
-                        <MudTd DataLabel="Room Type">@context.RoomType</MudTd>
-                        <MudTd DataLabel="Room Size">@context.RoomSize</MudTd>
-                        <MudTd DataLabel="Beds and Sizes">@context.NrOfBedsAndSizes</MudTd>
-                        <MudTd DataLabel="Options">@context.RoomOptions</MudTd>
-                        <MudTd DataLabel="Max Persons Allowed">@context.MaxPersonsAllowed</MudTd>                        
-                        <MudTd DataLabel="Price">@context.Price</MudTd>                        
+                        <MudTd DataLabel="Image">
+                            <MudImage Src="@context.ImageUrl" Elevation="25" Width="200" Height="150" />
+                        </MudTd>
+                        <MudTd DataLabel="Type">@context.RoomType</MudTd>
+                        <MudTd DataLabel="Size">@context.RoomSize</MudTd>
+                        <MudTd DataLabel="Nr Of beds">@context.NrOfBedsAndSizes</MudTd>
+                        <MudTd DataLabel="Room Options">@context.RoomOptions</MudTd>
+                        <MudTd DataLabel="Max Persons">@context.MaxPersonsAllowed</MudTd>
+                        <MudTd DataLabel="Description">@context.Description</MudTd>
+                        <MudTd DataLabel="Price">$@context.Price</MudTd>
                         <MudTd>
-                            <MudButton Class="py-5" ButtonType="ButtonType.Button" Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary" OnClick="() => GoToRoomDetailsPage(context.Id)">Details</MudButton>                                
+                            <MudLink Class="py-5" ButtonType="ButtonType.Button" Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary" OnClick="() => GoToRoomDetailsPage(context.Id)">Details</MudLink>                                
                         </MudTd>
                     </RowTemplate>            
                     <PagerContent>
@@ -82,6 +99,7 @@
     string arrivalDateError = "";
     string departureDateError = "";
     string validationError = "";
+
 
     private void GoToRoomDetailsPage(Guid roomId)
     {

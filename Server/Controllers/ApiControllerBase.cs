@@ -16,6 +16,7 @@ namespace HotelManagementSystem.Server.Controllers
         /// </summary>
         /// <param name="apiBaseResponse"></param>
         /// <returns>A task that represents the asynchronous execute operation.</returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult ProcessError(ApiBaseResponse apiBaseResponse)
         {
             return apiBaseResponse switch

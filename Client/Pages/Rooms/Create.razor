@@ -15,6 +15,9 @@
         <MudItem xs="12" sm="7">
             <MudCard Outlined="true">
                 <MudCardContent>
+                    <div class="col-md-10">
+                        <ImageUpload OnChange="SetImageUrl"/>
+                    </div>
                     <MudTextField Label="Room Type" HelperText="Max. 15 characters" @bind-Value="roomModel.RoomType" For=@(() => roomModel.RoomType ) Immediate=true Variant="Variant.Text"/>
                     <MudTextField Label="Room Size" HelperText="Max. 15 characters" @bind-Value="roomModel.RoomSize" For=@(() => roomModel.RoomSize ) Immediate=true Variant="Variant.Text"/>                    
                     <MudTextField Label="Beds and Sizes" HelperText="Max. 15 characters" @bind-Value="roomModel.NrOfBedsAndSizes" For=@(() => roomModel.NrOfBedsAndSizes) Immediate=true Variant="Variant.Text"/>
@@ -34,9 +37,10 @@
     </MudGrid>
 </EditForm>
 
-
 @code {
     RoomDto roomModel = new();
+
+    private void SetImageUrl(string imgUrl) => roomModel.ImageUrl = imgUrl;
 
     async Task CreateRoom()
     {

@@ -1,4 +1,5 @@
-﻿using HotelManagementSystem.Server.Models;
+﻿using HotelManagementSystem.Server.Controllers;
+using HotelManagementSystem.Server.Models;
 using HotelManagementSystem.Shared.Dto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

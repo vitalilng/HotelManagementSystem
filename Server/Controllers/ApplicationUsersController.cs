@@ -113,9 +113,9 @@ namespace HotelManagementSystem.Server.Controllers
             {
                 return BadRequest("PatchDoc object sent from client is null.");
             }
-            var result = _serviceManager.ApplicationUserService.GetApplicationUserForPatch(userId);
-            patchDoc.ApplyTo(result.userDataForUpdate);
-            _serviceManager.ApplicationUserService.SaveChangesForPatch(result.userDataForUpdate, result.applicationUser);
+            var (userDataForUpdate, applicationUser) = _serviceManager.ApplicationUserService.GetApplicationUserForPatch(userId);
+            patchDoc.ApplyTo(userDataForUpdate);
+            _serviceManager.ApplicationUserService.SaveChangesForPatch(userDataForUpdate, applicationUser);
             return NoContent();
         }
     }
