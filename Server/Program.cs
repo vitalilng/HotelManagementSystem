@@ -71,6 +71,7 @@ builder.Services.AddAuthentication().AddIdentityServerJwt();
 
 builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
 builder.Services.AddSingleton<StateContainer>();
+builder.Services.AddSingleton<AvailableRoomsStateContainer>();
 
 //register repository manager class
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();

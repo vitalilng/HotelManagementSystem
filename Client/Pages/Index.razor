@@ -1,8 +1,9 @@
 ﻿@page "/"
 @inject ISnackbar snackBar
 @inject NavigationManager NavigationManager
-@inject HttpClient httpClient 
+@inject HttpClient httpClient
 @inject IStringLocalizer<Resource> localizer
+
 
 <MudCard Outlined=true>
     <MudCardContent>
@@ -82,7 +83,8 @@
                         <MudTd DataLabel="Description">@context.Description</MudTd>
                         <MudTd DataLabel="Price">$@context.Price</MudTd>
                         <MudTd>
-                            <MudLink Class="py-5" ButtonType="ButtonType.Button" Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary" OnClick="() => GoToRoomDetailsPage(context.Id)">Details</MudLink>                                
+                            <MudLink Class="py-5" ButtonType="ButtonType.Button" Size=Size.Large Variant="Variant.Filled" Color="Color.Tertiary" 
+                                     OnClick="() => GoToRoomDetailsPage(context.Id)">Details</MudLink>                                
                         </MudTd>
                     </RowTemplate>            
                     <PagerContent>
@@ -95,11 +97,37 @@
 @code {
     RoomDto[]? rooms { get; set; }
     RoomDto room = new();
-    TransactionParameters? transactionParameters { get; set; } = new();
+    CultureSelector? cultureSelector { get; set; } = new();
+    public TransactionParameters? transactionParameters { get; set; } = new();
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "arrivaldate")]
+    public string? arrivaldate { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "departuredate")]
+    public string? departuredate { get; set; }
+
     string arrivalDateError = "";
     string departureDateError = "";
     string validationError = "";
+    private string? backUrl;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (!string.IsNullOrEmpty(arrivaldate) && !string.IsNullOrEmpty(departuredate))
+        {
+            if (DateTime.TryParseExact(arrivaldate, "dd-MM-yyyy", cultureSelector.Culture, System.Globalization.DateTimeStyles.None, out var parsedArrivalDate) 
+            && DateTime.TryParseExact(departuredate, "dd-MM-yyyy", cultureSelector.Culture, System.Globalization.DateTimeStyles.None, out var parsedDepartureDate))
+            {
+                transactionParameters.DateOfArrival = parsedArrivalDate;
+                transactionParameters.DateOfDeparture = parsedDepartureDate;
+            }
+            await GetAvailableRooms();
+        }
+    }
 
     private void GoToRoomDetailsPage(Guid roomId)
     {
@@ -126,8 +154,9 @@
             var dateOfDeparture = transactionParameters.DateOfDeparture;
             var url = $"api/rooms/GetAvailableRooms?DateOfArrival={dateOfArrival}&DateOfDeparture={dateOfDeparture}";
             rooms = await httpClient.GetFromJsonAsync<RoomDto[]>(url);
+            UsingQueryParams();
         }
-        else if(transactionParameters is not null && transactionParameters.DateOfArrival > transactionParameters.DateOfDeparture)
+        else if (transactionParameters is not null && transactionParameters.DateOfArrival > transactionParameters.DateOfDeparture)
         {
             arrivalDateError = arrivalDateError.Remove(0);
             departureDateError = departureDateError.Remove(0);
@@ -153,6 +182,34 @@
             arrivalDateError = arrivalDateError.Remove(0);
             departureDateError = departureDateError.Remove(0);
             validationError = "Departure Date should be at least 2 days after Arrival Date";
+        }
+    }
+
+    void UsingQueryParams()
+    {
+        var query = new Dictionary<string, string?>
+        {
+            {"arrivaldate", transactionParameters.DateOfArrival?.ToString("dd-MM-yyyy")},
+            {"departuredate", transactionParameters.DateOfDeparture?.ToString("dd-MM-yyyy")}
+        };
+
+        var queryString = string.Join("&", query
+        .Where(kvp => !string.IsNullOrEmpty(kvp.Value))
+        .Select(kvp => $"{HttpUtility.UrlEncode(kvp.Key)}={HttpUtility.UrlEncode(kvp.Value)}"));
+
+        var encodedUrl = $"{NavigationManager.BaseUri}?{queryString}";
+        NavigationManager.NavigateTo(encodedUrl);
+
+        var uri = new Uri(NavigationManager.Uri);
+        var queryParams = HttpUtility.ParseQueryString(uri.Query);
+
+        var arrivalParam = queryParams.Get("arrivaldate");
+        var departureParam = queryParams.Get("departuredate");
+
+        if (!string.IsNullOrEmpty(arrivalParam) && !string.IsNullOrEmpty(departureParam))
+        {
+            arrivaldate = arrivalParam;
+            departuredate = departureParam;
         }
     }
 }
