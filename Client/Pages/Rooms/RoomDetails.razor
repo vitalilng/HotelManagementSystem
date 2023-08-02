@@ -7,7 +7,8 @@
 
 <MudPaper Elevation="0" MaxWidth="20%" >
     <br />
-    <MudButton Variant="Variant.Filled" Color="Color.Default" Class="ml-auto align-content-lg-start" Href="/">Back</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Default" Class="ml-auto align-content-lg-start" 
+     OnClick="() => NavigateToTheListOfAvailableRooms()">Back</MudButton>
     <br/>
 </MudPaper>
 <br/>
@@ -18,7 +19,7 @@
         <MudTextField Label="Room Size" @bind-Value="RoomDetailsDto.RoomSize" ReadOnly=true DisableUnderLine=true />
         <MudTextField Label="Nr of Beds" @bind-Value="RoomDetailsDto.NrOfBedsAndSizes" ReadOnly=true DisableUnderLine=true />
         <MudTextField Label="Room Options" @bind-Value="RoomDetailsDto.RoomOptions" ReadOnly=true DisableUnderLine=true />
-        <MudTextField Label="Maximum Persons Allowed" @bind-Value="RoomDetailsDto.MaxPersonsAllowed" ReadOnly=true DisableUnderLine=true />
+        <MudTextField Label="Max Persons Allowed" @bind-Value="RoomDetailsDto.MaxPersonsAllowed" ReadOnly=true DisableUnderLine=true />
         <MudTextField Label="Description" @bind-Value="RoomDetailsDto.Description" ReadOnly=true DisableUnderLine=true />
         <MudTextField Label="Price" @bind-Value="RoomDetailsDto.Price" ReadOnly=true DisableUnderLine=true   />
     </MudCardContent>
@@ -33,19 +34,40 @@
     [Parameter]
     public Guid roomId { get; set; }
     RoomDto RoomDetailsDto { get; set; } = new();
-    
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "arrivaldate")]
+    public string? arrivaldate { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "departuredate")]
+    public string? departuredate { get; set; }
+
+
     protected override async Task OnInitializedAsync()
-    {        
+    {         
         RoomDetailsDto = await httpClient.GetFromJsonAsync<RoomDto>($"/api/rooms/{roomId}");
-        StateContainer.OnStateChange += StateHasChanged;
-    }
-    
+        if (RoomDetailsDto is not null)
+        {
+            StateContainer.OnStateChange += StateHasChanged;    
+        }
+    }    
 
     private void HandleButton()
     {
-        StateContainer.SetValue(RoomDetailsDto);
-        NavigationManager.NavigateTo("/createbooking");
+        if (RoomDetailsDto is not null)
+        {
+            StateContainer.SetValue(RoomDetailsDto);
+            NavigationManager.NavigateTo("/createbooking");
+        }
     }
+
+
+    private void NavigateToTheListOfAvailableRooms()
+    {
+        NavigationManager.NavigateTo("");
+    }
+
 
     public void Dispose()
     {

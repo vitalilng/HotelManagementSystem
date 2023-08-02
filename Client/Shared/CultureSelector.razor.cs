@@ -18,7 +18,7 @@ namespace HotelManagementSystem.Client.Shared
             new CultureInfo("ro-RO")
         };
 
-        CultureInfo Culture
+        public CultureInfo Culture
         {
             get => CultureInfo.CurrentCulture;
             set
@@ -27,7 +27,6 @@ namespace HotelManagementSystem.Client.Shared
                 {
                     var js = (IJSInProcessRuntime)JSRuntime;
                     js.InvokeVoid("blazorCulture.set", value.Name);
-
                     NavManager.NavigateTo(NavManager.Uri, forceLoad: true);
                 }
             }

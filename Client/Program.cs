@@ -34,6 +34,8 @@ builder.Services.AddScoped<IRoomHttpRepository, RoomHttpRepository>();
 builder.Services.AddMudServices();
 builder.Services.AddSingleton<StateContainer>();
 builder.Services.AddSingleton<GlobalStateContainer>();
+builder.Services.AddSingleton<BookingParametersStateContainer>();
+builder.Services.AddSingleton<AvailableRoomsStateContainer>();
 builder.Services.AddOidcAuthentication(options => builder.Configuration.Bind("Local", options.ProviderOptions));
 builder.Services.AddFileReaderService(o => o.UseWasmSharedBuffer = true);
 await builder.Build().SetDefaultCulture(); //used for localization
